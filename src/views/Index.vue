@@ -2,11 +2,10 @@
  * @Author: zxk
  * @Date: 2020-05-18 14:01:48
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-18 17:54:10
+ * @LastEditTime: 2020-05-19 10:04:41
 --> 
 <template>
   <div id="index">
-    index
     <router-view />
     <van-tabbar v-model="active">
         <van-tabbar-item icon="home-o">标签</van-tabbar-item>

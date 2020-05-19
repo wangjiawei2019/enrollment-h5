@@ -2,7 +2,7 @@
  * @Author: zxk
  * @Date: 2020-05-18 14:01:20
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-18 17:53:52
+ * @LastEditTime: 2020-05-19 09:32:28
 --> 
 <template>
   <div id="login">
@@ -18,11 +18,13 @@
       <div class="writeInfo">
         <img class="icon-code" src="@/images/security.png" alt="logo" />
         <input class="auth-code" type="number" placeholder="请输入验证码" v-model="autoCode" />
-        <div class="send-code count-down" v-if="sendcode">{{sendcode}}s</div>
+        <div class="send-code count-down" v-if="sendcode">重新发送({{sendcode}}s)</div>
         <div class="send-code" @click="sendCode" v-else>获取验证码</div>
       </div>
     </div>
-    <div class="submit" @click="login">确认</div>
+    <div class="btn">
+      <div class="submit" @click="login">确认</div>
+    </div>
   </div>
 </template>
 
@@ -61,10 +63,14 @@ export default {
         tip = '手机号不能为空'
       }else if(this.autoCode === ''){
         tip = '验证码不能为空'
+      }else if(this.autoCode.length != 4){
+        tip = '验证码格式不正确'
       }
       if(tip){
         Toast(tip);
+        return
       }
+      this.$router.push({path: '/index/home'})
     }
   }
 };
@@ -92,6 +98,10 @@ export default {
 }
 
 .login-info{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-flow: column;
   .writeInfo{
     width: 17.1875rem /* 275/16 */;
     height:3.4375rem /* 55/16 */;
@@ -151,19 +161,24 @@ export default {
   }
 }
 
-.submit{
-  width: 19.6875rem /* 315/16 */;
-  height: 3.4375rem /* 55/16 */;
-  line-height: 3.4375rem /* 55/16 */;
-  background: #F2323A;
-  margin: 2.1875rem /* 35/16 */ 1.875rem /* 30/16 */;
-  border-radius: 1.71875rem /* 27.5/16 */;
-  text-align: center;
-  // 字体样式
-  font-size:1.3125rem /* 21/16 */;
-  font-family:PingFangSC-Regular,PingFang SC;
-  font-weight:400;
-  color:rgba(255,255,255,1);
+.btn{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .submit{
+    width: 19.6875rem /* 315/16 */;
+    height: 3.4375rem /* 55/16 */;
+    line-height: 3.4375rem /* 55/16 */;
+    background: #F2323A;
+    margin: 2.1875rem /* 35/16 */ 1.875rem /* 30/16 */;
+    border-radius: 1.71875rem /* 27.5/16 */;
+    text-align: center;
+    // 字体样式
+    font-size:1.3125rem /* 21/16 */;
+    font-family:PingFangSC-Regular,PingFang SC;
+    font-weight:400;
+    color:rgba(255,255,255,1);
+  }
 }
 
 </style>

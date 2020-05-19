@@ -1,8 +1,8 @@
 /*
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
- * @LastEditors: wjw
- * @LastEditTime: 2020-05-18 11:19:17
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-05-18 18:11:56
  */
 
 import Vue from 'vue'
@@ -10,6 +10,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home'
 import Index from '../views/Index'
 import Login from '../views/Login'
+import Notice from '../views/Notice'
 
 Vue.use(VueRouter)
 
@@ -19,6 +20,9 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login,
+    children:[
+      { path: "/login/notice", component: Notice}
+    ]
   },
   {
     path: '/index',
