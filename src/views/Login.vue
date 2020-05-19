@@ -2,7 +2,7 @@
  * @Author: zxk
  * @Date: 2020-05-18 14:01:20
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-19 09:32:28
+ * @LastEditTime: 2020-05-19 10:41:26
 --> 
 <template>
   <div id="login">
@@ -70,7 +70,7 @@ export default {
         Toast(tip);
         return
       }
-      this.$router.push({path: '/index/home'})
+      this.$router.push({path: '/index/lesson'})
     }
   }
 };

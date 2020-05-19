@@ -1,13 +1,8 @@
 /*
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
-<<<<<<< HEAD
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-19 10:38:34
-=======
- * @LastEditors: wjw
- * @LastEditTime: 2020-05-19 10:17:04
->>>>>>> 5b0635741bdb94db6ea1fc9aeefd49f7b12b8236
+ * @LastEditTime: 2020-05-19 10:40:29
  */
 
 import Vue from 'vue'
@@ -32,7 +27,7 @@ const routes = [
     component: Login,
     children:[
       { path: "/login/notice", component: Notice}
-    ]
+    ],
     meta: {
       title: '网上老年大学招生'
     }

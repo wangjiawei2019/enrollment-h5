@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-19 10:39:05
+ * @LastEditTime: 2020-05-19 11:34:22
 --> 
 <template>
   <div class="lesson">
@@ -16,12 +16,24 @@
         <input type="text" placeholder="搜索学习课程" />
       </div>
     </div>
+    <div class="curr-list">
+      <Curriculums></Curriculums>
+    </div>
   </div>
 </template>
 
 <script>
+import Curriculums from '@/components/Curriculums'
 export default {
   name: 'Lesson',
+  data() {
+    return {
+      
+    }
+  },
+  components:{
+Curriculums
+  }
 }
 </script>
 
@@ -30,9 +42,9 @@ export default {
   .header{
     height: 4.375rem /* 70/16 */;
     display: flex;
-    justify-content: space-between;
     align-items: center;
     padding: 0 .9375rem /* 15/16 */;
+    border-bottom: 1px solid #E9E9E9;
     .classify{
       height: 100%;
       display: flex;
@@ -54,9 +66,25 @@ export default {
       width: 11.25rem /* 180/16 */;
       height: 2.5rem /* 40/16 */;
       padding: 0 .90625rem /* 14.5/16 */;
+      margin-left: 1.9375rem /* 31/16 */;
+      display: flex;
+      align-items: center;
+      background: #F5F6FA;
+      border-radius:1.25rem /* 20/16 */;
       &>img{
         width: 1.25rem /* 20/16 */;
         height: 1.25rem /* 20/16 */;
+        margin-right: .59375rem /* 9.5/16 */;
+      }
+      &>input{
+        width: 8.125rem /* 130/16 */;
+        height: 100%;
+        background: none;
+        border: none;
+        font-size:1.25rem /* 20/16 */;
+        font-family:PingFangSC-Regular,PingFang SC;
+        font-weight:400;
+        color:rgba(153,153,153,1);
       }
     }
   }
