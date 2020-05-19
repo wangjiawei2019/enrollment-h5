@@ -2,6 +2,13 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
+ * @LastEditTime: 2020-05-18 18:37:34
+ */
+
+/*
+ * @Github: https://github.com/wangjiawei2019
+ * @Date: 2020-05-18 11:12:49
+ * @LastEditors: wjw
  * @LastEditTime: 2020-05-18 11:20:12
  */
 
@@ -17,5 +24,5 @@ Vue.config.productionTip = false
 new Vue({
   router,
   store,
-  render: (h) => h(App),
+  render: h => h(App)
 }).$mount('#app')

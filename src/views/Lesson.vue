@@ -2,10 +2,10 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-19 10:36:27
+ * @LastEditTime: 2020-05-19 10:39:05
 --> 
 <template>
-  <div class="home">
+  <div class="lesson">
     <div class="header">
       <div class="classify">
         <span>课程分类</span>
@@ -26,7 +26,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.home{
+.lesson{
   .header{
     height: 4.375rem /* 70/16 */;
     display: flex;
