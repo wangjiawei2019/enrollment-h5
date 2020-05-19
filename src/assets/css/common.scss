@@ -1,0 +1,29 @@
+@mixin font($family, $size, $color, $weight) {
+  font-family: $family;
+  font-size: $size;
+  color: $color;
+  font-weight: $weight;
+}
+
+@mixin flex($row, $column, $direction, $wrap) {
+  display: flex;
+
+  @if $direction==column {
+    flex-direction: column;
+  }
+
+  @else {
+    flex-direction: row;
+  }
+
+  @if $wrap==wrap {
+    flex-wrap: wrap;
+  }
+
+  @else {
+    flex-wrap: nowrap;
+  }
+
+  justify-content: $row;
+  align-items: $column;
+}

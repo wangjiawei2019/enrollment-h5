@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-18 18:37:34
+ * @LastEditTime: 2020-05-19 11:03:56
  */
 
 /*
@@ -17,7 +17,6 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import 'reset-css'
-
 
 Vue.config.productionTip = false
 
