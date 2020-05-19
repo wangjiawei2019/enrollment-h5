@@ -2,7 +2,7 @@
  * @Author: zxk
  * @Date: 2020-05-18 14:01:48
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-19 11:49:44
+ * @LastEditTime: 2020-05-19 16:32:17
 --> 
 <template>
   <div id="index">
@@ -22,6 +22,13 @@
 import { Tabbar, TabbarItem } from 'vant'
 export default {
   name: 'Index',
+  components: {
+    'van-tabbar': Tabbar,
+    'van-tabbar-item': TabbarItem
+  },
+  mounted() {
+    this.active = this.$route.meta.tab
+  },
   data() {
     return {
       active: 0,
@@ -52,13 +59,19 @@ export default {
         }
       ]
     }
-  },
-  components: {
-    'van-tabbar': Tabbar,
-    'van-tabbar-item': TabbarItem
   }
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+#index {
+  display: flex;
+  min-height: calc(100vh - 3.63rem);
+  min-height: calc(100vh - 3.63rem - constant(safe-area-inset-bottom));
+  min-height: calc(100vh - 3.63rem - env(safe-area-inset-bottom));
+  margin-bottom: 3.63rem;
+  margin-bottom: calc(3.63rem + constant(safe-area-inset-bottom));
+  margin-bottom: calc(3.63rem + env(safe-area-inset-bottom));
+  background-color: #fff;
+}
 </style>

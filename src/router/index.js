@@ -1,8 +1,8 @@
 /*
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
- * @LastEditors: zxk
- * @LastEditTime: 2020-05-19 10:40:29
+ * @LastEditors: wjw
+ * @LastEditTime: 2020-05-19 16:31:46
  */
 
 import Vue from 'vue'
@@ -25,9 +25,7 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login,
-    children:[
-      { path: "/login/notice", component: Notice}
-    ],
+    children: [{ path: '/login/notice', component: Notice }],
     meta: {
       title: '网上老年大学招生'
     }
@@ -37,20 +35,24 @@ const routes = [
     name: 'Index',
     component: Index,
     redirect: '/index/lesson',
+
     children: [
       {
         path: 'lesson',
         name: 'Lesson',
+        meta: { tab: 0 },
         component: Lesson
       },
       {
         path: 'list',
         name: 'List',
+        meta: { tab: 1 },
         component: List
       },
       {
         path: 'order',
         name: 'Order',
+        meta: { tab: 2 },
         component: Order
       }
     ]

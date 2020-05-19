@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-19 11:47:06
+ * @LastEditTime: 2020-05-19 14:51:13
 --> 
 <template>
   <div id="app">
@@ -11,6 +11,7 @@
 </template>
 
 <style lang="scss">
+// tabbar
 .van-tabbar {
   height: 3.63rem !important;
   .van-tabbar-item {
@@ -47,6 +48,22 @@
         height: 1.25rem;
       }
     }
+  }
+}
+
+// Empty
+.van-empty {
+  .van-empty__image {
+    width: 14.75rem;
+    height: 8.875rem;
+  }
+  .van-empty__description {
+    margin-top: 0.3125rem;
+    line-height: 1.6875rem;
+    font-size: 1.1875rem;
+    font-family: PingFang SC;
+    color: rgba(153, 153, 153, 1);
+    font-weight: 400;
   }
 }
 </style>
