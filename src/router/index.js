@@ -1,8 +1,8 @@
 /*
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
- * @LastEditors: wjw
- * @LastEditTime: 2020-05-19 10:17:04
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-05-19 10:40:29
  */
 
 import Vue from 'vue'
@@ -12,6 +12,7 @@ import Lesson from '@/views/Lesson'
 import List from '@/views/List'
 import Order from '@/views/Order'
 import Login from '@/views/Login'
+import Notice from '@/views/Notice'
 
 Vue.use(VueRouter)
 
@@ -24,6 +25,9 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login,
+    children:[
+      { path: "/login/notice", component: Notice}
+    ],
     meta: {
       title: '网上老年大学招生'
     }
