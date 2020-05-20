@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-20 16:34:46
+ * @LastEditTime: 2020-05-20 17:26:37
  */
 
 import Vue from 'vue'
@@ -16,7 +16,7 @@ import List from '@/views/List'
 import Order from '@/views/Order'
 import Login from '@/views/Login'
 import Notice from '@/views/Notice'
-
+import Search from '@/views/Search'
 Vue.use(VueRouter)
 
 const routes = [
@@ -59,6 +59,11 @@ const routes = [
         component: Order
       }
     ]
+  },
+  {
+    path: '/search',
+    name: 'Search',
+    component: Search
   }
 ]
 
@@ -67,20 +72,21 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
-const token = 'eyJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjIwMDk1NSwibG9naW5UaW1lIjoiMTU4OTg3OTQ1OTIyMiIsInBob25lIjoiMTg0NTk0MDYxMTQiLCJ0eXBlIjoiMCIsImV4cCI6MTU4OTk2NTg1OX0.U_XgICcrs9P86QqJ40Lu_YWo1b66HmBCCX-NJs0HU5ttsxD9nwFV6vqLB-bUif_JM6xwjCELpYIpyt18ZrJvEA'
 router.beforeEach((to,from,next)=>{
-
   if(to.name === 'Login'){
     const query = qs.parse(to.hash.split('?')[1]);
     if (query.token) { //将token&手机号存入store,直接登录
-      // store.commit('setToken', query.token);
-      store.commit('setToken', token);
+      store.commit('setToken', query.token);
+      // store.commit('setToken', token);
       //是否需要去报名须知
       next({path: '/index',replace: true})
     }else{
       next();
     }
   }else{
+    // if (store.state.token){
+
+    // }
     next()
   }
 })

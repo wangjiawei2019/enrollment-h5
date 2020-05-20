@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-04-20 16:14:58
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-20 16:53:12
+ * @LastEditTime: 2020-05-20 17:27:29
  */
 import axios from 'axios'
 import { httpBaseUrl, domainBaseUrl } from './BASE'
@@ -71,6 +71,7 @@ instance.interceptors.response.use(
       // 响应结果里的status: ok是我与后台的约定，大家可以根据实际情况去做对应的判断
       if (response.data.status === 401){
         console.log("token错误")
+        store.commit('setToken','') //清空token
         Toast.fail(response.data.msg)
         router.replace({
           path: `/login`
