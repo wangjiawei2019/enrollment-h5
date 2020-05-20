@@ -2,11 +2,11 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-20 16:44:22
+ * @LastEditTime: 2020-05-20 17:43:44
 --> 
 <template>
   <div class="list-page">
-    <template v-if="!list.length">
+    <template v-if="list.length">
       <van-sticky>
         <div class="title-box van-hairline--bottom">
           <div class="title-box-left">共4门课程</div>
@@ -25,7 +25,6 @@
           <van-checkbox
             name="1"
             class="check-item"
-            :class="{'van-hairline--bottom':index !== list.length}"
             v-for="(item, index) in list"
             :key="item.cartId"
           >
@@ -46,6 +45,7 @@
 import { Empty, Sticky, Checkbox, CheckboxGroup } from 'vant'
 import ListItem from '@/components/listItem'
 import PayBar from '@/components/payBar'
+import http from '@/api'
 
 export default {
   name: 'List',
@@ -62,20 +62,26 @@ export default {
       list: [],
       result: [],
       showEdit: true, // 默认是显示编辑
-      checked: true
+      allChecked: true
     }
   },
   mounted() {
-    this.$refs['CheckboxGroup'].toggleAll(true)
+    this.getCartList()
   },
   methods: {
+    getCartList() {
+      const { data } = http.getCartList()
+      this.list = data ? data : []
+      // this.list.length && this.$refs['CheckboxGroup'].toggleAll(true)
+      console.log("getCartList -> this.$refs['CheckboxGroup']", this.$refs['CheckboxGroup'])
+    },
     handleEdit() {
       this.showEdit = !this.showEdit
     },
     onCheckboxGroupChange(names) {},
     checkAll(val) {
-      this.checked = val
-      this.$refs['CheckboxGroup'].toggleAll(this.checked)
+      this.allChecked = val
+      this.$refs['CheckboxGroup'].toggleAll(this.allChecked)
     },
     onSubmit() {}
   },
@@ -90,7 +96,7 @@ export default {
 <style lang="scss" scoped>
 .list-page {
   width: 100%;
-  height: 100%;
+  // height: 100%;
   flex: 1;
   .title-box {
     width: 100%;
