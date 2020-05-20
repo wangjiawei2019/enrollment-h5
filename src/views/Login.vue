@@ -2,7 +2,7 @@
  * @Author: zxk
  * @Date: 2020-05-18 14:01:20
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-19 10:41:26
+ * @LastEditTime: 2020-05-20 12:06:47
 --> 
 <template>
   <div id="login">
@@ -17,37 +17,39 @@
       </div>
       <div class="writeInfo">
         <img class="icon-code" src="@/assets/images/lesson/security.png" alt="logo" />
-        <input class="auth-code" type="number" placeholder="请输入验证码" v-model="autoCode" />
+        <input class="auth-code" type="number" placeholder="请输入验证码" v-model="smsCode" />
         <div class="send-code count-down" v-if="sendcode">重新发送({{sendcode}}s)</div>
         <div class="send-code" @click="sendCode" v-else>获取验证码</div>
       </div>
     </div>
     <div class="btn">
-      <div class="submit" @click="login">确认</div>
+      <div class="submit" @click="userLogin">确认</div>
     </div>
   </div>
 </template>
 
 <script>
-import { Toast } from 'vant'
+import { Toast } from 'vant';
+import http from '@/api/index.js'
 export default {
   name: 'Login',
   data() {
     return {
       sendcode: 0, //倒计时
       phone: '',
-      autoCode: ''
+      smsCode: '',  //验证码
     }
   },
   methods: {
-    sendCode() {
+    sendCode() {  //获取验证码
       let that = this
       if (/^[1]([3-9])[0-9]{9}$/.test(this.phone)) {
-        const TIME_COUNT = 60
-        this.sendcode = TIME_COUNT
+        const TIME_COUNT = 60;
+        that.sendcode = TIME_COUNT;
+        that.sendsms();
         let timer = setInterval(() => {
           if (that.sendcode > 0 && that.sendcode <= TIME_COUNT) {
-            that.sendcode--
+            that.sendcode--;
           } else {
             clearInterval(that.timer)
             that.timer = null
@@ -57,20 +59,45 @@ export default {
         Toast('手机号码格式错误')
       }
     },
-    login() {
+    sendsms(){  //发送验证码
+      console.log(this.phone)
+      // sendsms(this.phone).then(res=>{
+      //   console.log("验证码",res)
+      // })
+    },
+    login(){
+      let params = {
+        phone: this.phone,
+        code: this.smsCode
+      }
+      console.log(params)
+      http.login(params).then(res=>{
+        if(res.status==200){
+          console.log("登录成功")
+          //存一下token，看是否要去报名须知
+          // this.$router.push({ path: '/index/lesson' })
+        }else{
+          Toast(res.msg)
+        }
+      })
+      .catch(err=>{
+        console.log(err)
+      })
+    },
+    userLogin() {
       let tip = null
       if (this.phone === '') {
         tip = '手机号不能为空'
-      } else if (this.autoCode === '') {
+      } else if (this.smsCode === '') {
         tip = '验证码不能为空'
-      } else if (this.autoCode.length != 4) {
+      } else if (this.smsCode.length != 4) {
         tip = '验证码格式不正确'
       }
       if (tip) {
         Toast(tip)
         return
       }
-      this.$router.push({ path: '/index/lesson' })
+      this.login()
     }
   }
 }
@@ -137,7 +164,7 @@ export default {
     }
     .send-code {
       position: relative;
-      width: 5.03125rem /* 80.5/16 */;
+      width: 6.375rem /* 102/16 */;
       height: 100%;
       line-height: 3.4375rem;
       font-size: 0.9375rem /* 15/16 */;
@@ -170,7 +197,7 @@ export default {
     height: 3.4375rem /* 55/16 */;
     line-height: 3.4375rem /* 55/16 */;
     background: #f2323a;
-    margin: 2.1875rem /* 35/16 */ 1.875rem /* 30/16 */;
+    margin: 1.25rem /* 20/16 */ 1.875rem /* 30/16 */;
     border-radius: 1.71875rem /* 27.5/16 */;
     text-align: center;
     // 字体样式
