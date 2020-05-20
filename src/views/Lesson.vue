@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-20 13:51:38
+ * @LastEditTime: 2020-05-20 17:18:51
 --> 
 <template>
   <div class="lesson">
@@ -12,7 +12,7 @@
         <img src="@/assets/images/lesson/down.png" alt />
       </div>
 
-      <div class="search">
+      <div class="search" @click="toSearch">
         <img src="@/assets/images/lesson/search.png" alt />
         <div class="search-ipt">搜索学习课程</div>
       </div>
@@ -56,7 +56,10 @@ export default {
     }
   },
   methods: {
-    changeClassify(){
+    toSearch(){
+      this.$router.push({ path: '/search' })
+    },
+    changeClassify(){ //课程分类组件展示
       this.showClassify = !this.showClassify;
       if(this.showClassify){
         this.getMajorList();

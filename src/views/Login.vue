@@ -2,7 +2,7 @@
  * @Author: zxk
  * @Date: 2020-05-18 14:01:20
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-20 12:06:47
+ * @LastEditTime: 2020-05-20 17:06:52
 --> 
 <template>
   <div id="login">
@@ -31,6 +31,7 @@
 <script>
 import { Toast } from 'vant';
 import http from '@/api/index.js'
+import store from '@/store'
 export default {
   name: 'Login',
   data() {
@@ -46,7 +47,7 @@ export default {
       if (/^[1]([3-9])[0-9]{9}$/.test(this.phone)) {
         const TIME_COUNT = 60;
         that.sendcode = TIME_COUNT;
-        that.sendsms();
+        // that.sendsms();
         let timer = setInterval(() => {
           if (that.sendcode > 0 && that.sendcode <= TIME_COUNT) {
             that.sendcode--;
@@ -61,21 +62,30 @@ export default {
     },
     sendsms(){  //发送验证码
       console.log(this.phone)
-      // sendsms(this.phone).then(res=>{
-      //   console.log("验证码",res)
-      // })
+      let params = {
+        phone: this.phone
+      }
+      http.sendsms(params).then(res=>{
+        console.log("验证码",res)
+        if(res.status === 200){
+          Toast.success('验证码已发送')
+        }
+        //发送失败的话做处理
+      })
+      .catch(err=>{console.log(err)})
     },
     login(){
       let params = {
         phone: this.phone,
         code: this.smsCode
       }
-      console.log(params)
       http.login(params).then(res=>{
-        if(res.status==200){
+        console.log(res)
+        if(res.status === 200){
           console.log("登录成功")
           //存一下token，看是否要去报名须知
-          // this.$router.push({ path: '/index/lesson' })
+          store.commit('setToken', res.data);
+          this.$router.push({ path: '/index/lesson' })
         }else{
           Toast(res.msg)
         }

@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-04-20 16:14:58
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-20 16:36:16
+ * @LastEditTime: 2020-05-20 17:27:29
  */
 import axios from 'axios'
 import { httpBaseUrl, domainBaseUrl } from './BASE'
@@ -66,9 +66,17 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   response => {
     // console.log('response', response)
-    loadingInstance.clear()
+    loadingInstance.clear();
     if (response.status === 200) {
       // 响应结果里的status: ok是我与后台的约定，大家可以根据实际情况去做对应的判断
+      if (response.data.status === 401){
+        console.log("token错误")
+        store.commit('setToken','') //清空token
+        Toast.fail(response.data.msg)
+        router.replace({
+          path: `/login`
+        })
+      }
       return Promise.resolve(response.data)
     } else {
       Toast.fail(response.data.message)
@@ -81,12 +89,12 @@ instance.interceptors.response.use(
       // 根据请求失败的http状态码去给用户相应的提示
       let tips = error.response.status in httpCode ? httpCode[error.response.status] : error.response.data.message
       Toast.fail(tips)
-      if (error.response.status === 401) {
-        // token或者登陆失效情况下跳转到登录页面，根据实际情况，在这里可以根据不同的响应错误结果，做对应的事。这里我以401判断为例
-        router.push({
-          path: `/Home`
-        })
-      }
+      // if (error.response.status === 401) {
+      //   // token或者登陆失效情况下跳转到登录页面，根据实际情况，在这里可以根据不同的响应错误结果，做对应的事。这里我以401判断为例
+      //   router.push({
+      //     path: `/login`
+      //   })
+      // }
       return Promise.reject(error)
     } else {
       Toast.fail('请求超时, 请刷新重试')
