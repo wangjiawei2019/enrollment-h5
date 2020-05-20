@@ -2,7 +2,7 @@
  * @Author: zxk
  * @Date: 2020-05-18 14:01:48
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-19 16:32:17
+ * @LastEditTime: 2020-05-20 14:08:48
 --> 
 <template>
   <div id="index">
@@ -69,9 +69,13 @@ export default {
   min-height: calc(100vh - 3.63rem);
   min-height: calc(100vh - 3.63rem - constant(safe-area-inset-bottom));
   min-height: calc(100vh - 3.63rem - env(safe-area-inset-bottom));
+  min-height: 3.63rem;
+  min-height: calc(3.63rem - constant(safe-area-inset-bottom));
+  min-height: calc(3.63rem - env(safe-area-inset-bottom));
   margin-bottom: 3.63rem;
   margin-bottom: calc(3.63rem + constant(safe-area-inset-bottom));
   margin-bottom: calc(3.63rem + env(safe-area-inset-bottom));
   background-color: #fff;
+  overflow: hidden;
 }
 </style>

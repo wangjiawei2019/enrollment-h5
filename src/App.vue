@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-19 14:51:13
+ * @LastEditTime: 2020-05-20 16:08:01
 --> 
 <template>
   <div id="app">
@@ -49,6 +49,21 @@
       }
     }
   }
+  &::after {
+    top: 0 !important;
+    bottom: 0 !important;
+    transform: none !important;
+    border-width: 0.03rem 0 !important;
+    border-color: rgba(233, 233, 233, 1) !important;
+  }
+}
+
+.van-hairline--bottom::after {
+  top: 0 !important;
+  bottom: 0 !important;
+  border-width: 0 0 0.03rem 0 !important;
+  transform: none !important;
+  border-color: rgba(233, 233, 233, 1) !important;
 }
 
 // Empty
@@ -65,5 +80,35 @@
     color: rgba(153, 153, 153, 1);
     font-weight: 400;
   }
+}
+
+// checkbox van-checkbox__label
+.van-checkbox__label {
+  width: 100% !important;
+  margin-left: 0.63rem !important;
+}
+.all-check {
+  .van-checkbox__label {
+    margin-left: 0.94rem !important;
+    font-size: 0.94rem !important;
+    font-family: PingFang SC;
+    font-weight: 400 !important;
+    color: rgba(51, 51, 51, 1) !important;
+    line-height: 1.88rem !important;
+  }
+}
+
+// button
+.van-button--danger {
+  width: 5.33rem !important;
+  height: 2.22rem !important;
+  background-color: #f2323a !important;
+  border-color: #f2323a !important;
+  border-radius: 0.28rem !important;
+  padding: 0 !important;
+  font-size: 1.06rem !important;
+  font-family: PingFang SC !important;
+  font-weight: 400 !important;
+  line-height: 1.47rem !important;
 }
 </style>
