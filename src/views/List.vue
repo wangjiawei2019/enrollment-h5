@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-20 17:43:44
+ * @LastEditTime: 2020-05-20 17:50:51
 --> 
 <template>
   <div class="list-page">
@@ -23,9 +23,10 @@
           @change="onCheckboxGroupChange"
         >
           <van-checkbox
-            name="1"
+            :name="item.classId"
             class="check-item"
             v-for="(item, index) in list"
+            :class="{'van-hairline--bottom': index !== list.length}"
             :key="item.cartId"
           >
             <list-item :checked="true"></list-item>
@@ -72,8 +73,7 @@ export default {
     getCartList() {
       const { data } = http.getCartList()
       this.list = data ? data : []
-      // this.list.length && this.$refs['CheckboxGroup'].toggleAll(true)
-      console.log("getCartList -> this.$refs['CheckboxGroup']", this.$refs['CheckboxGroup'])
+      this.list.length && this.$refs['CheckboxGroup'].toggleAll(true)
     },
     handleEdit() {
       this.showEdit = !this.showEdit
@@ -88,7 +88,8 @@ export default {
   computed: {
     payBarButtonText() {
       return this.showEdit ? '去支付' : '删除'
-    }
+    },
+    totalMoney() {}
   }
 }
 </script>
