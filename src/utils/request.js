@@ -1,14 +1,15 @@
 /*
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-04-20 16:14:58
- * @LastEditors: wjw
- * @LastEditTime: 2020-05-18 18:35:41
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-05-20 16:36:16
  */
 import axios from 'axios'
 import { httpBaseUrl, domainBaseUrl } from './BASE'
 import qs from 'qs'
 import { Toast } from 'vant'
 import router from '@/router'
+import store from '@/store'
 
 let loadingInstance = null // 加载全局的loading
 
@@ -18,7 +19,8 @@ const instance = axios.create({
   baseURL: httpBaseUrl
 })
 // 文档中的统一设置post请求头。下面会说到post请求的几种'Content-Type'
-instance.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
+// instance.defaults.headers.post["Authorization"] = store.state.token;
+instance.defaults.headers.post['Content-Type'] = 'application/json';
 
 let httpCode = {
   //这里我简单列出一些常见的http状态码信息，可以自己去调整配置
@@ -40,8 +42,9 @@ instance.interceptors.request.use(
       forbidClick: true,
       message: '加载中...'
     })
+    config.headers['Authorization'] = store.state.token;
     if (config.method === 'post') {
-      config.data = qs(config.data)
+      config.data = JSON.stringify(config.data)
     }
     // 在这里：可以根据业务需求可以在发送请求之前做些什么:例如我这个是导出文件的接口，因为返回的是二进制流，所以需要设置请求响应类型为blob，就可以在此处设置。
     if (config.url.includes('pur/contract/export')) {
@@ -62,9 +65,9 @@ instance.interceptors.request.use(
 /** 添加响应拦截器  **/
 instance.interceptors.response.use(
   response => {
-    console.log('response', response)
+    // console.log('response', response)
     loadingInstance.clear()
-    if (response.data.code === 200) {
+    if (response.status === 200) {
       // 响应结果里的status: ok是我与后台的约定，大家可以根据实际情况去做对应的判断
       return Promise.resolve(response.data)
     } else {

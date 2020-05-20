@@ -2,26 +2,36 @@
  * @Github: https://github.com/IdlerHub
  * @Author: zxk
  * @Date: 2020-05-19 11:15:15
- * @LastEditors: wjw
- * @LastEditTime: 2020-05-19 11:52:42
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-05-20 10:21:43
 --> 
 <template>
   <div class="curriculums">
     <div class="curr-left">
-      <!-- <img src="@/assets/images/lesson/wei.png" alt="" /> -->
+      <img :src="classItem.image" :alt="classItem.name" />
     </div>
     <div class="curr-right">
-      <div class="title">标题</div>
+      <div class="title">{{classItem.name}}</div>
       <div class="price">
-        <span class="number">￥10</span>
-        <div class="join">立即报名</div>
+        <span class="number">￥{{classItem.money}}</span>
+        <div class="join" @click="joinLesson">立即报名</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {}
+import { Toast } from 'vant'
+export default {
+  props:{
+    classItem: Object
+  },
+  methods: {
+    joinLesson(){
+      Toast('本期招生已截止');
+    }
+  },
+}
 </script>
 
 <style lang="scss" scoped>
@@ -44,12 +54,32 @@ export default {}
     justify-content: space-between;
     flex-flow: column;
     position: relative;
+    .title{
+      line-height: 1.5625rem /* 25/16 */;
+      font-size:1.3125rem /* 21/16 */;
+      font-family:PingFangSC-Regular,PingFang SC;
+      font-weight:400;
+      color:rgba(51,51,51,1);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      // display: -webkit-box;
+      // -webkit-line-clamp: 2;
+      // -webkit-box-orient: vertical;
+      /* autoprefixer: off */ 
+    }
     .price {
+      margin-top: .4375rem /* 7/16 */;
       .number {
         height: 1.5625rem /* 25/16 */;
         line-height: 1.5625rem /* 25/16 */;
         text-align: center;
         color: #f2323a;
+
+        font-size:1.1875rem /* 19/16 */;
+        font-family:PingFangSC-Medium,PingFang SC;
+        font-weight:500;
+        color:rgba(242,50,58,1);
       }
       .join {
         position: absolute;

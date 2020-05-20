@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-20 16:37:35
+ * @LastEditTime: 2020-05-20 16:44:22
 --> 
 <template>
   <div class="list-page">
@@ -44,8 +44,8 @@
 
 <script>
 import { Empty, Sticky, Checkbox, CheckboxGroup } from 'vant'
-import ListItem from '@/components/ListItem'
-import PayBar from '@/components/PayBar'
+import ListItem from '@/components/listItem'
+import PayBar from '@/components/payBar'
 
 export default {
   name: 'List',
