@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-20 17:18:51
+ * @LastEditTime: 2020-05-21 17:06:12
 --> 
 <template>
   <div class="lesson">
@@ -20,18 +20,33 @@
     <div class="class-list" v-show="showClassify">
       <van-tree-select
         @click-nav="selectedClass"
-        @click-item="selectedLesson"
         :items="majorList"
-        :active-id.sync="activeId"
-        :main-active-index.sync="activeIndex"
-      />
+        :main-active-index.sync="majorIndex"
+      >
+      <div slot="content">
+        <div :class="['van-tree-select__item',{'van-tree-select__item--active':item.id==courseId}]" @click="selectedCourse(item)" v-for="(item,index) in courseList" :key="index">
+          <div class="van-ellipsis">{{item.text}}</div>
+          <img v-show="item.id==courseId" src="@/assets/images/lesson/selected.png" alt="" />
+        </div>
+      </div>
+      </van-tree-select>
     </div>
-    <div class="curr-list" v-if="classList.length">
-      <Curriculums v-for="(item,index) in classList" :key="index" :classItem="item"></Curriculums>
-    </div>
-    <div class="no-list" v-else>
-      <van-empty :image="require('@/assets/no-list1.png')" description="暂无相关课程" />
-    </div>
+    
+    <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+      <van-list
+        v-model="loading"
+        :finished="finished"
+        @load="onLoad"
+      >
+        <div class="curr-list" v-if="false">
+          <Curriculums v-for="(item,index) in classList" :key="index" :classItem="item"></Curriculums>
+        </div>
+        <div class="no-list" v-else>
+          <van-empty :image="require('@/assets/no-list1.png')" description="暂无相关课程" />
+        </div>
+      </van-list>
+    </van-pull-refresh>
+
     <!-- 提示内容 -->
     <currTip :repeatShow="repeatShow"></currTip>
   </div>
@@ -40,7 +55,7 @@
 <script>
 import Curriculums from '@/components/curriculums'
 import CurrTip from '@/components/currTip'
-import { TreeSelect, Empty } from 'vant'
+import { TreeSelect, Empty, List, PullRefresh } from 'vant'
 import http from '@/api/index.js'
 export default {
   name: 'Lesson',
@@ -48,11 +63,19 @@ export default {
     return {
       repeatShow: false, //重复报名提示
       showClassify: false,  //课程分类
-      majorList: [],
-      activeId: null,  //课程id
-      activeIndex: 0, //专业下标
+      majorList: [],      //专业分类
+      courseList: [],   //课程分类
+      courseId: 0,  //课程id
+      majorIndex: 0, //专业下标 
       majorTitle: '课程分类',
-      classList: [],  //班级列表
+      // classList: [],  //班级列表
+      classList:[{"id":1,"name":"计算机一班","subtitle":"学会修电脑的必备之路","image":"https://xiehui-guanwang.obs.cn-north-1.myhuaweicloud.com:443/uploads/images/20190815%5Ca6dbd1bf97aeb528e2aa6964fb2ab468.jpg","money":0.09,"num":500},{"id":1,"name":"计算机一班","subtitle":"学会修电脑的必备之路","image":"https://xiehui-guanwang.obs.cn-north-1.myhuaweicloud.com:443/uploads/images/20190815%5Ca6dbd1bf97aeb528e2aa6964fb2ab468.jpg","money":0.09,"num":500},{"id":1,"name":"计算机一班","subtitle":"学会修电脑的必备之路","image":"https://xiehui-guanwang.obs.cn-north-1.myhuaweicloud.com:443/uploads/images/20190815%5Ca6dbd1bf97aeb528e2aa6964fb2ab468.jpg","money":0.09,"num":500},{"id":1,"name":"计算机一班","subtitle":"学会修电脑的必备之路","image":"https://xiehui-guanwang.obs.cn-north-1.myhuaweicloud.com:443/uploads/images/20190815%5Ca6dbd1bf97aeb528e2aa6964fb2ab468.jpg","money":0.09,"num":500},{"id":2,"name":"网络一班","subtitle":"成为网管的必备之路","image":"https://xiehui-guanwang.obs.cn-north-1.myhuaweicloud.com:443/uploads/images/20190821%5Cdfbe7e4e1f142cde7c6f2dd7e2ef0327.png","money":0.01,"num":324},{"id":16,"name":"算法与数据结构一班","subtitle":"算法与数据结构一班副标题","image":"https://hwcdn.jinlingkeji.cn/uploads/images/efac154b0f3bd4b1a2cf764b5e3ae31f.jpg","money":0.01,"num":100},{"id":17,"name":"计算机原理一班","subtitle":"计算机原理班级副标题","image":"https://hwcdn.jinlingkeji.cn/uploads/images/abb969f74e0c7f0d7dfd2008a61042a5.jpg","money":0.10,"num":100},{"id":18,"name":"这次不学草书了","subtitle":"不学草书副标题","image":"https://hwcdn.jinlingkeji.cn/uploads/images/c919839ee5eaadfb5e8192be231af077.jpg","money":0.00,"num":12}],
+      page: 1,
+      totalPage: 1,
+      list: [],
+      loading: false,   //是否处于加载中
+      finished: false,  //是否加载完成
+      refreshing: false,
     }
   },
   methods: {
@@ -61,59 +84,113 @@ export default {
     },
     changeClassify(){ //课程分类组件展示
       this.showClassify = !this.showClassify;
-      if(this.showClassify){
-        this.getMajorList();
-      }
-      // console.log("dakai")
     },
-    selectedClass(index){
+    selectedClass(index){ //选择专业
       console.log("选择专业",this.majorList[index])
       let majorItem = this.majorList[index];
-      this.majorTitle = majorItem.text;
-      this.getClassList(majorItem.id,1);
-    },
-    selectedLesson(e){
-      console.log("选择课程",e);
-      let id = this.activeId;
-      if(e.text === '全部'){  //课程选择全部，title显示专业类别
-        //使用专业id请求
-        //id = this.majorList[index].id
-      }else{
-        this.majorTitle = e.text;
+      let text = majorItem.text;
+      if(majorItem.text === '全部'){
+        text = "课程分类"
       }
-      this.getClassList(id,1);
-      this.changeClassify();
+      this.majorTitle = text;
+      this.getCourseList();
     },
-    getMajorList(){ //获取课程分类
+    selectedCourse(item,flag=false){  //选择课程
+      let major = this.majorList[this.majorIndex]
+      this.courseId = item.id;
+      let text = item.text;
+      if(item.text === '全部'){
+        text = major.text==='全部'?'课程分类':major.text;
+      }
+      this.majorTitle = text;
+      this.showClassify = flag;
+      let id = {
+        majorId: major.id,
+        courseId: item.id
+      }
+      this.getClassList(id);
+    },
+    getMajorList(){ //获取课程分类初始列表
       http.getMajorList().then(res=>{
-        this.majorList = res.data;
-        if(!this.activeId){ //第一次进来获取的班级列表
-          this.activeId = res.data[0].children[0].id;
-        }
-        this.getClassList(this.activeId,1);
+        this.majorList = res.data.majorNodeDTOS;
+        this.courseList = res.data.courseNodeDTOS;
       })
     },
-    getClassList(id,page){  //获取班级列表
+    getCourseList(){  //获取课程分类
       let params = {
-        id,
-        pageNum: page,
-        pageSize: 10
+        id: this.majorList[this.majorIndex].id
+      }
+      http.getCourseList(params).then(res=>{
+        this.courseList = res.data;
+        this.selectedCourse(res.data[0],true)
+      })
+    },
+    getClassList(id,page=1){  //获取班级列表
+      let {majorId,courseId} = id;
+      let params = {
+        majorId,
+        courseId,
+        pageNum: page
       }
       http.getClassList(params).then(res=>{
-        // console.log(res)
-        this.classList = res.data;
+        if(page == 1){
+          this.classList = res.data;
+          this.page++;
+        }else{
+          this.classList = this.classList.concat(res.data);
+        }
+        this.refreshing = false;
+        // 数据全部加载完成
+        this.finished = true;
+        //加载状态结束
+        this.loading = false;
       })
+    },
+    init(){
+      let id = {
+        majorId: 0,
+        courseId: 0
+      }
+      this.getMajorList();
+      this.getClassList(id);
+    },
+    onLoad(){
+      console.log("上拉加载");
+      if(this.page >= this.totalPage){
+        this.finished = true;
+        return
+      }
+      let id = {
+        majorId: this.majorList[this.majorIndex],
+        courseId: this.courseId
+      }
+      this.getClassList(id,2)
+    },
+    onRefresh(){
+      console.log("下拉刷新");
+      // 将 loading 设置为 true，表示处于加载状态,不加载load
+      this.loading = true;
+      // 清空列表数据
+      this.classList = [];
+      this.page = 1;
+      // 重新加载数据
+      let id = {
+        majorId: this.majorList[this.majorIndex].id,
+        courseId: this.courseId
+      }
+      this.getClassList(id,1);
     }
-
   },
   mounted(){
-    this.getMajorList();
+    this.init()
   },
   components: {
     Curriculums,
     CurrTip,
     "van-tree-select":TreeSelect,
-    'van-empty': Empty
+    'van-empty': Empty,
+    'van-list': List,
+    'van-pull-refresh': PullRefresh
   }
 }
 </script>
@@ -138,11 +215,11 @@ export default {
       display: flex;
       align-items: center;
       text-align: center;
+      width: 6.875rem /* 110/16 */;
       & > span {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        width: 5.28125rem /* 84.5/16 */;
         font-size: 1.3125rem /* 21/16 */;
         font-family: PingFangSC-Medium, PingFang SC;
         font-weight: 500;
@@ -155,7 +232,8 @@ export default {
       }
     }
     .search {
-      width: 11.25rem /* 180/16 */;
+      flex: 1;
+      // width: 11.25rem /* 180/16 */;
       height: 2.5rem /* 40/16 */;
       padding: 0 0.90625rem /* 14.5/16 */;
       margin-left: 1.9375rem /* 31/16 */;
@@ -169,7 +247,7 @@ export default {
         margin-right: 0.59375rem /* 9.5/16 */;
       }
       .search-ipt {
-        width: 8.125rem /* 130/16 */;
+        // width: 8.125rem /* 130/16 */;
         height: 2.5rem /* 40/16 */;
         line-height: 2.5rem /* 40/16 */;
         background: none;
@@ -185,7 +263,7 @@ export default {
   .class-list {
     width: 100%;
     height: 100%;
-    position: absolute;
+    position: fixed;
     top: 4.4375rem /* 71/16 */;
     z-index: 99;
     background: rgba(0, 0, 0, 0.6);
@@ -195,7 +273,7 @@ export default {
   }
   .no-list {
     margin-top: 4.375rem /* 70/16 */;
-    padding-top: 2.8125rem /* 45/16 */;
+    padding-top: 5.625rem /* 90/16 */;
     width: 100%;
   }
 }
@@ -209,6 +287,9 @@ export default {
   background: rgba(247, 247, 247, 1);
 }
 .van-sidebar-item {
+  width: 100%;
+  // width: 8.125rem /* 130/16 */;
+  padding: .875rem /* 14/16 */ .9375rem /* 15/16 */;
   font-size: 1.25rem /* 20/16 */;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
@@ -233,6 +314,9 @@ export default {
 }
 //右侧列表样式重写
 .van-tree-select__item {
+  display: flex;
+  align-items: center;
+  position: relative;
   max-height: 3.5rem /* 56/16 */;
   padding: 0.9375rem 2rem 0.9375rem 0;
   margin: 0 0.9375rem /* 15/16 */;
@@ -242,6 +326,12 @@ export default {
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
   color: rgba(102, 102, 102, 1);
+  &>img{
+    width: 1.125rem /* 18/16 */;
+    height: .8125rem /* 13/16 */;
+    position: absolute;
+    right: 0;
+  }
 }
 .van-tree-select__item::after {
   content: '';

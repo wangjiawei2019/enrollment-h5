@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-19 11:15:15
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-20 10:21:43
+ * @LastEditTime: 2020-05-20 18:41:06
 --> 
 <template>
   <div class="curriculums">
@@ -12,23 +12,36 @@
     </div>
     <div class="curr-right">
       <div class="title">{{classItem.name}}</div>
+      <div class="subtitle">{{classItem.subtitle}}</div>
       <div class="price">
         <span class="number">￥{{classItem.money}}</span>
-        <div class="join" @click="joinLesson">立即报名</div>
+        <div class="join" @click="applyCourse">立即报名</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { Toast } from 'vant'
+import { Toast } from 'vant';
+import http from '@/api'
 export default {
   props:{
     classItem: Object
   },
   methods: {
-    joinLesson(){
-      Toast('本期招生已截止');
+    applyCourse(){
+      console.log(this.classItem)
+      let params = {
+        id: this.classItem.id
+      }
+      console.log(params)
+      // http.applyCourse(params).then(res=>{
+      //   if(res.status === 200){
+      //     console.log("报名成功")
+      //   }
+      //   console.log(res)
+      // })
+      // Toast('本期招生已截止');
     }
   },
 }
@@ -63,10 +76,17 @@ export default {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      // display: -webkit-box;
-      // -webkit-line-clamp: 2;
-      // -webkit-box-orient: vertical;
-      /* autoprefixer: off */ 
+    }
+    .subtitle{
+      height:1.5625rem /* 25/16 */;
+      font-size:.9375rem /* 15/16 */;
+      font-family:PingFangSC-Regular,PingFang SC;
+      font-weight:400;
+      color:rgba(102,102,102,1);
+      line-height: 1.5625rem /* 25/16 */;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     .price {
       margin-top: .4375rem /* 7/16 */;

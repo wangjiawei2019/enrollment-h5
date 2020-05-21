@@ -1,8 +1,8 @@
 <!--
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
- * @LastEditors: wjw
- * @LastEditTime: 2020-05-19 14:51:13
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-05-21 16:12:39
 --> 
 <template>
   <div id="app">
@@ -65,5 +65,10 @@
     color: rgba(153, 153, 153, 1);
     font-weight: 400;
   }
+}
+
+//PullRefresh
+.van-pull-refresh{
+  height: 100%;
 }
 </style>
