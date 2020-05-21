@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-21 16:45:14
+ * @LastEditTime: 2020-05-21 17:12:14
 --> 
 <template>
   <div id="app">
@@ -183,5 +183,9 @@
   .van-tabs__line {
     border-radius: 0.09rem !important;
   }
+}
+//PullRefresh
+.van-pull-refresh {
+  height: 100%;
 }
 </style>

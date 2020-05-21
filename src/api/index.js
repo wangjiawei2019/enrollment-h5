@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 17:03:31
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-21 16:54:03
+ * @LastEditTime: 2020-05-21 17:13:52
  */
 import { get, post } from '@/utils/request'
 
@@ -17,9 +17,13 @@ function login(params) {
   return get('/auth/loginTest', params)
 }
 
-// post 获取课程分类
+// post 获取课程分类初始列表
 function getMajorList() {
   return post('/major/api/course/getMajorList')
+}
+// post 根据专业id获取课程分类(右侧)
+function getCourseList(params) {
+  return post('/major/api/course/getCourseList', params)
 }
 
 //post 获取班级列表
@@ -49,6 +53,11 @@ function getOrderList(param) {
   return post('/major/api/course/getOrderList', param)
 }
 
+//post 立即报名，添加购物车
+function applyCourse(params) {
+  return post('/major/api/course/applyCourse', params)
+}
+
 export default {
   sendsms,
   login,
@@ -56,5 +65,7 @@ export default {
   getClassList,
   getCartList,
   createOrder,
-  getOrderList
+  getOrderList,
+  getCourseList,
+  applyCourse
 }
