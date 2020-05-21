@@ -22,14 +22,14 @@
 </template>
 
 <script>
-import { Toast } from 'vant';
+import { Toast } from 'vant'
 import http from '@/api'
 export default {
-  props:{
+  props: {
     classItem: Object
   },
   methods: {
-    applyCourse(){
+    applyCourse() {
       console.log(this.classItem)
       let params = {
         id: this.classItem.id
@@ -43,7 +43,7 @@ export default {
       // })
       // Toast('本期招生已截止');
     }
-  },
+  }
 }
 </script>
 
@@ -67,39 +67,39 @@ export default {
     justify-content: space-between;
     flex-flow: column;
     position: relative;
-    .title{
+    .title {
       line-height: 1.5625rem /* 25/16 */;
-      font-size:1.3125rem /* 21/16 */;
-      font-family:PingFangSC-Regular,PingFang SC;
-      font-weight:400;
-      color:rgba(51,51,51,1);
+      font-size: 1.3125rem /* 21/16 */;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: rgba(51, 51, 51, 1);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-    .subtitle{
-      height:1.5625rem /* 25/16 */;
-      font-size:.9375rem /* 15/16 */;
-      font-family:PingFangSC-Regular,PingFang SC;
-      font-weight:400;
-      color:rgba(102,102,102,1);
+    .subtitle {
+      height: 1.5625rem /* 25/16 */;
+      font-size: 0.9375rem /* 15/16 */;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: rgba(102, 102, 102, 1);
       line-height: 1.5625rem /* 25/16 */;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
     .price {
-      margin-top: .4375rem /* 7/16 */;
+      margin-top: 0.4375rem /* 7/16 */;
       .number {
         height: 1.5625rem /* 25/16 */;
         line-height: 1.5625rem /* 25/16 */;
         text-align: center;
         color: #f2323a;
 
-        font-size:1.1875rem /* 19/16 */;
-        font-family:PingFangSC-Medium,PingFang SC;
-        font-weight:500;
-        color:rgba(242,50,58,1);
+        font-size: 1.1875rem /* 19/16 */;
+        font-family: PingFangSC-Medium, PingFang SC;
+        font-weight: 500;
+        color: rgba(242, 50, 58, 1);
       }
       .join {
         position: absolute;

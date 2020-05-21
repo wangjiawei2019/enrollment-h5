@@ -1,8 +1,8 @@
 <!--
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
- * @LastEditors: zxk
- * @LastEditTime: 2020-05-21 17:06:12
+ * @LastEditors: wjw
+ * @LastEditTime: 2020-05-21 17:21:46
 --> 
 <template>
   <div class="lesson">
@@ -23,21 +23,22 @@
         :items="majorList"
         :main-active-index.sync="majorIndex"
       >
-      <div slot="content">
-        <div :class="['van-tree-select__item',{'van-tree-select__item--active':item.id==courseId}]" @click="selectedCourse(item)" v-for="(item,index) in courseList" :key="index">
-          <div class="van-ellipsis">{{item.text}}</div>
-          <img v-show="item.id==courseId" src="@/assets/images/lesson/selected.png" alt="" />
+        <div slot="content">
+          <div
+            :class="['van-tree-select__item',{'van-tree-select__item--active':item.id==courseId}]"
+            @click="selectedCourse(item)"
+            v-for="(item,index) in courseList"
+            :key="index"
+          >
+            <div class="van-ellipsis">{{item.text}}</div>
+            <img v-show="item.id==courseId" src="@/assets/images/lesson/selected.png" alt />
+          </div>
         </div>
-      </div>
       </van-tree-select>
     </div>
-    
+
     <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
-      <van-list
-        v-model="loading"
-        :finished="finished"
-        @load="onLoad"
-      >
+      <van-list v-model="loading" :finished="finished" @load="onLoad">
         <div class="curr-list" v-if="false">
           <Curriculums v-for="(item,index) in classList" :key="index" :classItem="item"></Curriculums>
         </div>
@@ -53,7 +54,7 @@
 </template>
 
 <script>
-import Curriculums from '@/components/curriculums'
+import Curriculums from '@/components/curriculum'
 import CurrTip from '@/components/currTip'
 import { TreeSelect, Empty, List, PullRefresh } from 'vant'
 import http from '@/api/index.js'
@@ -62,132 +63,203 @@ export default {
   data() {
     return {
       repeatShow: false, //重复报名提示
-      showClassify: false,  //课程分类
-      majorList: [],      //专业分类
-      courseList: [],   //课程分类
-      courseId: 0,  //课程id
-      majorIndex: 0, //专业下标 
+      showClassify: false, //课程分类
+      majorList: [], //专业分类
+      courseList: [], //课程分类
+      courseId: 0, //课程id
+      majorIndex: 0, //专业下标
       majorTitle: '课程分类',
       // classList: [],  //班级列表
-      classList:[{"id":1,"name":"计算机一班","subtitle":"学会修电脑的必备之路","image":"https://xiehui-guanwang.obs.cn-north-1.myhuaweicloud.com:443/uploads/images/20190815%5Ca6dbd1bf97aeb528e2aa6964fb2ab468.jpg","money":0.09,"num":500},{"id":1,"name":"计算机一班","subtitle":"学会修电脑的必备之路","image":"https://xiehui-guanwang.obs.cn-north-1.myhuaweicloud.com:443/uploads/images/20190815%5Ca6dbd1bf97aeb528e2aa6964fb2ab468.jpg","money":0.09,"num":500},{"id":1,"name":"计算机一班","subtitle":"学会修电脑的必备之路","image":"https://xiehui-guanwang.obs.cn-north-1.myhuaweicloud.com:443/uploads/images/20190815%5Ca6dbd1bf97aeb528e2aa6964fb2ab468.jpg","money":0.09,"num":500},{"id":1,"name":"计算机一班","subtitle":"学会修电脑的必备之路","image":"https://xiehui-guanwang.obs.cn-north-1.myhuaweicloud.com:443/uploads/images/20190815%5Ca6dbd1bf97aeb528e2aa6964fb2ab468.jpg","money":0.09,"num":500},{"id":2,"name":"网络一班","subtitle":"成为网管的必备之路","image":"https://xiehui-guanwang.obs.cn-north-1.myhuaweicloud.com:443/uploads/images/20190821%5Cdfbe7e4e1f142cde7c6f2dd7e2ef0327.png","money":0.01,"num":324},{"id":16,"name":"算法与数据结构一班","subtitle":"算法与数据结构一班副标题","image":"https://hwcdn.jinlingkeji.cn/uploads/images/efac154b0f3bd4b1a2cf764b5e3ae31f.jpg","money":0.01,"num":100},{"id":17,"name":"计算机原理一班","subtitle":"计算机原理班级副标题","image":"https://hwcdn.jinlingkeji.cn/uploads/images/abb969f74e0c7f0d7dfd2008a61042a5.jpg","money":0.10,"num":100},{"id":18,"name":"这次不学草书了","subtitle":"不学草书副标题","image":"https://hwcdn.jinlingkeji.cn/uploads/images/c919839ee5eaadfb5e8192be231af077.jpg","money":0.00,"num":12}],
+      classList: [
+        {
+          id: 1,
+          name: '计算机一班',
+          subtitle: '学会修电脑的必备之路',
+          image: 'https://xiehui-guanwang.obs.cn-north-1.myhuaweicloud.com:443/uploads/images/20190815%5Ca6dbd1bf97aeb528e2aa6964fb2ab468.jpg',
+          money: 0.09,
+          num: 500
+        },
+        {
+          id: 1,
+          name: '计算机一班',
+          subtitle: '学会修电脑的必备之路',
+          image: 'https://xiehui-guanwang.obs.cn-north-1.myhuaweicloud.com:443/uploads/images/20190815%5Ca6dbd1bf97aeb528e2aa6964fb2ab468.jpg',
+          money: 0.09,
+          num: 500
+        },
+        {
+          id: 1,
+          name: '计算机一班',
+          subtitle: '学会修电脑的必备之路',
+          image: 'https://xiehui-guanwang.obs.cn-north-1.myhuaweicloud.com:443/uploads/images/20190815%5Ca6dbd1bf97aeb528e2aa6964fb2ab468.jpg',
+          money: 0.09,
+          num: 500
+        },
+        {
+          id: 1,
+          name: '计算机一班',
+          subtitle: '学会修电脑的必备之路',
+          image: 'https://xiehui-guanwang.obs.cn-north-1.myhuaweicloud.com:443/uploads/images/20190815%5Ca6dbd1bf97aeb528e2aa6964fb2ab468.jpg',
+          money: 0.09,
+          num: 500
+        },
+        {
+          id: 2,
+          name: '网络一班',
+          subtitle: '成为网管的必备之路',
+          image: 'https://xiehui-guanwang.obs.cn-north-1.myhuaweicloud.com:443/uploads/images/20190821%5Cdfbe7e4e1f142cde7c6f2dd7e2ef0327.png',
+          money: 0.01,
+          num: 324
+        },
+        {
+          id: 16,
+          name: '算法与数据结构一班',
+          subtitle: '算法与数据结构一班副标题',
+          image: 'https://hwcdn.jinlingkeji.cn/uploads/images/efac154b0f3bd4b1a2cf764b5e3ae31f.jpg',
+          money: 0.01,
+          num: 100
+        },
+        {
+          id: 17,
+          name: '计算机原理一班',
+          subtitle: '计算机原理班级副标题',
+          image: 'https://hwcdn.jinlingkeji.cn/uploads/images/abb969f74e0c7f0d7dfd2008a61042a5.jpg',
+          money: 0.1,
+          num: 100
+        },
+        {
+          id: 18,
+          name: '这次不学草书了',
+          subtitle: '不学草书副标题',
+          image: 'https://hwcdn.jinlingkeji.cn/uploads/images/c919839ee5eaadfb5e8192be231af077.jpg',
+          money: 0.0,
+          num: 12
+        }
+      ],
       page: 1,
       totalPage: 1,
       list: [],
-      loading: false,   //是否处于加载中
-      finished: false,  //是否加载完成
-      refreshing: false,
+      loading: false, //是否处于加载中
+      finished: false, //是否加载完成
+      refreshing: false
     }
   },
   methods: {
-    toSearch(){
+    toSearch() {
       this.$router.push({ path: '/search' })
     },
-    changeClassify(){ //课程分类组件展示
-      this.showClassify = !this.showClassify;
+    changeClassify() {
+      //课程分类组件展示
+      this.showClassify = !this.showClassify
     },
-    selectedClass(index){ //选择专业
-      console.log("选择专业",this.majorList[index])
-      let majorItem = this.majorList[index];
-      let text = majorItem.text;
-      if(majorItem.text === '全部'){
-        text = "课程分类"
+    selectedClass(index) {
+      //选择专业
+      console.log('选择专业', this.majorList[index])
+      let majorItem = this.majorList[index]
+      let text = majorItem.text
+      if (majorItem.text === '全部') {
+        text = '课程分类'
       }
-      this.majorTitle = text;
-      this.getCourseList();
+      this.majorTitle = text
+      this.getCourseList()
     },
-    selectedCourse(item,flag=false){  //选择课程
+    selectedCourse(item, flag = false) {
+      //选择课程
       let major = this.majorList[this.majorIndex]
-      this.courseId = item.id;
-      let text = item.text;
-      if(item.text === '全部'){
-        text = major.text==='全部'?'课程分类':major.text;
+      this.courseId = item.id
+      let text = item.text
+      if (item.text === '全部') {
+        text = major.text === '全部' ? '课程分类' : major.text
       }
-      this.majorTitle = text;
-      this.showClassify = flag;
+      this.majorTitle = text
+      this.showClassify = flag
       let id = {
         majorId: major.id,
         courseId: item.id
       }
-      this.getClassList(id);
+      this.getClassList(id)
     },
-    getMajorList(){ //获取课程分类初始列表
-      http.getMajorList().then(res=>{
-        this.majorList = res.data.majorNodeDTOS;
-        this.courseList = res.data.courseNodeDTOS;
+    getMajorList() {
+      //获取课程分类初始列表
+      http.getMajorList().then(res => {
+        this.majorList = res.data.majorNodeDTOS
+        this.courseList = res.data.courseNodeDTOS
       })
     },
-    getCourseList(){  //获取课程分类
+    getCourseList() {
+      //获取课程分类
       let params = {
         id: this.majorList[this.majorIndex].id
       }
-      http.getCourseList(params).then(res=>{
-        this.courseList = res.data;
-        this.selectedCourse(res.data[0],true)
+      http.getCourseList(params).then(res => {
+        this.courseList = res.data
+        this.selectedCourse(res.data[0], true)
       })
     },
-    getClassList(id,page=1){  //获取班级列表
-      let {majorId,courseId} = id;
+    getClassList(id, page = 1) {
+      //获取班级列表
+      let { majorId, courseId } = id
       let params = {
         majorId,
         courseId,
         pageNum: page
       }
-      http.getClassList(params).then(res=>{
-        if(page == 1){
-          this.classList = res.data;
-          this.page++;
-        }else{
-          this.classList = this.classList.concat(res.data);
+      http.getClassList(params).then(res => {
+        if (page == 1) {
+          this.classList = res.data
+          this.page++
+        } else {
+          this.classList = this.classList.concat(res.data)
         }
-        this.refreshing = false;
+        this.refreshing = false
         // 数据全部加载完成
-        this.finished = true;
+        this.finished = true
         //加载状态结束
-        this.loading = false;
+        this.loading = false
       })
     },
-    init(){
+    init() {
       let id = {
         majorId: 0,
         courseId: 0
       }
-      this.getMajorList();
-      this.getClassList(id);
+      this.getMajorList()
+      this.getClassList(id)
     },
-    onLoad(){
-      console.log("上拉加载");
-      if(this.page >= this.totalPage){
-        this.finished = true;
+    onLoad() {
+      console.log('上拉加载')
+      if (this.page >= this.totalPage) {
+        this.finished = true
         return
       }
       let id = {
         majorId: this.majorList[this.majorIndex],
         courseId: this.courseId
       }
-      this.getClassList(id,2)
+      this.getClassList(id, 2)
     },
-    onRefresh(){
-      console.log("下拉刷新");
+    onRefresh() {
+      console.log('下拉刷新')
       // 将 loading 设置为 true，表示处于加载状态,不加载load
-      this.loading = true;
+      this.loading = true
       // 清空列表数据
-      this.classList = [];
-      this.page = 1;
+      this.classList = []
+      this.page = 1
       // 重新加载数据
       let id = {
         majorId: this.majorList[this.majorIndex].id,
         courseId: this.courseId
       }
-      this.getClassList(id,1);
+      this.getClassList(id, 1)
     }
   },
-  mounted(){
+  mounted() {
     this.init()
   },
   components: {
     Curriculums,
     CurrTip,
-    "van-tree-select":TreeSelect,
+    'van-tree-select': TreeSelect,
     'van-empty': Empty,
     'van-list': List,
     'van-pull-refresh': PullRefresh
@@ -289,7 +361,7 @@ export default {
 .van-sidebar-item {
   width: 100%;
   // width: 8.125rem /* 130/16 */;
-  padding: .875rem /* 14/16 */ .9375rem /* 15/16 */;
+  padding: 0.875rem /* 14/16 */ 0.9375rem /* 15/16 */;
   font-size: 1.25rem /* 20/16 */;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
@@ -326,9 +398,9 @@ export default {
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
   color: rgba(102, 102, 102, 1);
-  &>img{
+  & > img {
     width: 1.125rem /* 18/16 */;
-    height: .8125rem /* 13/16 */;
+    height: 0.8125rem /* 13/16 */;
     position: absolute;
     right: 0;
   }
