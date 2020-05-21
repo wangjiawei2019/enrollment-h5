@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-21 17:21:46
+ * @LastEditTime: 2020-05-21 17:24:23
 --> 
 <template>
   <div class="lesson">
@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import Curriculums from '@/components/curriculum'
+import Curriculums from '@/components/curriculums'
 import CurrTip from '@/components/currTip'
 import { TreeSelect, Empty, List, PullRefresh } from 'vant'
 import http from '@/api/index.js'

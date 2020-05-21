@@ -41,7 +41,7 @@
 
 <script>
 import { Empty } from 'vant'
-import Curriculums from '@/components/curriculum'
+import Curriculums from '@/components/curriculums'
 import CurrTip from '@/components/currTip'
 export default {
   name: 'Search',
