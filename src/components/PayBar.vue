@@ -2,45 +2,75 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-20 09:35:54
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-20 12:04:38
+ * @LastEditTime: 2020-05-21 11:42:05
 --> 
 <template>
-  <div class="pay-bar" :class="{'safe-area':!showCheck}">
-    <van-checkbox
-      class="all-check"
-      v-if="showCheck"
-      v-model="checked"
-      checked-color="#f2323a"
-      icon-size="1.38rem"
-      @click="checkAll"
-    >全选</van-checkbox>
-    <div class="price-box">
+  <div class="pay-bar" :class="{'safe-area':safeArea}">
+    <slot name="check-slot"></slot>
+    <slot name="total"></slot>
+    <div class="price-box" v-if="buttonMethod !== 'delete'">
       <span>合计：</span>
       <span>￥</span>
-      <span>29.3</span>
+      <span>{{ totalMoney }}</span>
     </div>
-    <van-button type="danger" @click="pay">{{ buttonText }}</van-button>
+    <van-button
+      type="danger"
+      :disabled="buttonMethod === 'delete' && !result.length"
+      @click="handleClick(buttonMethod)"
+    >{{ buttonText }}</van-button>
   </div>
 </template>
 
 <script>
 import { Button, Checkbox } from 'vant'
+import http from '@/api'
 
 export default {
-  props: ['showCheck', 'buttonText'],
+  props: {
+    safeArea: {
+      // 固定定位底部 bottom 是否等于 0
+      type: Boolean,
+      default: false
+    },
+    result: {
+      // 选中的数组，用来改变删除按钮的禁用与否
+      type: Array,
+      default: []
+    },
+    buttonText: {
+      // 按钮文本
+      type: String,
+      default: '去支付'
+    },
+    totalMoney: {
+      // 总金额
+      type: Number,
+      default: 0
+    }
+  },
   components: {
     'van-button': Button,
     'van-checkbox': Checkbox
   },
   data() {
-    return {
-      checked: true
-    }
+    return {}
   },
   methods: {
-    pay() {},
-    checkAll() {
-      this.$emit('checkAll', this.checked)
+    handleClick(method) {
+      this[method]()
+    },
+    goPay() {
+      this.$emit('goPay')
+    },
+    delete() {},
+    submitOrder() {
+      this.$emit('submitOrder', this.result)
+    }
+  },
+  computed: {
+    buttonMethod() {
+      const obj = { 去支付: 'goPay', 删除: 'delete', 提交订单: 'submitOrder' }
+      return obj[this.buttonText]
     }
   }
 }

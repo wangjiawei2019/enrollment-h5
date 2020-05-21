@@ -2,14 +2,14 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-20 17:50:51
+ * @LastEditTime: 2020-05-21 15:36:02
 --> 
 <template>
   <div class="list-page">
     <template v-if="list.length">
       <van-sticky>
         <div class="title-box van-hairline--bottom">
-          <div class="title-box-left">共4门课程</div>
+          <div class="title-box-left">共{{ list.length }}门课程</div>
           <div class="title-box-right" @click="handleEdit">{{ showEdit ? '编辑' :'完成' }}</div>
         </div>
       </van-sticky>
@@ -27,15 +27,29 @@
             class="check-item"
             v-for="(item, index) in list"
             :class="{'van-hairline--bottom': index !== list.length}"
-            :key="item.cartId"
+            :key="item.classId"
           >
-            <list-item :checked="true"></list-item>
+            <list-item :checked="true" :item="item"></list-item>
           </van-checkbox>
         </van-checkbox-group>
       </div>
-      <pay-bar :showCheck="true" :buttonText="payBarButtonText" @checkAll="checkAll"></pay-bar>
+      <pay-bar
+        :buttonText="payBarButtonText"
+        :totalMoney="totalMoney(result)"
+        :result="result"
+        @goPay="goPay"
+      >
+        <template v-slot:check-slot>
+          <van-checkbox
+            class="check-box"
+            v-model="allChecked"
+            checked-color="#f2323a"
+            icon-size="1.38rem"
+            @click="toggleAll(allChecked)"
+          >全选</van-checkbox>
+        </template>
+      </pay-bar>
     </template>
-
     <div class="no-list-wrapper" v-else>
       <van-empty :image="require('@/assets/no-list1.png')" description="暂无已选课程" />
     </div>
@@ -62,8 +76,8 @@ export default {
     return {
       list: [],
       result: [],
-      showEdit: true, // 默认是显示编辑
-      allChecked: true
+      allChecked: false, // 默认不全选，加载完列表之后手动全选
+      showEdit: true // 默认是显示编辑
     }
   },
   mounted() {
@@ -71,25 +85,53 @@ export default {
   },
   methods: {
     getCartList() {
-      const { data } = http.getCartList()
-      this.list = data ? data : []
-      this.list.length && this.$refs['CheckboxGroup'].toggleAll(true)
+      http.getCartList().then(res => {
+        this.list = Array.isArray(res.data) ? res.data : []
+        this.$nextTick(() => {
+          this.toggleAll(true)
+        })
+      })
     },
     handleEdit() {
       this.showEdit = !this.showEdit
+      this.toggleAll(this.showEdit)
     },
-    onCheckboxGroupChange(names) {},
-    checkAll(val) {
-      this.allChecked = val
-      this.$refs['CheckboxGroup'].toggleAll(this.allChecked)
+    onCheckboxGroupChange(names) {
+      console.log('onCheckboxGroupChange -> names', names)
+      this.allChecked = names.length === this.list.length
+      if (this.showEdit) {
+        // 计算总价格
+      }
     },
-    onSubmit() {}
+    toggleAll(val) {
+      this.$refs['CheckboxGroup'].toggleAll(val)
+    },
+    goPay() {
+      if (this.result.length) {
+        let info = { list: [], classIdList: this.result, totalMoney: this.totalMoney(this.result) }
+        this.result.map(i => {
+          info.list.push(this.list.filter(v => v.classId === i)[0])
+        })
+        this.$store.commit('setConfirmOrderList', info)
+        this.$router.push({ name: 'ConfirmOrder' })
+      } else {
+        this.$toast('请选择订单')
+      }
+    }
   },
   computed: {
     payBarButtonText() {
       return this.showEdit ? '去支付' : '删除'
     },
-    totalMoney() {}
+    totalMoney() {
+      return result => {
+        let total = 0
+        result.map(i => {
+          total = total + this.list.filter(v => v.classId === i)[0].money
+        })
+        return total.toFixed(2) * 1
+      }
+    }
   }
 }
 </script>
@@ -97,7 +139,6 @@ export default {
 <style lang="scss" scoped>
 .list-page {
   width: 100%;
-  // height: 100%;
   flex: 1;
   .title-box {
     width: 100%;
@@ -133,6 +174,9 @@ export default {
         @include flex(flex-start, center, row, nowrap);
       }
     }
+  }
+  .check-box {
+    flex: 1;
   }
 
   .no-list-wrapper {

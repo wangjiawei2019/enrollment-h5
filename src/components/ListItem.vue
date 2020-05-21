@@ -2,21 +2,21 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-19 16:44:12
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-20 16:10:09
+ * @LastEditTime: 2020-05-21 09:38:18
 --> 
 <template>
   <div class="list-item">
     <div class="top-box">
       <div class="img-wapper">
-        <img src="@/assets/images/lesson/phone.png" alt="课程缩略图" class="lesson-img" />
+        <img :src="item.image || '@/assets/site.png'" alt="课程缩略图" class="lesson-img" />
         <div class="mask"></div>
       </div>
       <div class="desc-box" :class="{checked:checked}">
-        <div class="title van-ellipsis">啊啊啊啊啊啊啊啊啊啊</div>
-        <div class="subtitle van-ellipsis">啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊</div>
-        <div class="price">
-          <span class="red">￥</span>
-          <span class="red">29.3</span>
+        <div class="title van-ellipsis">{{ item.name }}</div>
+        <div class="subtitle van-ellipsis">{{ item.subtitle }}</div>
+        <div class="price" :class="{red: checked}">
+          <span>￥</span>
+          <span>{{ item.money }}</span>
         </div>
       </div>
     </div>
@@ -26,7 +26,7 @@
 
 <script>
 export default {
-  props: ['checked']
+  props: ['checked', 'item']
 }
 </script>
 
@@ -60,7 +60,7 @@ export default {
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0, 0, 0, 1);
+      background-color: rgba(0, 0, 0, 0.5);
       background-image: url('~@/assets/images/order/yiquxiao.png');
       background-repeat: no-repeat;
       background-size: 3.33rem 3.33rem;
@@ -94,7 +94,9 @@ export default {
         line-height: 1.47rem;
         @include font(PingFang SC, 1.06rem, rgba(51, 51, 51, 1), 500);
       }
-      .red {
+    }
+    .red {
+      span {
         color: #f2323a !important;
       }
     }

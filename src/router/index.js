@@ -1,18 +1,18 @@
 /*
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
- * @LastEditors: zxk
- * @LastEditTime: 2020-05-20 17:26:37
+ * @LastEditors: wjw
+ * @LastEditTime: 2020-05-21 17:01:51
  */
 
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import qs from 'qs'
-import store from "@/store"
-import http from '@/api'
+import store from '@/store'
 import Index from '@/views/Index'
 import Lesson from '@/views/Lesson'
 import List from '@/views/List'
+import ConfirmOrder from '@/views/ConfirmOrder'
 import Order from '@/views/Order'
 import Login from '@/views/Login'
 import Notice from '@/views/Notice'
@@ -38,7 +38,6 @@ const routes = [
     name: 'Index',
     component: Index,
     redirect: '/index/lesson',
-
     children: [
       {
         path: 'lesson',
@@ -61,6 +60,14 @@ const routes = [
     ]
   },
   {
+    path: '/confirm-order',
+    name: 'ConfirmOrder',
+    component: ConfirmOrder,
+    meta: {
+      title: '确认订单'
+    }
+  },
+  {
     path: '/search',
     name: 'Search',
     component: Search
@@ -72,18 +79,28 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
-router.beforeEach((to,from,next)=>{
-  if(to.name === 'Login'){
-    const query = qs.parse(to.hash.split('?')[1]);
-    if (query.token) { //将token&手机号存入store,直接登录
-      store.commit('setToken', query.token);
+router.beforeEach((to, from, next) => {
+  if (to.meta.title) {
+    //判断是否有标题
+    console.log(to.meta.title)
+    document.title = to.meta.title
+  }
+  if (to.name === 'Login') {
+    const query = qs.parse(to.hash.split('?')[1])
+    if (query.token) {
+      //将token&手机号存入store,直接登录
+      store.commit('setToken', query.token)
       // store.commit('setToken', token);
       //是否需要去报名须知
-      next({path: '/index',replace: true})
-    }else{
-      next();
+      next({ path: '/index', replace: true })
+    } else {
+      if (store.state.token) {
+        next({ path: '/index', replace: true })
+      } else {
+        next()
+      }
     }
-  }else{
+  } else {
     // if (store.state.token){
 
     // }

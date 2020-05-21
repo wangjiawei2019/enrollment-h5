@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-20 16:08:01
+ * @LastEditTime: 2020-05-21 16:45:14
 --> 
 <template>
   <div id="app">
@@ -11,6 +11,9 @@
 </template>
 
 <style lang="scss">
+#app {
+  overflow: hidden;
+}
 // tabbar
 .van-tabbar {
   height: 3.63rem !important;
@@ -110,5 +113,75 @@
   font-family: PingFang SC !important;
   font-weight: 400 !important;
   line-height: 1.47rem !important;
+}
+.van-button--info {
+  height: 3.44rem !important;
+  background-color: #f2323a !important;
+  border-color: #f2323a !important;
+  .van-button__text {
+    font-size: 1.31rem !important;
+    font-family: PingFang SC !important;
+    font-weight: 400 !important;
+    color: rgba(255, 255, 255, 1) !important;
+  }
+}
+.van-button--disabled {
+  opacity: 1 !important;
+  background-color: #cccccc !important;
+  border-color: #cccccc !important;
+}
+
+// dialog
+.van-dialog {
+  border-radius: 0.5rem !important;
+  .van-dialog__header {
+    padding: 0 !important;
+    margin-top: 1.56rem !important;
+    font-size: 1.44rem !important;
+    font-family: PingFang SC !important;
+    font-weight: 600 !important;
+    color: rgba(51, 51, 51, 1) !important;
+    line-height: 1.75rem !important;
+  }
+  .van-dialog__content {
+    // height: 6.5rem !important;
+    display: flex;
+    justify-content: center;
+    .van-dialog__message--has-title {
+      padding-top: 0.94rem !important;
+      // width: 15rem !important;
+      font-size: 1.31rem !important;
+      font-family: PingFang SC !important;
+      font-weight: 400 !important;
+      color: rgba(102, 102, 102, 1) !important;
+      line-height: 2rem !important;
+    }
+  }
+  .van-dialog__footer--buttons {
+    height: 3.91rem !important;
+    .van-dialog__cancel,
+    .van-dialog__confirm {
+      height: 100% !important;
+      font-size: 1.31rem !important;
+      font-family: PingFang SC !important;
+      font-weight: 400 !important;
+      line-height: 3.91rem;
+    }
+  }
+}
+
+// tabs
+.van-tabs__wrap {
+  height: 2.94rem;
+  .van-tab__text {
+    font-size: 1.31rem;
+    font-family: PingFang SC;
+    font-weight: 500;
+    line-height: 1.84rem;
+  }
+
+  .van-tabs__line {
+    border-radius: 0.09rem !important;
+  }
 }
 </style>
