@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-22 10:00:25
+ * @LastEditTime: 2020-05-22 14:54:11
  */
 
 import Vue from 'vue'
@@ -18,6 +18,7 @@ import Login from '@/views/Login'
 import Notice from '@/views/Notice'
 import Search from '@/views/Search'
 import ApplyRule from '@/views/ApplyRule'
+import LessonDetail from '@/views/LessonDetail'
 Vue.use(VueRouter)
 
 const routes = [
@@ -77,6 +78,14 @@ const routes = [
     }
   },
   {
+    path: '/lesson-detail',
+    name: 'LessonDetail',
+    component: LessonDetail,
+    meta:{
+      title: '班级详情'
+    }
+  },
+  {
     path: '/apply-rule',
     name: 'ApplyRule',
     component: ApplyRule,
@@ -100,22 +109,22 @@ router.beforeEach((to, from, next) => {
   if (to.name === 'Login') {
     const query = qs.parse(to.hash.split('?')[1])
     if (query.token) {
-      //将token&手机号存入store,直接登录
+      //更新token,直接登录
       store.commit('setToken', query.token)
       // store.commit('setToken', token);
       //是否需要去报名须知
       next({ path: '/index', replace: true })
     } else {
       if (store.state.token) {
+        //是否去报名须知
+        //true-->去报名须知
+        //false-->去首页
         next({ path: '/index', replace: true })
       } else {
         next()
       }
     }
   } else {
-    // if (store.state.token){
-
-    // }
     next()
   }
 })

@@ -3,10 +3,10 @@
  * @Author: zxk
  * @Date: 2020-05-19 11:15:15
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-22 09:44:59
+ * @LastEditTime: 2020-05-22 14:59:46
 --> 
 <template>
-  <div class="curriculums">
+  <div class="curriculums" @click="toDetail">
     <div class="curr-left">
       <img :src="classItem.image || require('@/assets/site.png')" :alt="classItem.name" />
     </div>
@@ -15,7 +15,7 @@
       <div class="subtitle" v-html="classItem.subtitle"></div>
       <div class="price">
         <span class="number">￥{{classItem.money}}</span>
-        <div class="join" @click="applyCourse">立即报名</div>
+        <div class="join" @click.stop="applyCourse">立即报名</div>
       </div>
     </div>
   </div>
@@ -42,6 +42,9 @@ export default {
         Toast(err)
       })
       // Toast('本期招生已截止');
+    },
+    toDetail(){
+      this.$router.push({path:'/lesson-detail',query:{id:this.classItem.id}})
     }
   }
 }

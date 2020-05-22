@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-22 10:17:19
+ * @LastEditTime: 2020-05-22 11:57:40
 --> 
 <template>
   <div class="lesson">
@@ -56,7 +56,7 @@
 <script>
 import Curriculums from '@/components/curriculums'
 import CurrTip from '@/components/currTip'
-import { TreeSelect, Empty, List, PullRefresh } from 'vant'
+import { TreeSelect, Empty, List, PullRefresh, Toast } from 'vant'
 import http from '@/api/index.js'
 export default {
   name: 'Lesson',
@@ -158,11 +158,13 @@ export default {
         console.log(this.page)
       })
       .catch(err=>{
+        this.finished = true
+        Toast.fail('服务器出错')
         console.log(err)
       })
     },
     init() {
-      console.log("获取初始数据")
+      console.log("获取初始数据",navigator.userAgent)
       let id = {
         majorId: 0,
         courseId: 0
