@@ -3,16 +3,16 @@
  * @Author: zxk
  * @Date: 2020-05-20 09:22:14
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-21 17:07:42
+ * @LastEditTime: 2020-05-21 18:56:56
 --> 
 <template>
   <div class="search-page">
     <div class="title">
       <div class="search">
         <img class="s-img" src="@/assets/images/lesson/search.png" alt />
-        <input class="search-ipt" type="text" placeholder="搜索学习课程" v-model="keyWorld" />
+        <input class="search-ipt" type="text" placeholder="搜索学习课程" @blur="searchWorld" v-model="keyWord" />
         <img
-          v-show="keyWorld"
+          v-show="keyWord"
           @click="delWorld"
           class="d-img"
           src="@/assets/images/lesson/del.png"
@@ -21,12 +21,17 @@
       </div>
       <div class="cancel" @click="cancel">取消</div>
     </div>
-    <div class="curr-list" v-if="searchList.length">
-      <Curriculums></Curriculums>
-    </div>
-    <div class="none-list" v-else>
-      <van-empty :image="require('@/assets/no-list1.png')" description="暂无相关搜索课程" />
-    </div>
+
+    <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+      <van-list v-model="loading" :finished="finished" @load="downPull">
+        <div class="curr-list" v-if="classList.length">
+          <Curriculums v-for="(item,index) in classList" :key="index" :classItem="item"></Curriculums>
+        </div>
+        <div class="none-list" v-else>
+          <van-empty :image="require('@/assets/no-list1.png')" description="暂无相关搜索课程" />
+        </div>
+      </van-list>
+    </van-pull-refresh>
 
     <!--
       <div style="margin-left: 100px">
@@ -40,27 +45,80 @@
 </template>
 
 <script>
-import { Empty } from 'vant'
+import { Empty, List, PullRefresh } from 'vant'
 import Curriculums from '@/components/curriculums'
 import CurrTip from '@/components/currTip'
+import http from '@/api/index.js'
 export default {
   name: 'Search',
   data() {
     return {
       repeatShow: false, //重复报名提示
-      searchList: [], //搜索列表
-      keyWorld: '' //搜索关键词
+      keyWord: '', //搜索关键词
+      classList: [],  //班级列表
+      page: 0,
+      totalPage: 2,
+      list: [],
+      loading: false, //是否处于加载中
+      finished: true, //是否加载完成
+      refreshing: false
     }
   },
   methods: {
     delWorld() {
-      this.keyWorld = ''
+      this.keyWord = ''
     },
     cancel() {
       this.$router.back()
+    },
+    searchWorld(){
+      if(this.keyWord.length){
+        this.searchCourseClass()
+      }
+    },
+    searchCourseClass(page=0){
+      let params = {
+        keyword: this.keyWord,
+        pageSize: 10,
+        pageNum: page
+      }
+      http.searchCourseClass(params).then(res=>{
+        if(page == 0){
+          this.classList = res.data.content
+          this.totalPage = res.data.totalPages
+        }else{
+          this.classList = this.classList.concat(res.data.content);
+        }
+        //加载状态完成
+        this.loading = false
+        // 数据全部加载完成
+        // this.finished = true
+        //下拉刷新完成
+        this.refreshing = false
+      })
+    },
+    downPull() {
+      console.log('上拉加载')
+      if (this.page > this.totalPage) {
+        //  数据全部加载完成，可以弹提示
+        this.finished = true
+        return
+      }
+      this.searchCourseClass(this.page)
+    },
+    onRefresh() {
+      console.log('下拉刷新')
+      // 将 loading 设置为 true，表示处于加载状态,不加载load
+      this.loading = true
+      // 清空列表数据
+      this.classList = []
+      this.page = 0
+      this.searchCourseClass()
     }
   },
   components: {
+    'van-list': List,
+    'van-pull-refresh': PullRefresh,
     'van-empty': Empty,
     Curriculums,
     CurrTip
@@ -70,6 +128,7 @@ export default {
 
 <style lang="scss" scoped>
 .search-page {
+  min-height: 100vh;
   .title {
     height: 4.375rem /* 70/16 */;
     width: 100%;
@@ -83,6 +142,7 @@ export default {
     align-items: center;
     justify-content: space-between;
     padding: 0 0.9375rem /* 15/16 */;
+    z-index: 1;
     .search {
       flex: 1;
       // width: 16.25rem /* 260/16 */;
@@ -134,4 +194,5 @@ export default {
     width: 100%;
   }
 }
+
 </style>

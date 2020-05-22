@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-21 16:59:32
+ * @LastEditTime: 2020-05-22 10:00:25
  */
 
 import Vue from 'vue'
@@ -17,6 +17,7 @@ import Order from '@/views/Order'
 import Login from '@/views/Login'
 import Notice from '@/views/Notice'
 import Search from '@/views/Search'
+import ApplyRule from '@/views/ApplyRule'
 Vue.use(VueRouter)
 
 const routes = [
@@ -70,7 +71,18 @@ const routes = [
   {
     path: '/search',
     name: 'Search',
-    component: Search
+    component: Search,
+    meta:{
+      title: '班级搜索'
+    }
+  },
+  {
+    path: '/apply-rule',
+    name: 'ApplyRule',
+    component: ApplyRule,
+    meta:{
+      title: '报名须知'
+    }
   }
 ]
 

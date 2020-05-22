@@ -3,16 +3,16 @@
  * @Author: zxk
  * @Date: 2020-05-19 11:15:15
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-20 18:41:06
+ * @LastEditTime: 2020-05-22 09:44:59
 --> 
 <template>
   <div class="curriculums">
     <div class="curr-left">
-      <img :src="classItem.image" :alt="classItem.name" />
+      <img :src="classItem.image || require('@/assets/site.png')" :alt="classItem.name" />
     </div>
     <div class="curr-right">
-      <div class="title">{{classItem.name}}</div>
-      <div class="subtitle">{{classItem.subtitle}}</div>
+      <div class="title" v-html="classItem.name"></div>
+      <div class="subtitle" v-html="classItem.subtitle"></div>
       <div class="price">
         <span class="number">￥{{classItem.money}}</span>
         <div class="join" @click="applyCourse">立即报名</div>
@@ -30,17 +30,17 @@ export default {
   },
   methods: {
     applyCourse() {
-      console.log(this.classItem)
       let params = {
-        id: this.classItem.id
+        id: ''
       }
       console.log(params)
-      // http.applyCourse(params).then(res=>{
-      //   if(res.status === 200){
-      //     console.log("报名成功")
-      //   }
-      //   console.log(res)
-      // })
+      http.applyCourse(params).then(res=>{
+        console.log("报名成功",res)
+      })
+      .catch(err=>{
+        console.log(err)
+        Toast(err)
+      })
       // Toast('本期招生已截止');
     }
   }
