@@ -2,13 +2,13 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-22 17:34:09
+ * @LastEditTime: 2020-05-22 18:28:41
 --> 
 <template>
   <div class="lesson">
     <div class="header">
       <div class="classify" @click="changeClassify">
-        <span>{{majorTitle}}</span>
+        <div class="major-title">{{majorTitle}}</div>
         <img src="@/assets/images/lesson/down.png" alt />
       </div>
 
@@ -240,7 +240,9 @@ export default {
       align-items: center;
       text-align: center;
       width: 6.875rem /* 110/16 */;
-      & > span {
+      .major-title {
+        height: 4.375rem /* 70/16 */;
+        line-height: 4.375rem /* 70/16 */;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;

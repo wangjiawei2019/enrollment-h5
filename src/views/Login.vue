@@ -2,7 +2,7 @@
  * @Author: zxk
  * @Date: 2020-05-18 14:01:20
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-22 17:30:34
+ * @LastEditTime: 2020-05-22 18:05:45
 --> 
 <template>
   <div id="login">
@@ -19,7 +19,7 @@
         <img class="icon-code" src="@/assets/images/lesson/security.png" alt="logo" />
         <input class="auth-code" type="number" placeholder="请输入验证码" v-model="smsCode" />
         <div class="send-code count-down" v-if="sendcode">重新发送({{sendcode}}s)</div>
-        <div class="send-code" @click="sendCode" v-else>获取验证码</div>
+        <div class="send-code" @click.prevent="sendCode" v-else>获取验证码</div>
       </div>
     </div>
     <div class="btn">

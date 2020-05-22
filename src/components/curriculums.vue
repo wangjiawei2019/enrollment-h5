@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-19 11:15:15
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-22 15:40:34
+ * @LastEditTime: 2020-05-22 18:14:45
 --> 
 <template>
   <div class="curriculums" @click="toDetail">
@@ -65,7 +65,8 @@ export default {
     }
   }
   .curr-right {
-    width: 12.5rem /* 200/16 */;
+    // width: 12.5rem /* 200/16 */;
+    flex: 1;
     height: 5rem /* 80/16 */;
     display: flex;
     justify-content: space-between;

@@ -3,14 +3,16 @@
  * @Author: zxk
  * @Date: 2020-05-20 09:22:14
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-22 17:34:54
+ * @LastEditTime: 2020-05-22 19:04:31
 --> 
 <template>
   <div class="search-page">
     <div class="title">
       <div class="search">
         <img class="s-img" src="@/assets/images/lesson/search.png" alt />
-        <input class="search-ipt" type="text" placeholder="搜索学习课程" @blur="searchWorld" v-model="keyWord" />
+        <div class="search-ipt">
+          <input type="text" placeholder="搜索学习课程" @input="searchWorld" v-model="keyWord" />
+        </div>
         <img
           v-show="keyWord"
           @click="delWorld"
@@ -58,7 +60,6 @@ export default {
       classList: [],  //班级列表
       page: 0,
       totalPage: 2,
-      list: [],
       loading: false, //是否处于加载中
       finished: true, //是否加载完成
       refreshing: false
@@ -66,14 +67,17 @@ export default {
   },
   methods: {
     delWorld() {
-      this.keyWord = ''
+      this.keyWord = '';
+      this.classList = []
     },
     cancel() {
       this.$router.back()
     },
-    searchWorld(){
+    searchWorld(e){
       if(this.keyWord.length){
         this.searchCourseClass()
+      }else{
+        this.classList = []
       }
     },
     searchCourseClass(page=0){
@@ -126,11 +130,11 @@ export default {
 
 <style lang="scss" scoped>
 .search-page {
+  width: 100%;
   min-height: 100vh;
   .title {
-    height: 4.375rem /* 70/16 */;
     width: 100%;
-    box-sizing: border-box;
+    height: 4.375rem /* 70/16 */;
     position: fixed;
     left: 0;
     right: 0;
@@ -138,45 +142,52 @@ export default {
     background: #fff;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 0.9375rem /* 15/16 */;
     z-index: 1;
+    border-bottom: 1px solid #E9E9E9;
     .search {
-      flex: 1;
-      // width: 16.25rem /* 260/16 */;
       height: 2.5rem /* 40/16 */;
-      padding: 0 0.9375rem;
       display: flex;
       align-items: center;
       background: #f5f6fa;
       border-radius: 1.25rem /* 20/16 */;
       position: relative;
+      margin-left: 0.9375rem;
+      margin-right: 4.375rem /* 70/16 */;
       .s-img {
         width: 1.1875rem /* 19/16 */;
         height: 1.1875rem /* 19/16 */;
         margin-right: 0.59375rem /* 9.5/16 */;
+        margin-left: 0.9375rem;
       }
       .d-img {
-        position: absolute;
-        right: 0.9375rem /* 15/16 */;
+        // position: absolute;
+        // right: 0.9375rem /* 15/16 */;
         width: 1.25rem /* 20/16 */;
         height: 1.25rem /* 20/16 */;
+        margin: 0 0.9375rem;
       }
       .search-ipt {
-        // width: 11.5625rem /* 185/16 */;
+        min-width: 13.6875rem /* 219/16 */;
         flex: 1;
-        height: 2.5rem /* 40/16 */;
-        line-height: 2.5rem /* 40/16 */;
-        background: none;
-        border: none;
+        // margin-right: 0.9375rem;
         font-size: 1.25rem /* 20/16 */;
-        font-family: PingFangSC-Regular, PingFang SC;
-        font-weight: 400;
-        color: rgba(153, 153, 153, 1);
+        &>input{
+          width: 100%;
+          height: 1.25rem /* 20/16 */;
+          padding: 1.25rem 0;
+          background: none;
+          border: none;
+          font-family: PingFangSC-Regular, PingFang SC;
+          font-weight: 400;
+          color: rgba(153, 153, 153, 1);
+        }
       }
     }
     .cancel {
-      margin-left: 0.9375rem /* 15/16 */;
+      width: 2.5rem /* 40/16 */;
+      position: absolute;
+      right: .9375rem /* 15/16 */;
+      line-height: 2.5rem /* 40/16 */;
       font-size: 1.25rem /* 20/16 */;
       font-family: PingFangSC-Regular, PingFang SC;
       font-weight: 400;
