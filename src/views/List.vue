@@ -1,8 +1,8 @@
 <!--
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
- * @LastEditors: wjw
- * @LastEditTime: 2020-05-21 15:36:02
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-05-22 17:34:26
 --> 
 <template>
   <div class="list-page">
@@ -97,7 +97,6 @@ export default {
       this.toggleAll(this.showEdit)
     },
     onCheckboxGroupChange(names) {
-      console.log('onCheckboxGroupChange -> names', names)
       this.allChecked = names.length === this.list.length
       if (this.showEdit) {
         // 计算总价格

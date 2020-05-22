@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-20 09:22:14
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-21 18:56:56
+ * @LastEditTime: 2020-05-22 17:34:54
 --> 
 <template>
   <div class="search-page">
@@ -97,8 +97,7 @@ export default {
         this.refreshing = false
       })
     },
-    downPull() {
-      console.log('上拉加载')
+    downPull() {  //上拉加载
       if (this.page > this.totalPage) {
         //  数据全部加载完成，可以弹提示
         this.finished = true
@@ -106,8 +105,7 @@ export default {
       }
       this.searchCourseClass(this.page)
     },
-    onRefresh() {
-      console.log('下拉刷新')
+    onRefresh() { //下拉刷新
       // 将 loading 设置为 true，表示处于加载状态,不加载load
       this.loading = true
       // 清空列表数据

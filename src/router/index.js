@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-22 17:24:53
+ * @LastEditTime: 2020-05-22 17:32:33
  */
 
 import Vue from 'vue'
@@ -132,15 +132,6 @@ router.beforeEach((to, from, next) => {
   }
 })
 
-function getReadStatus(){
-  console.log(111)
-  http.getReadStatus().then(res=>{
-    console.log('招生简章',res)
-  })
-  .catch(err=>{
-    console.log(err)
-  })
-}
 // const logined = store.state.isLogin
 
 // router.beforeEach((to, from, next) => {

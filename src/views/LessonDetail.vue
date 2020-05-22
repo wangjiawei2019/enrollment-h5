@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-22 11:41:33
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-22 15:17:08
+ * @LastEditTime: 2020-05-22 17:34:16
 --> 
 <template>
     <div class="detail-page">
@@ -44,9 +44,7 @@ export default {
     },
     methods:{
         getClassDetail(id){
-            console.log(id)
             http.getClassDetail({id}).then(res=>{
-                console.log(res)
                 this.detail = res.data
                 document.title = res.data.name
             })

@@ -2,7 +2,7 @@
  * @Author: zxk
  * @Date: 2020-05-18 14:01:20
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-22 16:57:56
+ * @LastEditTime: 2020-05-22 17:30:34
 --> 
 <template>
   <div id="login">
@@ -79,7 +79,6 @@ export default {
     },
     getReadStatus(){
       http.getReadStatus().then(res=>{
-        console.log('是否需要查看招生简章',res)
         if(res.data){
           this.$router.push({ path: '/index/lesson' })
         }else{
@@ -95,7 +94,6 @@ export default {
       http
         .login(params)
         .then(res => {
-          console.log('登录成功',res)
           //存一下token，看是否要去报名须知
           store.commit('setToken', res.data)
           this.getReadStatus()

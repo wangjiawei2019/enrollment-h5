@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-22 09:52:58
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-22 16:51:39
+ * @LastEditTime: 2020-05-22 17:25:54
 --> 
 <template>
     <div class="apply-rule">
@@ -23,7 +23,6 @@ export default {
     methods:{
         toLesson(){
             http.setReadNote().then(res=>{
-                console.log(res)
                 this.$router.push('/index')
             })
             .catch(err=>{

@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-22 17:09:12
+ * @LastEditTime: 2020-05-22 17:34:09
 --> 
 <template>
   <div class="lesson">
@@ -92,7 +92,6 @@ export default {
     },
     selectedClass(index) {
       //选择专业
-      console.log('选择专业', this.majorList[index])
       let majorItem = this.majorList[index]
       let text = majorItem.text
       if (majorItem.text === '全部') {
@@ -171,7 +170,7 @@ export default {
       })
     },
     init() {
-      console.log("获取初始数据",navigator.userAgent)
+      // console.log("获取初始数据",navigator.userAgent)
       let id = {
         majorId: 0,
         courseId: 0
@@ -180,7 +179,6 @@ export default {
       this.getClassList(id)
     },
     downPull() {
-      console.log('上拉加载')
       if(this.page == 1){
         this.init()
       }else{
@@ -197,7 +195,6 @@ export default {
         }
     },
     onRefresh() {
-      console.log('下拉刷新')
       // 将 loading 设置为 true，表示处于加载状态,不加载load
       this.loading = true
       // 清空列表数据
