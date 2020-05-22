@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-22 17:25:58
+ * @LastEditTime: 2020-05-22 18:46:28
 --> 
 <template>
   <div class="order-page">
@@ -215,20 +215,26 @@ export default {
   flex: 1;
   .list-box {
     width: 100%;
-    min-height: calc(100vh - 10.2rem);
-    min-height: calc(100vh - 10.2rem - constant(safe-area-inset-bottom));
-    min-height: calc(100vh - 10.2rem - env(safe-area-inset-bottom));
-    margin-bottom: 3.63rem;
-    margin-bottom: calc(3.63rem + constant(safe-area-inset-bottom));
-    margin-bottom: calc(3.63rem + env(safe-area-inset-bottom));
+    height: 100%;
+    // box-sizing: border-box;
+    // min-height: calc(100% - 6.57rem);
+    // min-height: calc(100% - 6.57rem - constant(safe-area-inset-bottom));
+    // min-height: calc(100% - 6.57rem - env(safe-area-inset-bottom));
+    // border-color: #fff;
+    // border-width: 3.63rem;
+    // border-width: calc(3.63rem + constant(safe-area-inset-bottom));
+    // border-width: calc(3.63rem + env(safe-area-inset-bottom));
     @include flex(flex-start, flex-start, column, nowrap);
     .item-wrapper {
       width: 100%;
       background-color: #fff;
       box-sizing: border-box;
       padding: 0 0.94rem;
-      border-top: 0.6rem solid #f7f7f7;
+      border-bottom: 0.6rem solid #f7f7f7;
       @include flex(flex-start, flex-start, column, nowrap);
+      &:nth-child(1) {
+        border-top: 0.6rem solid #f7f7f7;
+      }
       .title-box {
         width: 100%;
         height: 3.19rem;

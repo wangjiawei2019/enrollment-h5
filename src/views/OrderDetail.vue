@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-22 14:50:38
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-22 17:34:14
+ * @LastEditTime: 2020-05-22 18:04:46
 --> 
 <template>
   <div class="order-detail-page" v-if="detail">
@@ -218,6 +218,7 @@ export default {
     width: 100%;
     box-sizing: border-box;
     padding: 0 0.94rem;
+    border-bottom: 0.63rem solid #f7f7f7;
     background-color: #fff;
     @include flex(flex-start, flex-start, column, nowrap);
 
@@ -267,7 +268,7 @@ export default {
     width: 100%;
     padding: 0 0.94rem;
     background-color: #fff;
-    border-top: 0.63rem solid #f7f7f7;
+    border-bottom: 0.63rem solid #f7f7f7;
     box-sizing: border-box;
     @include flex(flex-start, flex-start, column, nowrap);
     .time {
@@ -294,9 +295,9 @@ export default {
     width: 100%;
     height: 4.38rem;
     background-color: #fff;
-    border-top: 0.63rem solid #f7f7f7;
     box-sizing: border-box;
     padding: 0 0.94rem;
+    border-bottom: 0.63rem solid #f7f7f7;
     @include flex(flex-end, center, row, nowrap);
     button {
       margin-left: 0.91rem;

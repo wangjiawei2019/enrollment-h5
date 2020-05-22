@@ -1,8 +1,13 @@
 /*
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-04-20 16:14:58
+<<<<<<< HEAD
  * @LastEditors: zxk
  * @LastEditTime: 2020-05-22 18:42:17
+=======
+ * @LastEditors: wjw
+ * @LastEditTime: 2020-05-22 17:49:46
+>>>>>>> fd60dbc9612a60534ae3009c11939be0f8904abb
  */
 import axios from 'axios'
 import { httpBaseUrl, domainBaseUrl } from './BASE'
@@ -20,7 +25,7 @@ const instance = axios.create({
 })
 // 文档中的统一设置post请求头。下面会说到post请求的几种'Content-Type'
 // instance.defaults.headers.post["Authorization"] = store.state.token;
-instance.defaults.headers.post['Content-Type'] = 'application/json';
+instance.defaults.headers.post['Content-Type'] = 'application/json'
 
 let httpCode = {
   //这里我简单列出一些常见的http状态码信息，可以自己去调整配置
@@ -42,7 +47,7 @@ instance.interceptors.request.use(
       forbidClick: true,
       message: '加载中...'
     })
-    config.headers['Authorization'] = store.state.token;
+    config.headers['Authorization'] = store.state.token
     if (config.method === 'post') {
       config.data = JSON.stringify(config.data)
     }
@@ -66,14 +71,14 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   response => {
     // console.log('response', response)
-    loadingInstance.clear();
+    loadingInstance.clear()
     if (response.status === 200) {
       // 响应结果里的status: ok是我与后台的约定，大家可以根据实际情况去做对应的判断
-      if(response.data.status === 200){
+      if (response.data.status === 200) {
         return Promise.resolve(response.data)
-      }else{
+      } else {
         if (response.data.status === 401) {
-          console.log("token错误")
+          console.log('token错误')
           store.commit('setToken', '') //清空token
           // Toast.fail(response.data.msg)
           router.replace({
@@ -93,12 +98,6 @@ instance.interceptors.response.use(
       // 根据请求失败的http状态码去给用户相应的提示
       let tips = error.response.status in httpCode ? httpCode[error.response.status] : error.response.data.msg
       Toast.fail(tips)
-      // if (error.response.status === 401) {
-      //   // token或者登陆失效情况下跳转到登录页面，根据实际情况，在这里可以根据不同的响应错误结果，做对应的事。这里我以401判断为例
-      //   router.push({
-      //     path: `/login`
-      //   })
-      // }
       return Promise.reject(error)
     } else {
       Toast.fail('请求超时, 请刷新重试')

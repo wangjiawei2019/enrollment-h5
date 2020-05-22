@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-22 17:39:34
+ * @LastEditTime: 2020-05-22 18:57:45
 --> 
 <template>
   <div class="list-page">
@@ -83,7 +83,7 @@ export default {
   },
   mounted() {
     this.getCartList().then(() => {
-      this.toggleAll(true)
+      this.list.length && this.toggleAll(true)
     })
   },
   methods: {
