@@ -2,12 +2,13 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-22 14:54:11
+ * @LastEditTime: 2020-05-22 17:24:53
  */
 
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import qs from 'qs'
+import http from '@/api'
 import store from '@/store'
 import Index from '@/views/Index'
 import Lesson from '@/views/Lesson'
@@ -80,10 +81,7 @@ const routes = [
   {
     path: '/lesson-detail',
     name: 'LessonDetail',
-    component: LessonDetail,
-    meta:{
-      title: '班级详情'
-    }
+    component: LessonDetail
   },
   {
     path: '/apply-rule',
@@ -100,6 +98,7 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
 router.beforeEach((to, from, next) => {
   if (to.meta.title) {
     //判断是否有标题
@@ -110,15 +109,19 @@ router.beforeEach((to, from, next) => {
     const query = qs.parse(to.hash.split('?')[1])
     if (query.token) {
       //更新token,直接登录
+      // console.log(query)
       store.commit('setToken', query.token)
       // store.commit('setToken', token);
       //是否需要去报名须知
-      next({ path: '/index', replace: true })
+      http.getReadStatus().then(res => {
+        if (res.data) {
+          next({ path: '/index', replace: true })
+        } else {
+          this.$router.push({ path: '/apply-rule' })
+        }
+      })
     } else {
-      if (store.state.token) {
-        //是否去报名须知
-        //true-->去报名须知
-        //false-->去首页
+      if (store.state.token) {//有缓存，说明不需要去看招生简章了
         next({ path: '/index', replace: true })
       } else {
         next()
@@ -129,6 +132,15 @@ router.beforeEach((to, from, next) => {
   }
 })
 
+function getReadStatus(){
+  console.log(111)
+  http.getReadStatus().then(res=>{
+    console.log('招生简章',res)
+  })
+  .catch(err=>{
+    console.log(err)
+  })
+}
 // const logined = store.state.isLogin
 
 // router.beforeEach((to, from, next) => {

@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-22 15:51:55
+ * @LastEditTime: 2020-05-22 17:09:12
 --> 
 <template>
   <div class="lesson">
@@ -123,6 +123,9 @@ export default {
       http.getMajorList().then(res => {
         this.majorList = res.data.majorNodeDTOS
         this.courseList = res.data.courseNodeDTOS
+      })
+      .catch(err=>{
+        console.log(err)
       })
     },
     getCourseList() {

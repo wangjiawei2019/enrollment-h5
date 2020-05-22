@@ -2,7 +2,7 @@
  * @Author: zxk
  * @Date: 2020-05-18 14:01:20
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-22 10:28:43
+ * @LastEditTime: 2020-05-22 16:57:56
 --> 
 <template>
   <div id="login">
@@ -77,6 +77,16 @@ export default {
           Toast.fail(err)
         })
     },
+    getReadStatus(){
+      http.getReadStatus().then(res=>{
+        console.log('是否需要查看招生简章',res)
+        if(res.data){
+          this.$router.push({ path: '/index/lesson' })
+        }else{
+          this.$router.push({ path: '/apply-rule' })
+        }
+      })
+    },
     login() {
       let params = {
         phone: this.phone,
@@ -88,7 +98,7 @@ export default {
           console.log('登录成功',res)
           //存一下token，看是否要去报名须知
           store.commit('setToken', res.data)
-          this.$router.replace({ path: '/index/lesson' })
+          this.getReadStatus()
         })
         .catch(err => {
           Toast(err)

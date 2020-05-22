@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-22 09:52:58
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-22 10:10:21
+ * @LastEditTime: 2020-05-22 16:51:39
 --> 
 <template>
     <div class="apply-rule">
@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import http from '@/api'
 export default {
     data(){
         return {
@@ -21,8 +22,19 @@ export default {
     },
     methods:{
         toLesson(){
-            this.$router.push('/index')
+            http.setReadNote().then(res=>{
+                console.log(res)
+                this.$router.push('/index')
+            })
+            .catch(err=>{
+                console.log(err)
+            })
         }
+    },
+    mounted(){
+        http.getRecruitIntro().then(res=>{
+            this.content = res.data
+        })
     }
 }
 </script>

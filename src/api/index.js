@@ -2,9 +2,24 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 17:03:31
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-22 11:50:23
+ * @LastEditTime: 2020-05-22 16:30:11
  */
 import { get, post } from '@/utils/request'
+
+//post 是否需要阅读招生简章
+function getReadStatus(){
+  return post('/major/api/course/getReadStatus')
+}
+
+//post 获取招生简章内容
+function getRecruitIntro() {
+  return post('/major/api/course/getRecruitIntro')
+}
+
+//post 设置阅读招生简章
+function setReadNote() {
+  return post('/major/api/course/setReadNote')
+}
 
 //get 发送短信验证码 { phone }
 function sendsms(params) {
@@ -21,6 +36,7 @@ function login(params) {
 function getMajorList() {
   return post('/major/api/course/getMajorList')
 }
+
 // post 根据专业id获取课程分类(右侧)
 function getCourseList(params) {
   return post('/major/api/course/getCourseList', params)
@@ -69,6 +85,9 @@ function applyCourse(params) {
 }
 
 export default {
+  getReadStatus,
+  getRecruitIntro,
+  setReadNote,
   sendsms,
   login,
   getMajorList,
