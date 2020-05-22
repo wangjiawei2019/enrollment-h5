@@ -2,7 +2,7 @@
  * @Author: zxk
  * @Date: 2020-05-18 14:01:48
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-20 17:04:17
+ * @LastEditTime: 2020-05-22 18:47:27
 --> 
 <template>
   <div id="index">
@@ -66,12 +66,20 @@ export default {
 <style lang="scss" scoped>
 #index {
   display: flex;
-  min-height: calc(100vh - 3.63rem);
-  min-height: calc(100vh - 3.63rem - constant(safe-area-inset-bottom));
-  min-height: calc(100vh - 3.63rem - env(safe-area-inset-bottom));
-  margin-bottom: 3.63rem;
-  margin-bottom: calc(3.63rem + constant(safe-area-inset-bottom));
-  margin-bottom: calc(3.63rem + env(safe-area-inset-bottom));
+  min-height: 100vh;
+  box-sizing: border-box;
+  // min-height: calc(100vh - 3.63rem);
+  // min-height: calc(100vh - 3.63rem - constant(safe-area-inset-bottom));
+  // min-height: calc(100vh - 3.63rem - env(safe-area-inset-bottom));
+  border-bottom: 0 solid #fff;
+  border-color: #fff;
+  border-bottom-width: 3.63rem;
+  border-bottom-width: calc(3.63rem + constant(safe-area-inset-bottom));
+  border-bottom-width: calc(3.63rem + env(safe-area-inset-bottom));
+
+  // margin-bottom: 3.63rem;
+  // margin-bottom: calc(3.63rem + constant(safe-area-inset-bottom));
+  // margin-bottom: calc(3.63rem + env(safe-area-inset-bottom));
   background-color: #fff;
   overflow: hidden;
 }

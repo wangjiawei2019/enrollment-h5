@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-21 19:00:44
+ * @LastEditTime: 2020-05-22 18:56:44
 --> 
 <template>
   <div id="app">
@@ -197,7 +197,7 @@
 .van-tabs--line {
   height: 100%;
   .van-tabs__content {
-    height: calc(100% - 2.94rem);
+    height: 100%;
     .van-tab__pane {
       height: 100%;
     }
