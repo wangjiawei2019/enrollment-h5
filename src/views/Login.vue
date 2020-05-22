@@ -1,8 +1,8 @@
 <!--
  * @Author: zxk
  * @Date: 2020-05-18 14:01:20
- * @LastEditors: wjw
- * @LastEditTime: 2020-05-21 17:14:48
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-05-22 17:30:34
 --> 
 <template>
   <div id="login">
@@ -46,39 +46,45 @@ export default {
       //获取验证码
       let that = this
       if (/^[1]([3-9])[0-9]{9}$/.test(this.phone)) {
-        const TIME_COUNT = 60
-        that.sendcode = TIME_COUNT
         that.sendsms()
-        let timer = setInterval(() => {
-          if (that.sendcode > 0 && that.sendcode <= TIME_COUNT) {
-            that.sendcode--
-          } else {
-            clearInterval(that.timer)
-            that.timer = null
-          }
-        }, 1000)
       } else {
         Toast('手机号码格式错误')
       }
     },
     sendsms() {
+      let that = this;
+      let timer = null;
+      const TIME_COUNT = 60
       //发送验证码
-      console.log(this.phone)
       let params = {
-        phone: this.phone
+        phone: that.phone
       }
       http
         .sendsms(params)
         .then(res => {
-          console.log('验证码', res)
-          if (res.status === 200) {
-            Toast.success('验证码已发送')
-          }
-          //发送失败的话做处理
+          Toast.success('验证码已发送');
+          that.sendcode = TIME_COUNT
+          timer = setInterval(() => {
+            if (that.sendcode > 0 && that.sendcode <= TIME_COUNT) {
+              that.sendcode--
+            } else {
+              clearInterval(timer)
+              timer = null
+            }
+          }, 1000)
         })
         .catch(err => {
-          console.log(err)
+          Toast.fail(err)
         })
+    },
+    getReadStatus(){
+      http.getReadStatus().then(res=>{
+        if(res.data){
+          this.$router.push({ path: '/index/lesson' })
+        }else{
+          this.$router.push({ path: '/apply-rule' })
+        }
+      })
     },
     login() {
       let params = {
@@ -88,17 +94,12 @@ export default {
       http
         .login(params)
         .then(res => {
-          console.log(res)
-          if (res.status === 200) {
-            console.log('登录成功')
-            //存一下token，看是否要去报名须知
-            store.commit('setToken', res.data)
-            this.$router.push({ path: '/index/lesson' })
-          } else {
-            Toast(res.msg)
-          }
+          //存一下token，看是否要去报名须知
+          store.commit('setToken', res.data)
+          this.getReadStatus()
         })
         .catch(err => {
+          Toast(err)
           console.log(err)
         })
     },

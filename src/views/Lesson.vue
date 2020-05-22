@@ -1,8 +1,8 @@
 <!--
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
- * @LastEditors: wjw
- * @LastEditTime: 2020-05-21 17:24:23
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-05-22 17:34:09
 --> 
 <template>
   <div class="lesson">
@@ -38,9 +38,9 @@
     </div>
 
     <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
-      <van-list v-model="loading" :finished="finished" @load="onLoad">
-        <div class="curr-list" v-if="false">
-          <Curriculums v-for="(item,index) in classList" :key="index" :classItem="item"></Curriculums>
+      <van-list v-model="loading" :finished="finished" @load="downPull">
+        <div class="curr-list" v-if="classList.length">
+          <Curriculums @changeShow="changeShow" v-for="(item,index) in classList" :key="index" :classItem="item"></Curriculums>
         </div>
         <div class="no-list" v-else>
           <van-empty :image="require('@/assets/no-list1.png')" description="暂无相关课程" />
@@ -49,102 +49,40 @@
     </van-pull-refresh>
 
     <!-- 提示内容 -->
-    <currTip :repeatShow="repeatShow"></currTip>
+    <currTip :repeat-show="repeatShow" :class-name="className" @changeShow="changeShow"></currTip>
   </div>
 </template>
 
 <script>
 import Curriculums from '@/components/curriculums'
 import CurrTip from '@/components/currTip'
-import { TreeSelect, Empty, List, PullRefresh } from 'vant'
+import { TreeSelect, Empty, List, PullRefresh, Toast } from 'vant'
 import http from '@/api/index.js'
 export default {
   name: 'Lesson',
   data() {
     return {
       repeatShow: false, //重复报名提示
+      className:'',
       showClassify: false, //课程分类
       majorList: [], //专业分类
       courseList: [], //课程分类
       courseId: 0, //课程id
       majorIndex: 0, //专业下标
       majorTitle: '课程分类',
-      // classList: [],  //班级列表
-      classList: [
-        {
-          id: 1,
-          name: '计算机一班',
-          subtitle: '学会修电脑的必备之路',
-          image: 'https://xiehui-guanwang.obs.cn-north-1.myhuaweicloud.com:443/uploads/images/20190815%5Ca6dbd1bf97aeb528e2aa6964fb2ab468.jpg',
-          money: 0.09,
-          num: 500
-        },
-        {
-          id: 1,
-          name: '计算机一班',
-          subtitle: '学会修电脑的必备之路',
-          image: 'https://xiehui-guanwang.obs.cn-north-1.myhuaweicloud.com:443/uploads/images/20190815%5Ca6dbd1bf97aeb528e2aa6964fb2ab468.jpg',
-          money: 0.09,
-          num: 500
-        },
-        {
-          id: 1,
-          name: '计算机一班',
-          subtitle: '学会修电脑的必备之路',
-          image: 'https://xiehui-guanwang.obs.cn-north-1.myhuaweicloud.com:443/uploads/images/20190815%5Ca6dbd1bf97aeb528e2aa6964fb2ab468.jpg',
-          money: 0.09,
-          num: 500
-        },
-        {
-          id: 1,
-          name: '计算机一班',
-          subtitle: '学会修电脑的必备之路',
-          image: 'https://xiehui-guanwang.obs.cn-north-1.myhuaweicloud.com:443/uploads/images/20190815%5Ca6dbd1bf97aeb528e2aa6964fb2ab468.jpg',
-          money: 0.09,
-          num: 500
-        },
-        {
-          id: 2,
-          name: '网络一班',
-          subtitle: '成为网管的必备之路',
-          image: 'https://xiehui-guanwang.obs.cn-north-1.myhuaweicloud.com:443/uploads/images/20190821%5Cdfbe7e4e1f142cde7c6f2dd7e2ef0327.png',
-          money: 0.01,
-          num: 324
-        },
-        {
-          id: 16,
-          name: '算法与数据结构一班',
-          subtitle: '算法与数据结构一班副标题',
-          image: 'https://hwcdn.jinlingkeji.cn/uploads/images/efac154b0f3bd4b1a2cf764b5e3ae31f.jpg',
-          money: 0.01,
-          num: 100
-        },
-        {
-          id: 17,
-          name: '计算机原理一班',
-          subtitle: '计算机原理班级副标题',
-          image: 'https://hwcdn.jinlingkeji.cn/uploads/images/abb969f74e0c7f0d7dfd2008a61042a5.jpg',
-          money: 0.1,
-          num: 100
-        },
-        {
-          id: 18,
-          name: '这次不学草书了',
-          subtitle: '不学草书副标题',
-          image: 'https://hwcdn.jinlingkeji.cn/uploads/images/c919839ee5eaadfb5e8192be231af077.jpg',
-          money: 0.0,
-          num: 12
-        }
-      ],
+      classList: [],  //班级列表
       page: 1,
       totalPage: 1,
       list: [],
       loading: false, //是否处于加载中
       finished: false, //是否加载完成
-      refreshing: false
+      refreshing: false,  //下拉刷新是否完成
     }
   },
   methods: {
+    changeShow(flag){
+      this.repeatShow = flag
+    },
     toSearch() {
       this.$router.push({ path: '/search' })
     },
@@ -154,7 +92,6 @@ export default {
     },
     selectedClass(index) {
       //选择专业
-      console.log('选择专业', this.majorList[index])
       let majorItem = this.majorList[index]
       let text = majorItem.text
       if (majorItem.text === '全部') {
@@ -177,6 +114,7 @@ export default {
         majorId: major.id,
         courseId: item.id
       }
+      this.page = 1;
       this.getClassList(id)
     },
     getMajorList() {
@@ -184,6 +122,9 @@ export default {
       http.getMajorList().then(res => {
         this.majorList = res.data.majorNodeDTOS
         this.courseList = res.data.courseNodeDTOS
+      })
+      .catch(err=>{
+        console.log(err)
       })
     },
     getCourseList() {
@@ -202,23 +143,34 @@ export default {
       let params = {
         majorId,
         courseId,
+        pageSize: 9,
         pageNum: page
       }
       http.getClassList(params).then(res => {
         if (page == 1) {
-          this.classList = res.data
-          this.page++
+          this.classList = res.dataList
+          this.totalPage = Math.ceil(res.total/res.pageSize)
         } else {
-          this.classList = this.classList.concat(res.data)
+          console.log("分页加载")
+          this.classList = this.classList.concat(res.dataList);
         }
-        this.refreshing = false
-        // 数据全部加载完成
-        this.finished = true
-        //加载状态结束
+        this.page++
+        //加载状态完成
         this.loading = false
+        // 数据全部加载完成
+        // this.finished = true
+        //下拉刷新完成
+        this.refreshing = false
+        console.log(this.page)
+      })
+      .catch(err=>{
+        this.finished = true
+        Toast.fail('服务器出错')
+        console.log(err)
       })
     },
     init() {
+      // console.log("获取初始数据",navigator.userAgent)
       let id = {
         majorId: 0,
         courseId: 0
@@ -226,20 +178,23 @@ export default {
       this.getMajorList()
       this.getClassList(id)
     },
-    onLoad() {
-      console.log('上拉加载')
-      if (this.page >= this.totalPage) {
-        this.finished = true
-        return
-      }
-      let id = {
-        majorId: this.majorList[this.majorIndex],
-        courseId: this.courseId
-      }
-      this.getClassList(id, 2)
+    downPull() {
+      if(this.page == 1){
+        this.init()
+      }else{
+        if (this.page > this.totalPage) {
+          //  数据全部加载完成，可以弹提示
+          this.finished = true
+          return
+        }
+        let id = {
+          majorId: this.majorList[this.majorIndex].id || 0,
+          courseId: this.courseId
+        }
+        this.getClassList(id, this.page)
+        }
     },
     onRefresh() {
-      console.log('下拉刷新')
       // 将 loading 设置为 true，表示处于加载状态,不加载load
       this.loading = true
       // 清空列表数据
@@ -252,9 +207,6 @@ export default {
       }
       this.getClassList(id, 1)
     }
-  },
-  mounted() {
-    this.init()
   },
   components: {
     Curriculums,

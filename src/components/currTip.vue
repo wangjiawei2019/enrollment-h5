@@ -3,29 +3,37 @@
  * @Author: zxk
  * @Date: 2020-05-19 14:34:41
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-19 15:07:24
+ * @LastEditTime: 2020-05-22 15:49:37
 --> 
 <template>
-    <div class="curr-tip" v-show="repeatShow">
-        <div class="tip-box">
+    <van-overlay class="curr-tip"  :show="repeatShow" @click="iknow">
+        <div class="tip-box" @click.stop>
             <div class="content">
-                <div>您已完成一下班级报名</div>
-                <div>"老年美妆搭配一班"</div>
+                <div>您已完成以下班级报名</div>
+                <div>"{{className}}"</div>
                 <div>相同课程请勿重复报名</div>
             </div>
-            <div class="know" @click="iknow">我知道了</div>
+            <div class="know" @click.stop="iknow">我知道了</div>
         </div>
-    </div>
+    </van-overlay>
 </template>
 
 <script>
+import { Overlay } from 'vant';
 export default {
     props:{
-        repeatShow: Boolean
+        repeatShow:Boolean,
+        className: {
+            type:String,
+            default: '相似班级'
+        }
+    },
+    components:{
+        'van-overlay':Overlay
     },
     methods:{
         iknow(){
-            this.repeatShow = false;
+            this.$emit('changeShow',false)
         }
     }
 }

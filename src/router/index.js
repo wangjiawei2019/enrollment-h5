@@ -2,12 +2,13 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-22 15:14:30
+ * @LastEditTime: 2020-05-22 17:39:09
  */
 
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import qs from 'qs'
+import http from '@/api'
 import store from '@/store'
 import Index from '@/views/Index'
 import Lesson from '@/views/Lesson'
@@ -18,6 +19,8 @@ import Order from '@/views/Order'
 import Login from '@/views/Login'
 import Notice from '@/views/Notice'
 import Search from '@/views/Search'
+import ApplyRule from '@/views/ApplyRule'
+import LessonDetail from '@/views/LessonDetail'
 Vue.use(VueRouter)
 
 const routes = [
@@ -80,7 +83,23 @@ const routes = [
   {
     path: '/search',
     name: 'Search',
-    component: Search
+    component: Search,
+    meta: {
+      title: '班级搜索'
+    }
+  },
+  {
+    path: '/lesson-detail',
+    name: 'LessonDetail',
+    component: LessonDetail
+  },
+  {
+    path: '/apply-rule',
+    name: 'ApplyRule',
+    component: ApplyRule,
+    meta: {
+      title: '报名须知'
+    }
   }
 ]
 
@@ -89,6 +108,7 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
 router.beforeEach((to, from, next) => {
   if (to.meta.title) {
     //判断是否有标题
@@ -97,49 +117,29 @@ router.beforeEach((to, from, next) => {
   if (to.name === 'Login') {
     const query = qs.parse(to.hash.split('?')[1])
     if (query.token) {
-      //将token&手机号存入store,直接登录
+      //更新token,直接登录
+      // console.log(query)
       store.commit('setToken', query.token)
       // store.commit('setToken', token);
       //是否需要去报名须知
-      next({ path: '/index', replace: true })
+      http.getReadStatus().then(res => {
+        if (res.data) {
+          next({ path: '/index', replace: true })
+        } else {
+          this.$router.push({ path: '/apply-rule' })
+        }
+      })
     } else {
       if (store.state.token) {
+        //有缓存，说明不需要去看招生简章了
         next({ path: '/index', replace: true })
       } else {
         next()
       }
     }
   } else {
-    // if (store.state.token){
-
-    // }
     next()
   }
 })
-
-// const logined = store.state.isLogin
-
-// router.beforeEach((to, from, next) => {
-//   //beforeEach是router的钩子函数，在进入路由前执行
-//   if (to.meta.title) {
-//     //判断是否有标题
-//     console.log(to.meta.title)
-//     document.title = to.meta.title
-//   }
-
-//   if (to.name == 'Login') {
-//     if (!logined) {
-//       next()
-//     } else {
-//       router.replace('/index')
-//     }
-//   } else {
-//     if (!logined) {
-//       router.replace('/login')
-//     } else {
-//       next()
-//     }
-//   }
-// })
 
 export default router

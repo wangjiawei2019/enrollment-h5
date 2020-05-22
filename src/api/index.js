@@ -2,9 +2,24 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 17:03:31
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-22 15:18:05
+ * @LastEditTime: 2020-05-22 17:38:32
  */
 import { get, post } from '@/utils/request'
+
+//post 是否需要阅读招生简章
+function getReadStatus() {
+  return post('/major/api/course/getReadStatus')
+}
+
+//post 获取招生简章内容
+function getRecruitIntro() {
+  return post('/major/api/course/getRecruitIntro')
+}
+
+//post 设置阅读招生简章
+function setReadNote() {
+  return post('/major/api/course/setReadNote')
+}
 
 //get 发送短信验证码 { phone }
 function sendsms(params) {
@@ -21,6 +36,7 @@ function login(params) {
 function getMajorList() {
   return post('/major/api/course/getMajorList')
 }
+
 // post 根据专业id获取课程分类(右侧)
 function getCourseList(params) {
   return post('/major/api/course/getCourseList', params)
@@ -29,6 +45,16 @@ function getCourseList(params) {
 //post 获取班级列表
 function getClassList(params) {
   return post('/major/api/course/getClassList', params)
+}
+
+//post 获取班级详情
+function getClassDetail(params) {
+  return post('/major/api/course/getClassDetail', params)
+}
+
+//post 搜索班级 {keyword:关键字,pageSize,pageNum},此处的页码从0开始,三个参数都必须要
+function searchCourseClass(params) {
+  return post('/es/elastic/searchCourseClass', params)
 }
 
 /**
@@ -92,10 +118,15 @@ function applyCourse(params) {
 }
 
 export default {
+  getReadStatus,
+  getRecruitIntro,
+  setReadNote,
   sendsms,
   login,
   getMajorList,
   getClassList,
+  getClassDetail,
+  searchCourseClass,
   getCartList,
   cancelApplyCourse,
   createOrder,
