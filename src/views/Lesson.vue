@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-22 11:57:40
+ * @LastEditTime: 2020-05-22 15:51:55
 --> 
 <template>
   <div class="lesson">
@@ -40,7 +40,7 @@
     <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
       <van-list v-model="loading" :finished="finished" @load="downPull">
         <div class="curr-list" v-if="classList.length">
-          <Curriculums v-for="(item,index) in classList" :key="index" :classItem="item"></Curriculums>
+          <Curriculums @changeShow="changeShow" v-for="(item,index) in classList" :key="index" :classItem="item"></Curriculums>
         </div>
         <div class="no-list" v-else>
           <van-empty :image="require('@/assets/no-list1.png')" description="暂无相关课程" />
@@ -49,7 +49,7 @@
     </van-pull-refresh>
 
     <!-- 提示内容 -->
-    <currTip :repeatShow="repeatShow"></currTip>
+    <currTip :repeat-show="repeatShow" :class-name="className" @changeShow="changeShow"></currTip>
   </div>
 </template>
 
@@ -63,6 +63,7 @@ export default {
   data() {
     return {
       repeatShow: false, //重复报名提示
+      className:'',
       showClassify: false, //课程分类
       majorList: [], //专业分类
       courseList: [], //课程分类
@@ -79,6 +80,9 @@ export default {
     }
   },
   methods: {
+    changeShow(flag){
+      this.repeatShow = flag
+    },
     toSearch() {
       this.$router.push({ path: '/search' })
     },

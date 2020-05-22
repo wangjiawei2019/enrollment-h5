@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-19 11:15:15
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-22 14:59:46
+ * @LastEditTime: 2020-05-22 15:40:34
 --> 
 <template>
   <div class="curriculums" @click="toDetail">
@@ -31,16 +31,17 @@ export default {
   methods: {
     applyCourse() {
       let params = {
-        id: ''
+        id: this.classItem.id
       }
+      this.$emit('changeShow',true)
       console.log(params)
-      http.applyCourse(params).then(res=>{
-        console.log("报名成功",res)
-      })
-      .catch(err=>{
-        console.log(err)
-        Toast(err)
-      })
+      // http.applyCourse(params).then(res=>{
+      //   console.log("报名成功",res)
+      // })
+      // .catch(err=>{
+      //   console.log(err)
+      //   Toast(err)
+      // })
       // Toast('本期招生已截止');
     },
     toDetail(){

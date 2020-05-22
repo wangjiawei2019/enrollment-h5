@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-22 11:41:33
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-22 14:57:59
+ * @LastEditTime: 2020-05-22 15:17:08
 --> 
 <template>
     <div class="detail-page">
@@ -35,6 +35,7 @@
 <script>
 import http from '@/api';
 export default {
+    name: 'LessonDetail',
     data(){
         return {
             id:0,
