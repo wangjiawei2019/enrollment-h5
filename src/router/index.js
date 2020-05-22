@@ -1,8 +1,8 @@
 /*
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
- * @LastEditors: zxk
- * @LastEditTime: 2020-05-21 16:59:32
+ * @LastEditors: wjw
+ * @LastEditTime: 2020-05-22 15:14:30
  */
 
 import Vue from 'vue'
@@ -13,6 +13,7 @@ import Index from '@/views/Index'
 import Lesson from '@/views/Lesson'
 import List from '@/views/List'
 import ConfirmOrder from '@/views/ConfirmOrder'
+import OrderDetail from '@/views/OrderDetail'
 import Order from '@/views/Order'
 import Login from '@/views/Login'
 import Notice from '@/views/Notice'
@@ -68,6 +69,15 @@ const routes = [
     }
   },
   {
+    path: '/order-detail',
+    name: 'OrderDetail',
+    component: OrderDetail,
+    props: true,
+    meta: {
+      title: '订单详情'
+    }
+  },
+  {
     path: '/search',
     name: 'Search',
     component: Search
@@ -82,7 +92,6 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   if (to.meta.title) {
     //判断是否有标题
-    console.log(to.meta.title)
     document.title = to.meta.title
   }
   if (to.name === 'Login') {

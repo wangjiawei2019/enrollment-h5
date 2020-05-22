@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-21 10:12:23
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-21 16:35:14
+ * @LastEditTime: 2020-05-22 17:32:32
 --> 
 <template>
   <div class="confirm-order-page">
@@ -88,18 +88,24 @@ export default {
   data() {
     return {
       showPay: false,
-      showDialog: false
+      showDialog: false,
+      url: '',
+      id: null // 订单 id
     }
   },
   methods: {
     submitOrder(classIdList) {
       http.createOrder({ classIdList }).then(res => {
         this.showPay = true
+        const { url, id } = res
+        this.url = url
+        this.id = id
       })
     },
-    confirmPay() {},
+    confirmPay() {
+      location.href = this.url
+    },
     handleCancel() {
-      console.log('1')
       this.showDialog = true
     },
     dialogConfirm() {
@@ -108,6 +114,7 @@ export default {
     dialogCancel() {
       this.showDialog = false
       this.showPay = false
+      this.$router.push({ name: 'OrderDetail', query: { id: this.id } })
     }
   },
   computed: {

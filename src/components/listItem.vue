@@ -2,13 +2,13 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-19 16:44:12
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-21 09:38:18
+ * @LastEditTime: 2020-05-22 14:09:09
 --> 
 <template>
   <div class="list-item">
     <div class="top-box">
       <div class="img-wapper">
-        <img :src="item.image || '@/assets/site.png'" alt="课程缩略图" class="lesson-img" />
+        <img :src="item.image || require('@/assets/site.png')" alt="课程缩略图" class="lesson-img" />
         <div class="mask"></div>
       </div>
       <div class="desc-box" :class="{checked:checked}">

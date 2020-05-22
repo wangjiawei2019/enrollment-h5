@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-21 15:36:02
+ * @LastEditTime: 2020-05-22 14:48:22
 --> 
 <template>
   <div class="list-page">
@@ -26,7 +26,7 @@
             :name="item.classId"
             class="check-item"
             v-for="(item, index) in list"
-            :class="{'van-hairline--bottom': index !== list.length}"
+            :class="{'van-hairline--bottom': index !== list.length - 1}"
             :key="item.classId"
           >
             <list-item :checked="true" :item="item"></list-item>
@@ -38,6 +38,7 @@
         :totalMoney="totalMoney(result)"
         :result="result"
         @goPay="goPay"
+        @deleteOrder="deleteOrder"
       >
         <template v-slot:check-slot>
           <van-checkbox
@@ -81,15 +82,14 @@ export default {
     }
   },
   mounted() {
-    this.getCartList()
+    this.getCartList().then(() => {
+      this.toggleAll(true)
+    })
   },
   methods: {
     getCartList() {
-      http.getCartList().then(res => {
+      return http.getCartList().then(res => {
         this.list = Array.isArray(res.data) ? res.data : []
-        this.$nextTick(() => {
-          this.toggleAll(true)
-        })
       })
     },
     handleEdit() {
@@ -97,14 +97,19 @@ export default {
       this.toggleAll(this.showEdit)
     },
     onCheckboxGroupChange(names) {
-      console.log('onCheckboxGroupChange -> names', names)
       this.allChecked = names.length === this.list.length
-      if (this.showEdit) {
-        // 计算总价格
-      }
     },
     toggleAll(val) {
       this.$refs['CheckboxGroup'].toggleAll(val)
+    },
+    deleteOrder() {
+      const cartIdList = []
+      this.result.map(i => {
+        cartIdList.push(this.list.filter(v => v.classId === i)[0].cartId)
+      })
+      http.cancelApplyCourse({ cartIdList }).then(res => {
+        this.getCartList()
+      })
     },
     goPay() {
       if (this.result.length) {

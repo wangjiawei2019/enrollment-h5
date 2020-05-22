@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-21 17:12:14
+ * @LastEditTime: 2020-05-21 19:00:44
 --> 
 <template>
   <div id="app">
@@ -125,6 +125,17 @@
     color: rgba(255, 255, 255, 1) !important;
   }
 }
+.van-button--plain {
+  width: 6rem !important;
+  height: 2.56rem !important;
+  padding: 0 !important;
+  border-radius: 0.31rem !important;
+  font-size: 1.19rem !important;
+  font-family: PingFang SC !important;
+  font-weight: 400 !important;
+  color: rgba(51, 51, 51, 1) !important;
+  line-height: 1.66rem !important;
+}
 .van-button--disabled {
   opacity: 1 !important;
   background-color: #cccccc !important;
@@ -179,9 +190,17 @@
     font-weight: 500;
     line-height: 1.84rem;
   }
-
   .van-tabs__line {
     border-radius: 0.09rem !important;
+  }
+}
+.van-tabs--line {
+  height: 100%;
+  .van-tabs__content {
+    height: calc(100% - 2.94rem);
+    .van-tab__pane {
+      height: 100%;
+    }
   }
 }
 //PullRefresh

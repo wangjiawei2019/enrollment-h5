@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 17:03:31
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-21 17:13:52
+ * @LastEditTime: 2020-05-22 15:18:05
  */
 import { get, post } from '@/utils/request'
 
@@ -37,6 +37,15 @@ function getClassList(params) {
 function getCartList() {
   return post('/major/api/course/getCartList')
 }
+
+/**
+ * @description: 删除购物车列表
+ * @param {cartId}
+ */
+function cancelApplyCourse(param) {
+  return post('/major/api/course/cancelApplyCourse', param)
+}
+
 /**
  * @description: 创建订单
  * @param {classIdList}
@@ -53,6 +62,30 @@ function getOrderList(param) {
   return post('/major/api/course/getOrderList', param)
 }
 
+/**
+ * @description: 取消订单
+ * @param {id}
+ */
+function cancelOrder(param) {
+  return post('/major/api/course/cancelOrder', param)
+}
+
+/**
+ * @description: 删除订单
+ * @param {id}
+ */
+function deleteOrder(param) {
+  return post('/major/api/course/deleteOrder', param)
+}
+
+/**
+ * @description: 获取订单详情
+ * @param {id}
+ */
+function getOrderDetail(param) {
+  return post('/major/api/course/getOrderDetail', param)
+}
+
 //post 立即报名，添加购物车
 function applyCourse(params) {
   return post('/major/api/course/applyCourse', params)
@@ -64,8 +97,12 @@ export default {
   getMajorList,
   getClassList,
   getCartList,
+  cancelApplyCourse,
   createOrder,
   getOrderList,
   getCourseList,
-  applyCourse
+  applyCourse,
+  cancelOrder,
+  deleteOrder,
+  getOrderDetail
 }

@@ -2,20 +2,20 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-20 09:35:54
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-21 11:42:05
+ * @LastEditTime: 2020-05-22 14:42:43
 --> 
 <template>
   <div class="pay-bar" :class="{'safe-area':safeArea}">
     <slot name="check-slot"></slot>
     <slot name="total"></slot>
-    <div class="price-box" v-if="buttonMethod !== 'delete'">
+    <div class="price-box" v-if="buttonMethod !== 'deleteOrder'">
       <span>合计：</span>
       <span>￥</span>
       <span>{{ totalMoney }}</span>
     </div>
     <van-button
       type="danger"
-      :disabled="buttonMethod === 'delete' && !result.length"
+      :disabled="buttonMethod === 'deleteOrder' && !result.length"
       @click="handleClick(buttonMethod)"
     >{{ buttonText }}</van-button>
   </div>
@@ -62,14 +62,16 @@ export default {
     goPay() {
       this.$emit('goPay')
     },
-    delete() {},
+    deleteOrder() {
+      this.$emit('deleteOrder', this.result)
+    },
     submitOrder() {
       this.$emit('submitOrder', this.result)
     }
   },
   computed: {
     buttonMethod() {
-      const obj = { 去支付: 'goPay', 删除: 'delete', 提交订单: 'submitOrder' }
+      const obj = { 去支付: 'goPay', 删除: 'deleteOrder', 提交订单: 'submitOrder' }
       return obj[this.buttonText]
     }
   }
@@ -94,14 +96,17 @@ export default {
     margin-right: 0.94rem;
     @include flex(flex-end, center, row, nowrap);
     & span:nth-child(1) {
+      white-space: nowrap;
       line-height: 1.88rem;
       @include font(PingFang SC, 0.94rem, rgba(51, 51, 51, 1), 400);
     }
     & span:nth-child(2) {
+      white-space: nowrap;
       line-height: 1.31rem;
       @include font(PingFang SC, 0.94rem, #f2323a, 500);
     }
     & span:nth-child(3) {
+      white-space: nowrap;
       line-height: 1.84rem;
       @include font(PingFang SC, 1.31rem, #f2323a, 500);
     }
