@@ -3,25 +3,33 @@
  * @Author: zxk
  * @Date: 2020-05-20 09:22:14
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-22 19:04:31
+ * @LastEditTime: 2020-05-25 14:02:12
 --> 
 <template>
   <div class="search-page">
     <div class="title">
-      <div class="search">
-        <img class="s-img" src="@/assets/images/lesson/search.png" alt />
-        <div class="search-ipt">
-          <input type="text" placeholder="搜索学习课程" @input="searchWorld" v-model="keyWord" />
-        </div>
+      <van-search
+        v-model="keyWord"
+        shape="round"
+        :clearable="false"
+        show-action
+        autofocus
+        placeholder="请输入搜索关键词"
+        @search="searchWorld"
+        @cancel="cancel"
+      >
+      <div class="c-img" slot="left-icon">
+        <img src="@/assets/images/lesson/search.png" alt />
+      </div>
         <img
+        slot="right-icon"
+          class="d-img"
           v-show="keyWord"
           @click="delWorld"
-          class="d-img"
           src="@/assets/images/lesson/del.png"
           alt
         />
-      </div>
-      <div class="cancel" @click="cancel">取消</div>
+      </van-search>
     </div>
 
     <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
@@ -47,7 +55,7 @@
 </template>
 
 <script>
-import { Empty, List, PullRefresh } from 'vant'
+import { Empty, List, PullRefresh, Search } from 'vant'
 import Curriculums from '@/components/curriculums'
 import CurrTip from '@/components/currTip'
 import http from '@/api/index.js'
@@ -57,7 +65,7 @@ export default {
     return {
       repeatShow: false, //重复报名提示
       keyWord: '', //搜索关键词
-      classList: [],  //班级列表
+      classList: [], //班级列表
       page: 0,
       totalPage: 2,
       loading: false, //是否处于加载中
@@ -67,31 +75,31 @@ export default {
   },
   methods: {
     delWorld() {
-      this.keyWord = '';
+      this.keyWord = ''
       this.classList = []
     },
     cancel() {
       this.$router.back()
     },
-    searchWorld(e){
-      if(this.keyWord.length){
+    searchWorld(e) {
+      if (this.keyWord.length) {
         this.searchCourseClass()
-      }else{
+      } else {
         this.classList = []
       }
     },
-    searchCourseClass(page=0){
+    searchCourseClass(page = 0) {
       let params = {
         keyword: this.keyWord,
         pageSize: 10,
         pageNum: page
       }
-      http.searchCourseClass(params).then(res=>{
-        if(page == 0){
+      http.searchCourseClass(params).then(res => {
+        if (page == 0) {
           this.classList = res.data.content
           this.totalPage = res.data.totalPages
-        }else{
-          this.classList = this.classList.concat(res.data.content);
+        } else {
+          this.classList = this.classList.concat(res.data.content)
         }
         //加载状态完成
         this.loading = false
@@ -101,7 +109,8 @@ export default {
         this.refreshing = false
       })
     },
-    downPull() {  //上拉加载
+    downPull() {
+      //上拉加载
       if (this.page > this.totalPage) {
         //  数据全部加载完成，可以弹提示
         this.finished = true
@@ -109,7 +118,8 @@ export default {
       }
       this.searchCourseClass(this.page)
     },
-    onRefresh() { //下拉刷新
+    onRefresh() {
+      //下拉刷新
       // 将 loading 设置为 true，表示处于加载状态,不加载load
       this.loading = true
       // 清空列表数据
@@ -122,78 +132,18 @@ export default {
     'van-list': List,
     'van-pull-refresh': PullRefresh,
     'van-empty': Empty,
+    'van-search': Search,
     Curriculums,
     CurrTip
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .search-page {
   width: 100%;
   min-height: 100vh;
-  .title {
-    width: 100%;
-    height: 4.375rem /* 70/16 */;
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    background: #fff;
-    display: flex;
-    align-items: center;
-    z-index: 1;
-    border-bottom: 1px solid #E9E9E9;
-    .search {
-      height: 2.5rem /* 40/16 */;
-      display: flex;
-      align-items: center;
-      background: #f5f6fa;
-      border-radius: 1.25rem /* 20/16 */;
-      position: relative;
-      margin-left: 0.9375rem;
-      margin-right: 4.375rem /* 70/16 */;
-      .s-img {
-        width: 1.1875rem /* 19/16 */;
-        height: 1.1875rem /* 19/16 */;
-        margin-right: 0.59375rem /* 9.5/16 */;
-        margin-left: 0.9375rem;
-      }
-      .d-img {
-        // position: absolute;
-        // right: 0.9375rem /* 15/16 */;
-        width: 1.25rem /* 20/16 */;
-        height: 1.25rem /* 20/16 */;
-        margin: 0 0.9375rem;
-      }
-      .search-ipt {
-        min-width: 13.6875rem /* 219/16 */;
-        flex: 1;
-        // margin-right: 0.9375rem;
-        font-size: 1.25rem /* 20/16 */;
-        &>input{
-          width: 100%;
-          height: 1.25rem /* 20/16 */;
-          padding: 1.25rem 0;
-          background: none;
-          border: none;
-          font-family: PingFangSC-Regular, PingFang SC;
-          font-weight: 400;
-          color: rgba(153, 153, 153, 1);
-        }
-      }
-    }
-    .cancel {
-      width: 2.5rem /* 40/16 */;
-      position: absolute;
-      right: .9375rem /* 15/16 */;
-      line-height: 2.5rem /* 40/16 */;
-      font-size: 1.25rem /* 20/16 */;
-      font-family: PingFangSC-Regular, PingFang SC;
-      font-weight: 400;
-      color: rgba(51, 51, 51, 1);
-    }
-  }
+
   .curr-list {
     margin-top: 4.375rem /* 70/16 */;
   }
@@ -204,4 +154,58 @@ export default {
   }
 }
 
+.van-search {
+  width: 100%;
+  height: 4.375rem /* 70/16 */;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  background: #fff;
+  z-index: 1;
+  border-bottom: 1px solid #e9e9e9;
+  padding: .9375rem 0 .9375rem .9375rem; 
+}
+.van-search__content {
+  padding-left: 0.9375rem /* 15/16 */;
+  height: 100%;
+}
+.c-img {
+  width: 1.1875rem /* 19/16 */;
+  height: 1.625rem /* 26/16 */;
+  margin-right: .3125rem;
+  display: flex;  
+  align-items: center;
+  &>img{
+    width: 1.1875rem;
+    height: 1.1875rem;
+  }
+}
+.van-field__right-icon{
+  display: flex;
+  align-items: center;
+  padding: 0 .9375rem /* 15/16 */;;
+  .d-img{
+    width: 20px;
+    height: 20px;
+  }
+}
+  
+.van-cell {
+  display: flex;
+  align-items: center;
+}
+.van-field__control{
+  font-size: 1.25rem;
+  font-family:PingFangSC-Regular,PingFang SC;
+  font-weight:400;
+  color:rgba(51,51,51,1);
+}
+.van-search__action{
+  padding: 0 .9375rem;
+  font-size: 1.25rem;
+  font-family:PingFangSC-Regular,PingFang SC;
+  font-weight:400;
+  color:rgba(51,51,51,1);
+}
 </style>
