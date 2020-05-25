@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-25 09:22:22
+ * @LastEditTime: 2020-05-25 14:33:53
 --> 
 <template>
   <div class="lesson">
@@ -56,7 +56,7 @@
 <script>
 import Curriculums from '@/components/curriculums'
 import CurrTip from '@/components/currTip'
-import { TreeSelect, Empty, List, PullRefresh, Toast } from 'vant'
+import { TreeSelect, Empty, List, PullRefresh } from 'vant'
 import http from '@/api/index.js'
 export default {
   name: 'Lesson',
@@ -165,7 +165,7 @@ export default {
       })
       .catch(err=>{
         this.finished = true
-        Toast.fail(err)
+        this.$toast.fail(err)
         console.log(err)
       })
     },

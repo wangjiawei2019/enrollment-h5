@@ -2,7 +2,7 @@
  * @Author: zxk
  * @Date: 2020-05-18 14:01:20
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-25 09:55:13
+ * @LastEditTime: 2020-05-25 14:36:17
 --> 
 <template>
   <div id="login">
@@ -13,11 +13,11 @@
     <div class="login-info">
       <div class="writeInfo">
         <img class="icon-ipt" src="@/assets/images/lesson/phone.png" alt="logo" />
-        <input class="phone-ipt" type="number" maxlength="11" placeholder="请输入手机号" v-model="phone" />
+        <input class="phone-ipt" type="text" maxlength="11" placeholder="请输入手机号" v-model="phone" />
       </div>
       <div class="writeInfo">
         <img class="icon-code" src="@/assets/images/lesson/security.png" alt="logo" />
-        <input class="auth-code" minlength="4" maxlength="4" type="number" placeholder="请输入验证码" v-model="smsCode" />
+        <input class="auth-code" minlength="4" maxlength="4" type="text" placeholder="请输入验证码" v-model="smsCode" />
         <div class="send-code count-down" v-if="sendcode">重新发送({{sendcode}}s)</div>
         <div class="send-code" @click.prevent="sendCode" v-else>获取验证码</div>
       </div>
@@ -29,7 +29,6 @@
 </template>
 
 <script>
-import { Toast } from 'vant'
 import http from '@/api/index.js'
 import store from '@/store'
 export default {
@@ -48,7 +47,7 @@ export default {
       if (/^[1]([3-9])[0-9]{9}$/.test(this.phone)) {
         that.sendsms()
       } else {
-        Toast('手机号码格式错误')
+        this.$toast('手机号码格式错误')
       }
     },
     sendsms() {
@@ -62,7 +61,7 @@ export default {
       http
         .sendsms(params)
         .then(res => {
-          Toast.success('验证码已发送');
+          this.$toast.success('验证码已发送');
           that.sendcode = TIME_COUNT
           timer = setInterval(() => {
             if (that.sendcode > 0 && that.sendcode <= TIME_COUNT) {
@@ -74,7 +73,7 @@ export default {
           }, 1000)
         })
         .catch(err => {
-          Toast.fail(err)
+          this.$toast.fail(err)
         })
     },
     getReadStatus(){
@@ -99,7 +98,7 @@ export default {
           this.getReadStatus()
         })
         .catch(err => {
-          Toast(err)
+          this.$toast(err)
           console.log(err)
         })
     },
@@ -113,7 +112,7 @@ export default {
         tip = '验证码格式不正确'
       }
       if (tip) {
-        Toast(tip)
+        this.$toast(tip)
         return
       }
       this.login()

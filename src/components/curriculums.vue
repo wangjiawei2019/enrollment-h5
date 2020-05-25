@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-19 11:15:15
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-22 18:14:45
+ * @LastEditTime: 2020-05-25 14:34:24
 --> 
 <template>
   <div class="curriculums" @click="toDetail">
@@ -22,7 +22,6 @@
 </template>
 
 <script>
-import { Toast } from 'vant'
 import http from '@/api'
 export default {
   props: {
@@ -40,9 +39,9 @@ export default {
       // })
       // .catch(err=>{
       //   console.log(err)
-      //   Toast(err)
+      //   this.$toast(err)
       // })
-      // Toast('本期招生已截止');
+      // this.$toast('本期招生已截止');
     },
     toDetail(){
       this.$router.push({path:'/lesson-detail',query:{id:this.classItem.id}})
