@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-20 09:22:14
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-25 14:02:12
+ * @LastEditTime: 2020-05-25 14:20:03
 --> 
 <template>
   <div class="search-page">
@@ -143,7 +143,6 @@ export default {
 .search-page {
   width: 100%;
   min-height: 100vh;
-
   .curr-list {
     margin-top: 4.375rem /* 70/16 */;
   }
@@ -153,7 +152,9 @@ export default {
     width: 100%;
   }
 }
-
+.van-pull-refresh{
+  min-height: 100vh;
+}
 .van-search {
   width: 100%;
   height: 4.375rem /* 70/16 */;
