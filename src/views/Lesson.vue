@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-22 18:28:41
+ * @LastEditTime: 2020-05-25 09:22:22
 --> 
 <template>
   <div class="lesson">
@@ -165,7 +165,7 @@ export default {
       })
       .catch(err=>{
         this.finished = true
-        Toast.fail('服务器出错')
+        Toast.fail(err)
         console.log(err)
       })
     },

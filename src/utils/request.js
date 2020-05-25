@@ -1,13 +1,8 @@
 /*
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-04-20 16:14:58
-<<<<<<< HEAD
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-22 18:42:17
-=======
- * @LastEditors: wjw
- * @LastEditTime: 2020-05-22 17:49:46
->>>>>>> fd60dbc9612a60534ae3009c11939be0f8904abb
+ * @LastEditTime: 2020-05-25 09:10:19
  */
 import axios from 'axios'
 import { httpBaseUrl, domainBaseUrl } from './BASE'
