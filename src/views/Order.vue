@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-22 18:46:28
+ * @LastEditTime: 2020-05-25 11:35:52
 --> 
 <template>
   <div class="order-page">
@@ -20,11 +20,13 @@
       <van-tab v-for="(item, index) in tabList" :key="index" :title="item">
         <van-pull-refresh v-model="isLoading" success-text="刷新成功" @refresh="onRefresh">
           <div class="list-box" v-if="listObj[index].length">
-            <div class="item-wrapper" v-for="bItem in listObj[index]" :key="bItem.id">
-              <div
-                class="title-box"
-                @click="() => {$router.push({name:'OrderDetail',query:{id:bItem.id}})}"
-              >
+            <div
+              class="item-wrapper"
+              v-for="bItem in listObj[index]"
+              @click="handleClick(bItem.id)"
+              :key="bItem.id"
+            >
+              <div class="title-box">
                 <template v-if="bItem.status === 1">
                   <div>{{ countDown(bItem) }}分钟后将自动取消</div>
                 </template>
@@ -33,12 +35,7 @@
                 </template>
                 <div class="status">{{ statusText[bItem.status] }}</div>
               </div>
-              <div
-                class="wrap"
-                v-for="sItem in bItem.classListDTOList"
-                :key="sItem.id"
-                @click="() => {$router.push({name:'OrderDetail',query:{id:bItem.id}})}"
-              >
+              <div class="wrap" v-for="sItem in bItem.classListDTOList" :key="sItem.id">
                 <list-item :item="sItem"></list-item>
               </div>
               <div
@@ -53,10 +50,10 @@
               </div>
               <div class="btn-box">
                 <template v-if="bItem.status === 1">
-                  <van-button color="#333" plain @click="cancelOrder(bItem.id)">取消订单</van-button>
-                  <van-button type="danger" @click="payOrder(bItem)">去支付</van-button>
+                  <van-button color="#333" plain @click="cancelOrder($event, bItem.id)">取消订单</van-button>
+                  <van-button type="danger" @click="payOrder($event, bItem)">去支付</van-button>
                 </template>
-                <van-button color="#333" plain v-else @click="deleteOrder(bItem.id)">删除订单</van-button>
+                <van-button color="#333" plain v-else @click="deleteOrder($event, bItem.id)">删除订单</van-button>
               </div>
             </div>
           </div>
@@ -138,8 +135,11 @@ export default {
         this.listObj[this.active] = Array.isArray(res.data) ? res.data : []
       })
     },
-    cancelOrder(id, e) {
-      console.log('cancelOrder -> id,e', id, e)
+    handleClick(id) {
+      this.$router.push({ name: 'OrderDetail', query: { id } })
+    },
+    cancelOrder(e, id) {
+      e.stopPropagation()
       const obj = {
         id,
         type: 'cancelOrder',
@@ -151,8 +151,8 @@ export default {
       }
       Object.assign(this.dialogObj, obj)
     },
-    payOrder(item) {
-      console.log('payOrder -> item', item)
+    payOrder(e, item) {
+      e.stopPropagation()
       const totalMoney = item.sum
       const list = item.classListDTOList
       const classIdList = []
@@ -162,7 +162,8 @@ export default {
       this.$store.commit('setConfirmOrderList', { classIdList, list, totalMoney })
       this.$router.push({ name: 'ConfirmOrder' })
     },
-    deleteOrder(id) {
+    deleteOrder(e, id) {
+      e.stopPropagation()
       const obj = {
         id,
         type: 'deleteOrder',
