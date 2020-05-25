@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-19 11:15:15
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-25 14:34:24
+ * @LastEditTime: 2020-05-25 15:44:25
 --> 
 <template>
   <div class="curriculums" @click="toDetail">
@@ -28,7 +28,7 @@ export default {
     classItem: Object
   },
   methods: {
-    applyCourse() {
+    applyCourse() { //立即报名
       let params = {
         id: this.classItem.id
       }
@@ -36,6 +36,10 @@ export default {
       console.log(params)
       // http.applyCourse(params).then(res=>{
       //   console.log("报名成功",res)
+        // this.$toast({
+          //   position: 'bottom',
+          //   message: '内容'
+          // })
       // })
       // .catch(err=>{
       //   console.log(err)

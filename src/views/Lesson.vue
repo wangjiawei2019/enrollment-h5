@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-25 14:33:53
+ * @LastEditTime: 2020-05-25 15:26:33
 --> 
 <template>
   <div class="lesson">
@@ -63,7 +63,7 @@ export default {
   data() {
     return {
       repeatShow: false, //重复报名提示
-      className:'',
+      className:'啥啥班级',
       showClassify: false, //课程分类
       majorList: [], //专业分类
       courseList: [], //课程分类
