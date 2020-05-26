@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-20 09:22:14
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-25 14:20:03
+ * @LastEditTime: 2020-05-25 16:47:27
 --> 
 <template>
   <div class="search-page">
@@ -42,12 +42,6 @@
         </div>
       </van-list>
     </van-pull-refresh>
-
-    <!--
-      <div style="margin-left: 100px">
-        <button style="width: 200px;height: 50px;border-radius: 10px">支付</button>
-    </div>
-    -->
 
     <!-- 提示内容 -->
     <currTip :repeatShow="repeatShow"></currTip>

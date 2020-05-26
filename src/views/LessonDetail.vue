@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-22 11:41:33
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-25 15:43:32
+ * @LastEditTime: 2020-05-26 11:29:59
 --> 
 <template>
   <div class="detail-page">
@@ -25,7 +25,9 @@
       <div class="text">课程详情</div>
       <div class="detail-info" v-html="detail.classInfo"></div>
     </div>
-    <div class="footer">
+    
+    <div class="footer" v-if="detail.falg">报名完成，进入班群</div>
+    <div class="footer" v-else>
       <div class="left" @click="applyCourse">加入选课单</div>
       <div class="right">立即报名</div>
     </div>
@@ -59,9 +61,10 @@ export default {
       http.getClassDetail({ id }).then(res => {
         this.detail = res.data
         document.title = res.data.name
+        // console.log(res)
       })
     },
-    dialog(title,message,text,path){
+    dialog(title,message,text,name){
       Dialog.confirm({
           title,
           message,
@@ -70,31 +73,50 @@ export default {
           cancelButtonColor: '#999999'
         }).then(res=>{
           console.log('确认',res)
-          this.$router.push(path)
+          this.$router.push({name: name})
         })
         .catch(err=>{
           console.log('取消',err)
         })
     },
     applyCourse() {
-      let params = {
-        id: this.detail.id
-      }
+      let params = { id: this.detail.id }
+      //立即报名，提交订单
+      let info = null;
+      // this.$router.push({ name: 'ConfirmOrder' })
+
     //   this.$emit('changeShow', true)
       console.log(params)
       http.applyCourse(params).then(res=>{
         console.log("报名成功",res)
-        this.$toast()
+        if(res.data.status === 0){  //成功--1
+          this.$toast("成功添加到选课单")
+        }else if(res.data.status === 1){  //课程已经在选课单内,去选课单--2
+        this.dialog('该课程已经在选课单内','请勿重复添加','进入选课单','List')
+        }else if(res.data.status === 2){  //购物车里有相似课程，去选课单--4
+          this.dialog('选课单内已有相同课程','相同课程只能报一个班级','进入选课单','List')
+        }else if(res.data.status === 4){  //已报名该课程的其他班级--3
+          this.repeatShow = true
+        }else if(res.data.status === 5){  //去支付--5 
+          info = {
+            list:[],
+            classIdList: [],
+            totalMoney:0
+          }
+          this.$store.commit('setConfirmOrderList', info)
+          this.dialog('您已提交该班级报名','点\'去支付\'完成报名','去支付','ConfirmOrder')
+        }else if(res.data.status === 6){  //去支付--6
+          info = {
+            list:[],
+            classIdList: [],
+            totalMoney:0
+          }
+          this.$store.commit('setConfirmOrderList', info)
+          this.dialog('您已提交相同课程报名','点\'去支付\'完成报名','去支付','ConfirmOrder')
+        }
       })
       .catch(err=>{
         console.log('catch',err)
-        //购物车里有，去选课单
-        //this.dialog('您已提交该班级报名','点击"去支付"完成报名','去支付','/index/list')
-        //订单里有相似或者是相同的课程,去订单
-        //this.dialog('您已提交该班级报名','点击"去支付"完成报名','去支付','/index/order')
-        //相同课程不同班级已经完成报名，提示我知道了
-        // this.repeatShow = true
-        
       })
     }
   },

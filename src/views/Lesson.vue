@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-25 15:26:33
+ * @LastEditTime: 2020-05-26 10:28:36
 --> 
 <template>
   <div class="lesson">
@@ -165,7 +165,7 @@ export default {
       })
       .catch(err=>{
         this.finished = true
-        this.$toast.fail(err)
+        // this.$toast.fail(err)
         console.log(err)
       })
     },
