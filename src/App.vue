@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-25 10:07:36
+ * @LastEditTime: 2020-05-26 18:29:28
 --> 
 <template>
   <div id="app">
@@ -205,6 +205,7 @@
 }
 //PullRefresh
 .van-pull-refresh {
+  min-height: 100% !important;
   height: 100%;
 }
 </style>

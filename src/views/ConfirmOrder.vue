@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-21 10:12:23
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-22 17:32:32
+ * @LastEditTime: 2020-05-26 17:38:00
 --> 
 <template>
   <div class="confirm-order-page">
@@ -24,35 +24,19 @@
     >
       <template v-slot:total>
         <div class="total-box">
-          共
-          <span class="red">{{ confirmOrder.list.length }}</span>门课程
+          <span>共</span>
+          <span class="red">{{ confirmOrder.list.length }}</span>
+          <span>门课程</span>
         </div>
       </template>
     </pay-bar>
-    <van-action-sheet
-      v-model="showPay"
-      :round="false"
-      :close-on-click-overlay="false"
-      :close-on-popstate="false"
-    >
-      <div class="action-sheet-box">
-        <div class="cancel" @click="handleCancel"></div>
-        <div class="total-title">总金额</div>
-        <div class="total-money">
-          <span>￥</span>
-          <span>{{ confirmOrder.totalMoney }}</span>
-        </div>
-        <div class="content time">
-          <div class="left">支付剩余时间</div>
-          <div class="right">1:59:59</div>
-        </div>
-        <div class="content method">
-          <div class="left">支付方式</div>
-          <div class="right">微信支付</div>
-        </div>
-        <van-button class="pay-button" type="info" round @click="confirmPay()">确认支付</van-button>
-      </div>
-    </van-action-sheet>
+    <pay-action-sheet
+      :showPay="showPay"
+      :totalMoney="confirmOrder.totalMoney"
+      :remainTime="remainTime"
+      @handleCancel="handleCancel"
+      @confirmPay="confirmPay"
+    ></pay-action-sheet>
     <van-dialog
       v-model="showDialog"
       width="20.19rem"
@@ -62,7 +46,7 @@
       cancel-button-color="#999999"
       show-cancel-button
       title="是否放弃本次支付"
-      message="1小时59分钟内未支付将被取消"
+      :message="`${dialogRemainTime}内未支付将被取消`"
       @cancel="dialogCancel"
       @confirm="dialogConfirm"
     ></van-dialog>
@@ -70,7 +54,8 @@
 </template>
 
 <script>
-import { Sticky, ActionSheet, Dialog, Button } from 'vant'
+import { Sticky, Dialog } from 'vant'
+import PayActionSheet from '@/components/pay-action-sheet'
 import ListItem from '@/components/listItem'
 import PayBar from '@/components/payBar'
 import http from '@/api'
@@ -79,27 +64,34 @@ export default {
   name: 'ConfirmOrder',
   components: {
     'van-sticky': Sticky,
-    'van-button': Button,
-    'van-action-sheet': ActionSheet,
-    [Dialog.Component.name]: Dialog.Component, // 必须这样局部注册，否则会调用全局方法
+    'pay-action-sheet': PayActionSheet,
     'list-item': ListItem,
-    'pay-bar': PayBar
+    'pay-bar': PayBar,
+    [Dialog.Component.name]: Dialog.Component // 必须这样局部注册，否则会调用全局方法
   },
   data() {
     return {
       showPay: false,
       showDialog: false,
       url: '',
+      now: null,
+      expireTime: null, // 到期时间
       id: null // 订单 id
     }
+  },
+  mounted() {
+    setInterval(() => {
+      this.now = Date.parse(new Date()) / 1000
+    }, 1000)
   },
   methods: {
     submitOrder(classIdList) {
       http.createOrder({ classIdList }).then(res => {
         this.showPay = true
-        const { url, id } = res
+        const { url, id, expireTime } = res.data
         this.url = url
         this.id = id
+        this.expireTime = parseInt(expireTime / 1000)
       })
     },
     confirmPay() {
@@ -120,6 +112,19 @@ export default {
   computed: {
     confirmOrder() {
       return this.$store.state.confirmOrder
+    },
+    remainTime() {
+      if (!this.expireTime) return '00:00:00'
+      const reamin = this.expireTime - this.now
+      const H = parseInt(reamin / 3600) < 10 ? `0${parseInt(reamin / 3600)}` : parseInt(reamin / 3600)
+      const M = parseInt((reamin - 3600 * H) / 60) < 10 ? `0${parseInt((reamin - 3600 * H) / 60)}` : parseInt((reamin - 3600 * H) / 60)
+      const S = parseInt(reamin - 3600 * H - 60 * M) < 10 ? `0${parseInt(reamin - 3600 * H - 60 * M)}` : parseInt(reamin - 3600 * H - 60 * M)
+      return `${H}:${M}:${S}`
+    },
+    dialogRemainTime() {
+      const H = parseInt(this.remainTime.split(':')[0])
+      const M = parseInt(this.remainTime.split(':')[1])
+      return `${H ? H + '小时' : ''}${M}分钟`
     }
   }
 }
@@ -158,85 +163,6 @@ export default {
     @include font(PingFang SC, 0.94rem, rgba(51, 51, 51, 1), 400);
     .red {
       color: #f2323a;
-    }
-  }
-  .action-sheet-box {
-    width: 100%;
-    height: 21.5rem;
-    box-sizing: border-box;
-    padding: 0.94rem;
-    @include flex(flex-start, center, column, nowrap);
-    .cancel {
-      align-self: flex-end;
-      width: 1.5rem;
-      height: 1.5rem;
-      position: relative;
-      background-color: #fff;
-      border-radius: 50%;
-    }
-    .cancel::before,
-    .cancel::after {
-      content: '';
-      position: absolute; /*方便进行定位*/
-      background-color: #999;
-      height: 1.7rem;
-      width: 0.14rem;
-      left: 50%;
-    }
-    .cancel::before {
-      transform: rotate(45deg); /*进行旋转*/
-    }
-    .cancel::after {
-      transform: rotate(-45deg);
-    }
-    .total-title,
-    .total-money,
-    .content,
-    .pay-button {
-      width: calc(100% - 0.62rem);
-      margin-left: 0.31rem;
-      margin-right: 0.31rem;
-    }
-    .total-title {
-      text-align: center;
-      line-height: 1.84rem;
-      @include font(PingFang SC, 1.31rem, rgba(51, 51, 51, 1), 400);
-    }
-    .total-money {
-      margin-top: 1.25rem;
-      padding-bottom: 1.25rem;
-      border-bottom: 0.03rem solid #e9e9e9;
-      @include flex(center, flex-start, row, nowrap);
-      & span:nth-child(1) {
-        line-height: 2.43rem;
-        @include font(PingFang SC, 1.31rem, rgba(242, 50, 58, 1), 600);
-      }
-      & span:nth-child(2) {
-        line-height: 1.75rem;
-        @include font(PingFang SC, 2.19rem, rgba(242, 50, 58, 1), 600);
-      }
-    }
-
-    .content {
-      @include flex(space-between, center, row, nowrap);
-      .left,
-      .right {
-        line-height: 1.75rem;
-        @include font(PingFang SC, 1.25rem, rgba(102, 102, 102, 1), 400);
-      }
-      .right {
-        color: #333;
-      }
-    }
-    .pay-button {
-      margin-top: 1.88rem;
-      margin-bottom: 0.9rem;
-    }
-    .time {
-      margin-top: 1.25rem;
-    }
-    .method {
-      margin-top: 0.63rem;
     }
   }
 }
