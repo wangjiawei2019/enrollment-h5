@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-22 11:41:33
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-26 14:03:13
+ * @LastEditTime: 2020-05-26 15:14:52
 --> 
 <template>
   <div class="detail-page">
@@ -26,7 +26,7 @@
       <div class="detail-info" v-html="detail.classInfo"></div>
     </div>
     
-    <div class="footer" v-if="detail.falg">报名完成，进入班群</div>
+    <div class="footer" v-if="detail.flag">报名完成，进入班群</div>
     <div class="footer" v-else>
       <div class="left" @click="applyCourse">加入选课单</div>
       <div class="right" @click="applyCourse($event,true)">立即报名</div>
@@ -64,7 +64,7 @@ export default {
         // console.log(res)
       })
     },
-    dialog(title,message,text,name){
+    dialog(title,message,text,name,params={}){
       Dialog.confirm({
           title,
           message,
@@ -73,45 +73,48 @@ export default {
           cancelButtonColor: '#999999'
         }).then(res=>{
           console.log('确认',res)
-          this.$router.push({name: name})
+          this.$router.push({name,params})
         })
         .catch(err=>{
           console.log('取消',err)
         })
     },
-    applyCourse(e,flag=false) {
+    applyCourse(e,flag=false) {//flag==true: 立即报名
       let params = { id: this.detail.id }
       //立即报名，提交订单
-      let info = null;
-      console.log(e,flag)
+      let info = {
+        list:[this.detail],
+        classIdList: [this.detail.id],
+        totalMoney: this.detail.money
+      }
       http.applyCourse(params).then(res=>{
         if(res.data.status === 0){  //成功--1
-          this.$toast("成功添加到选课单")
           if(flag){
-            console.log(flag,"去购物车")
-            info = {
-              list:[this.detail],
-              classIdList: [this.detail.id],
-              totalMoney: this.detail.money
-            }
             this.$store.commit('setConfirmOrderList', info)
             this.$router.push({name: 'ConfirmOrder'})
+          }else{
+            this.$toast("成功添加到选课单")
           }
         }else if(res.data.status === 1){  //课程已经在选课单内,去选课单--2
-        this.dialog('该课程已经在选课单内','请勿重复添加','进入选课单','List')
-        }else if(res.data.status === 2){  //购物车里有相似课程，去选课单--4
-          this.dialog('选课单内已有相同课程','相同课程只能报一个班级','进入选课单','List')
+          if(flag){
+            this.$store.commit('setConfirmOrderList', info)
+            this.$router.push({name: 'ConfirmOrder'})
+          }else{
+            this.dialog('该课程已经在选课单内','请勿重复添加','进入选课单','List')
+          }
+        }else if(res.data.status === 2){  //选课单里有相似课程，去选课单--4
+          if(flag){
+            this.$store.commit('setConfirmOrderList', info)
+            this.$router.push({name: 'ConfirmOrder'})
+          }else{
+            this.dialog('选课单内已有相同课程','相同课程只能报一个班级','进入选课单','List')
+          }
         }else if(res.data.status === 4){  //已报名该课程的其他班级--3
           this.className = res.data.className
           this.repeatShow = true
         }else if(res.data.status === 5){  //去支付--5 
-          info = {
-            list:[this.detail],
-            classIdList: [this.detail.id],
-            totalMoney: this.detail.money
-          }
           this.$store.commit('setConfirmOrderList', info)
-          this.dialog('您已提交该班级报名','点\'去支付\'完成报名','去支付','ConfirmOrder')
+          this.dialog('您已提交该班级报名','点\'去支付\'完成报名','去支付','Order',{index:1})
         }else if(res.data.status === 6){  //去支付--6
           info = {
             list:[res.data.classDetail],
@@ -119,11 +122,12 @@ export default {
             totalMoney: res.data.classDetail.money
           }
           this.$store.commit('setConfirmOrderList', info)
-          this.dialog('您已提交相同课程报名','点\'去支付\'完成报名','去支付','ConfirmOrder')
+          this.dialog('您已提交相同课程报名','点\'去支付\'完成报名','去支付','Order',{index:1})
         }
       })
       .catch(err=>{
-        console.log('catch',err)
+        console.log(err)
+        this.$toast(err)
       })
     }
   },
@@ -226,6 +230,9 @@ export default {
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: rgba(255, 255, 255, 1);
+    background: #F2323A;
+    text-align: center;
+    justify-content: center;
     & > div {
       width: 50%;
       height: 3.4375rem;
