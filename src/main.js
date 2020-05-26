@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-19 17:35:51
+ * @LastEditTime: 2020-05-26 16:51:46
  */
 
 /*
@@ -19,6 +19,10 @@ import store from './store'
 import 'reset-css'
 
 Vue.config.productionTip = false
+
+/* 手机查看console */
+var VConsole = require("vconsole/dist/vconsole.min.js");
+new VConsole();
 
 new Vue({
   router,
