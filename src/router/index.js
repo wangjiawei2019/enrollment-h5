@@ -1,8 +1,8 @@
 /*
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
- * @LastEditors: wjw
- * @LastEditTime: 2020-05-27 15:08:38
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-05-27 17:27:24
  */
 
 import Vue from 'vue'
@@ -26,7 +26,7 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    redirect: 'login'
+    redirect: '/login'
   },
   {
     path: '/login',
@@ -110,6 +110,8 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  //游客页面: 课程列表页，搜索页面，详情页
+  var visitorPages = ['Lesson', 'Search', 'LessonDetail']
   if (to.meta.title) {
     //判断是否有标题
     document.title = to.meta.title
@@ -142,8 +144,11 @@ router.beforeEach((to, from, next) => {
       }
     }
   } else {
-    console.log(to)
-    next()
+    if (!store.state.token && visitorPages.indexOf(to.name) === -1) { //非游客页面 需要登录
+      next({ path: '/login' })
+    } else {  //已登录
+      next()
+    }
   }
 })
 
