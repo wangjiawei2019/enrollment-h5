@@ -1,12 +1,12 @@
 <!--
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-19 16:44:12
- * @LastEditors: wjw
- * @LastEditTime: 2020-05-27 15:56:57
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-05-27 16:50:45
 --> 
 <template>
   <div class="list-item">
-    <div class="top-box">
+    <div class="top-box" @click="toDetail">
       <div class="img-wapper">
         <img :src="item.image || require('@/assets/site.png')" alt="课程缩略图" class="lesson-img" />
         <div :class="status"></div>
@@ -38,6 +38,13 @@ export default {
         return 'cancel'
       } else {
         return false
+      }
+    }
+  },
+  methods:{
+    toDetail(){
+      if(this.lesson){  //首页和搜索页可以进入详情
+        this.$emit('toDetail',this.item.id)
       }
     }
   }
@@ -105,6 +112,7 @@ export default {
       @include font(PingFang SC, 0.94rem, rgba(102, 102, 102, 1), 400);
     }
     .desc-footer {
+      width: 100%;
       @include flex(space-between, center, row, nowrap);
       .price {
         margin-top: 0.25em;

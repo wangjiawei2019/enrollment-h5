@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-27 15:40:22
+ * @LastEditTime: 2020-05-27 16:55:08
 --> 
 <template>
   <div class="lesson">
@@ -40,7 +40,12 @@
     <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
       <van-list v-model="loading" :finished="finished" @load="downPull">
         <div class="curr-list" v-if="classList.length">
-          <Curriculums @changeShow="changeShow" v-for="(item,index) in classList" :key="index" :classItem="item"></Curriculums>
+          <div v-for="(item,index) in classList" :key="index">
+            <list-item :lesson="true" :item="item" @toDetail="toDetail">
+              <div slot="lesson" class="join" @click.stop="applyCourse($event,item)">立即报名</div>
+            </list-item>
+          </div>
+          <!--Curriculums @changeShow="changeShow" v-for="(item,index) in classList" :key="index" :classItem="item"></Curriculums-->
         </div>
         <div class="no-list" v-else>
           <van-empty :image="require('@/assets/no-list1.png')" description="暂无相关课程" />
@@ -55,6 +60,7 @@
 
 <script>
 import Curriculums from '@/components/curriculums'
+import ListItem from '@/components/listItem'
 import CurrTip from '@/components/currTip'
 import { TreeSelect, Empty, List, PullRefresh } from 'vant'
 import http from '@/api/index.js'
@@ -80,6 +86,58 @@ export default {
     }
   },
   methods: {
+    toDetail(id){
+      this.$router.push({path:'/lesson-detail',query:{id}})
+    },
+    dialog(title,message,text,name,query={}){
+      Dialog.confirm({
+          title,
+          message,
+          confirmButtonText: text,
+          confirmButtonColor: '#F2323A',
+          cancelButtonColor: '#999999'
+        }).then(res=>{
+          this.$router.push({name,query})
+        })
+        .catch(err=>{
+          console.log('取消',err)
+        })
+    },
+    applyCourse(e,item) {
+      console.log(e,item)
+      let params = { id: item.id }
+      //立即报名，提交订单
+      let info = {
+        list:[item],
+        classIdList: [item.id],
+        totalMoney: item.money
+      }
+      http.applyCourse(params).then(res=>{
+        if(res.data.status === 3){  //该课程已经完成报名
+          this.$router.push({path:'/lesson-detail',query:{id: item.id}})
+        }else if(res.data.status === 0 || res.data.status === 1 || res.data.status === 2){  //班级或者同类班级已经在选课单内,去提交订单--2
+          this.$store.commit('setConfirmOrderList', info)
+          this.$router.push({name: 'ConfirmOrder'})
+        }else if(res.data.status === 4){  //已报名完成该课程的其他班级--3
+          this.repeatShow = true
+        }else if(res.data.status === 5){  //去支付--5 
+          // this.$store.commit('setConfirmOrderList', info)
+          this.dialog('您已提交该班级报名','点\'去支付\'完成报名','去支付','Order',{index:1})
+        }else if(res.data.status === 6){  //去支付--6
+          // info = {
+          //   list:[res.data.classDetail],
+          //   classIdList: [res.data.classDetail.classId],
+          //   totalMoney: res.data.classDetail.money
+          // }
+          // this.$store.commit('setConfirmOrderList', info)
+          this.dialog('您已提交相同课程报名','点\'去支付\'完成报名','去支付','Order',{index:1})
+        }
+      })
+      .catch(err=>{
+        console.log(err)
+        this.$toast(err)
+      })
+    },
     changeShow(flag){
       this.repeatShow = flag
     },
@@ -211,6 +269,7 @@ export default {
   components: {
     Curriculums,
     CurrTip,
+    'list-item':ListItem,
     'van-tree-select': TreeSelect,
     'van-empty': Empty,
     'van-list': List,
@@ -383,5 +442,18 @@ export default {
 .van-tree-select__selected {
   font-weight: bold;
   right: 0.90625rem /* 14.5/16 */;
+}
+
+.join {
+  width: 4rem /* 64/16 */;
+  padding: 0.125rem /* 2/16 */ 0.3125rem /* 5/16 */;
+  height: 1.3125rem /* 21/16 */;
+  font-size: 0.9375rem /* 15/16 */;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  background: #f2323a;
+  border-radius: 0.3125rem /* 5/16 */;
+  color: rgba(255, 255, 255, 1);
+  line-height: 1.3125rem /* 21/16 */;
 }
 </style>
