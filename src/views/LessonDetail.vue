@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-22 11:41:33
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-27 09:22:26
+ * @LastEditTime: 2020-05-27 10:07:22
 --> 
 <template>
   <div class="detail-page">
@@ -66,24 +66,29 @@ export default {
       if(isWeixin) {
         alert('请在浏览器上打开')
       }else{
-        console.log(isApp)
+        console.log('APP环境下',isApp)
         //如果是在APP环境下
-        // if(window.ReactNativeWebView.postMessage){
-        //   window.ReactNativeWebView.postMessage('enrollment')
-        // }else{
-          // window.location.href = 'j24swr://https://appxw.jinlingkeji.cn/'
-        // }
-        window.location.href = 'j24swr://https://appxw.jinlingkeji.cn/?type=ENROLLMENT'
+        if(window.ReactNativeWebView.postMessage){
+          window.ReactNativeWebView.postMessage({route: 'enrollment'})
+        }else{
+          window.location.href = 'j24swr://https://appxw.jinlingkeji.cn/?type=ENROLLMENT'
+          setTimeout(function(){
+            let hidden = window.document.hidden || window.document.mozHidden || window.document.msHidden ||window.document.webkitHidden 
+            if(typeof hidden =="undefined" || hidden ==false){
+              window.location.href ="https://appxw.jinlingkeji.cn/share.html"
+            }
+          }, 2000)
+        }
         //android端
         // if (isAndroid) {
             //安卓app的scheme协议
             // window.location.href = 'j24swr://https://appxw.jinlingkeji.cn/?type=ENROLLMENT'
-            setTimeout(function(){
-                let hidden = window.document.hidden || window.document.mozHidden || window.document.msHidden ||window.document.webkitHidden 
-                if(typeof hidden =="undefined" || hidden ==false){
-                  window.location.href ="https://appxw.jinlingkeji.cn/share.html"
-                }
-            }, 2000)
+            // setTimeout(function(){
+            //     let hidden = window.document.hidden || window.document.mozHidden || window.document.msHidden ||window.document.webkitHidden 
+            //     if(typeof hidden =="undefined" || hidden ==false){
+            //       window.location.href ="https://appxw.jinlingkeji.cn/share.html"
+            //     }
+            // }, 2000)
         // }
         // //ios端
         // if (isIOS) {
