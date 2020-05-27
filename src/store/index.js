@@ -2,8 +2,8 @@
  * @Github: https://github.com/IdlerHub
  * @Author: zxk
  * @Date: 2020-05-18 11:30:39
- * @LastEditors: wjw
- * @LastEditTime: 2020-05-21 11:32:01
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-05-26 18:31:46
  */
 
 import Vue from 'vue'
@@ -15,7 +15,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     token: localStorage.getItem('token') ? localStorage.getItem('token') : '',
-    confirmOrder: { list: [], classIdList: [], totalMoney: 0 }
+    confirmOrder: { list: [], classIdList: [], totalMoney: 0 },
+    terminal: ''
   },
   mutations: {
     setToken(state, token) {
@@ -24,6 +25,9 @@ export default new Vuex.Store({
     },
     setConfirmOrderList(state, info) {
       state.confirmOrder = info
+    },
+    setTerminal(state, terminal){
+      state.terminal = terminal
     }
   },
   actions: {},

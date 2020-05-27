@@ -1,8 +1,8 @@
 /*
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
- * @LastEditors: wjw
- * @LastEditTime: 2020-05-22 17:39:09
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-05-26 19:28:38
  */
 
 import Vue from 'vue'
@@ -116,18 +116,26 @@ router.beforeEach((to, from, next) => {
   }
   if (to.name === 'Login') {
     const query = qs.parse(to.hash.split('?')[1])
+    if (query.terminal === 'App'){  //App的环境
+      console.log(query.terminal)
+      store.commit('terminal', query.terminal);
+    }
     if (query.token) {
       //更新token,直接登录
       // console.log(query)
       store.commit('setToken', query.token)
       // store.commit('setToken', token);
+      next({ path: '/index', replace: true })
       //是否需要去报名须知
       http.getReadStatus().then(res => {
+        console.log(res)
         if (res.data) {
           next({ path: '/index', replace: true })
         } else {
           this.$router.push({ path: '/apply-rule' })
         }
+      }).catch(err=>{
+        console.log(err)
       })
     } else {
       if (store.state.token) {

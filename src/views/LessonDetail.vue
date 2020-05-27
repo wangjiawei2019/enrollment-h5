@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-22 11:41:33
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-26 17:01:05
+ * @LastEditTime: 2020-05-27 09:21:15
 --> 
 <template>
   <div class="detail-page">
@@ -26,7 +26,7 @@
       <div class="detail-info" v-html="detail.classInfo"></div>
     </div>
     
-    <div class="footer" v-if="true" @click="toAPP">报名完成，进入班群</div>
+    <div class="footer" v-if="detail.flag" @click="toAPP">报名完成，进入班群</div>
     <div class="footer" v-else>
       <div class="left" @click="applyCourse">加入选课单</div>
       <div class="right" @click="applyCourse($event,true)">立即报名</div>
@@ -38,6 +38,7 @@
 
 <script>
 import http from '@/api'
+import store from '@/store'
 import CurrTip from '@/components/currTip'
 import { Dialog } from 'vant';
 export default {
@@ -61,35 +62,41 @@ export default {
       var isWeixin = u.toLowerCase().indexOf('micromessenger') !== -1; // 微信内
       var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //android终端
       var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
-      // var isApp = u.indexOf('') > -1 || u.search('') - 1  //APP端
-      // if(isWeixin) {
-      //   alert('请在浏览器上打开')
-      // }else{
-      //   //android端
-      //   if (isAndroid) {
-      //       //安卓app的scheme协议
-      //       // window.location.href = 'taobao://'
-      //       setTimeout(function(){
-      //           let hidden = window.document.hidden || window.document.mozHidden || window.document.msHidden ||window.document.webkitHidden 
-      //           // if(typeof hidden =="undefined" || hidden ==false){
-      //           //     //应用宝下载地址 (emmm 找不到淘宝应用宝的地址，这里放的是 lucky coffee 地址)
-      //           //     window.location.href ="https://a.app.qq.com/o/simple.jsp?pkgname=com.lucky.luckyclient"
-      //           // }
-      //       }, 5000)
-      //   }
-      //   //ios端
-      //   if (isIOS) {
-      //       //ios的scheme协议
-      //       // window.location.href = 'taobao://'
-      //       setTimeout(function(){
-      //           let hidden = window.document.hidden || window.document.mozHidden || window.document.msHidden ||window.document.webkitHidden 
-      //           // if(typeof hidden =="undefined" || hidden ==false){
-      //           //     //App store下载地址
-      //           //     window.location.href = "http://itunes.apple.com/app/id387682726"
-      //           // }
-      //       }, 5000)
-      //   }
-      // }
+      var isApp = store.terminal  //APP端
+      if(isWeixin) {
+        alert('请在浏览器上打开')
+      }else{
+        console.log(isApp)
+        // if(window.ReactNativeWebView.postMessage){
+        //   window.ReactNativeWebView.postMessage('enrollment')
+        // }else{
+          // window.location.href = 'j24swr://https://appxw.jinlingkeji.cn/'
+        // }
+        window.location.href = 'j24swr://https://appxw.jinlingkeji.cn/?type=ENROLLMENT'
+        //android端
+        // if (isAndroid) {
+            //安卓app的scheme协议
+            // window.location.href = 'j24swr://https://appxw.jinlingkeji.cn/?type=ENROLLMENT'
+            setTimeout(function(){
+                let hidden = window.document.hidden || window.document.mozHidden || window.document.msHidden ||window.document.webkitHidden 
+                if(typeof hidden =="undefined" || hidden ==false){
+                  window.location.href ="https://appxw.jinlingkeji.cn/share.html"
+                }
+            }, 2000)
+        // }
+        // //ios端
+        // if (isIOS) {
+        //     //ios的scheme协议
+        //     // window.location.href = 'taobao://'
+        //     setTimeout(function(){
+        //         let hidden = window.document.hidden || window.document.mozHidden || window.document.msHidden ||window.document.webkitHidden 
+        //         // if(typeof hidden =="undefined" || hidden ==false){
+        //         //     //App store下载地址
+        //         //     window.location.href = "http://itunes.apple.com/app/id387682726"
+        //         // }
+        //     }, 2000)
+        // }
+      }
       
     },
     changeShow(flag){
