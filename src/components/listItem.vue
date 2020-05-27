@@ -2,14 +2,14 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-19 16:44:12
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-22 14:09:09
+ * @LastEditTime: 2020-05-26 11:49:22
 --> 
 <template>
   <div class="list-item">
     <div class="top-box">
       <div class="img-wapper">
         <img :src="item.image || require('@/assets/site.png')" alt="课程缩略图" class="lesson-img" />
-        <div class="mask"></div>
+        <div :class="status"></div>
       </div>
       <div class="desc-box" :class="{checked:checked}">
         <div class="title van-ellipsis">{{ item.name }}</div>
@@ -26,7 +26,18 @@
 
 <script>
 export default {
-  props: ['checked', 'item']
+  props: ['checked', 'item'],
+  computed: {
+    status() {
+      if (this.item.status === 3 || this.item.status === 4) {
+        return 'refund'
+      } else if (this.item.status === 5 || this.item.status === 6) {
+        return 'cancel'
+      } else {
+        return false
+      }
+    }
+  }
 }
 </script>
 
@@ -54,17 +65,24 @@ export default {
       width: 100%;
       height: 100%;
     }
-    .mask {
+    .refund,
+    .cancel {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
       background-color: rgba(0, 0, 0, 0.5);
-      background-image: url('~@/assets/images/order/yiquxiao.png');
+
       background-repeat: no-repeat;
       background-size: 3.33rem 3.33rem;
       background-position: 100% 100%;
+    }
+    .refund {
+      background-image: url('~@/assets/images/order/yituikuan.png');
+    }
+    .cancel {
+      background-image: url('~@/assets/images/order/yiquxiao.png');
     }
   }
   .desc-box {

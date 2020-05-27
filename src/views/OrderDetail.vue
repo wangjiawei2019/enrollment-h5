@@ -2,15 +2,15 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-22 14:50:38
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-22 18:04:46
+ * @LastEditTime: 2020-05-26 18:19:20
 --> 
 <template>
   <div class="order-detail-page" v-if="detail">
     <header :class="{green:detail.status === 2}">
-      <img class="header-icon" src="@/assets/images/order/success.png" />
+      <img class="header-icon" :src="statusText[detail.status].icon" />
       <div class="desc-box">
-        <span class="title">{{ statusText[detail.status] }}</span>
-        <span class="subtitle">订单完成，进入班群一起学习吧~</span>
+        <span class="title">{{ statusText[detail.status].title }}</span>
+        <span class="subtitle">{{ statusText[detail.status].subtitle }}</span>
       </div>
     </header>
     <section>
@@ -18,7 +18,7 @@
       <div class="wrap" v-for="item in detail.classListDTOList" :key="item.classId">
         <list-item :item="item">
           <template v-slot:button>
-            <div class="join-button-box">
+            <div class="join-button-box" v-if="item.status === 2">
               <img src="@/assets/images/order/class.png" alt class="join-icon" />
               <span class="text">进入班群</span>
               <van-icon name="arrow" color="#999999" size="1rem" />
@@ -36,13 +36,18 @@
     </section>
     <div class="time-box">
       <div class="title-box">订单时间</div>
-      <div class="time time1">
-        <span class="left">创建时间</span>
-        <span class="right">{{ transTime(detail.createTime) }}</span>
-      </div>
-      <div class="time time2">
-        <span class="left">支付时间</span>
-        <span class="right">2020-05-13 13:20:59</span>
+      <div class="time-wrap">
+        <div class="time time1">
+          <span class="left">创建时间</span>
+          <span class="right">{{ transTime(detail.createTime) }}</span>
+        </div>
+        <div
+          class="time time2"
+          v-if="detail.status === 2 || detail.status === 3|| detail.status === 4"
+        >
+          <span class="left">支付时间</span>
+          <span class="right">{{ transTime(detail.transactionTime) }}</span>
+        </div>
       </div>
     </div>
     <footer v-if="detail.status !== 2">
@@ -52,6 +57,13 @@
       </template>
       <van-button color="#333" plain v-else @click="deleteOrder(detail.id)">删除订单</van-button>
     </footer>
+    <pay-action-sheet
+      :showPay="actionSheetObj.showPay"
+      :totalMoney="actionSheetObj.totalMoney"
+      :remainTime="remainTime"
+      @handleCancel="handleCancel"
+      @confirmPay="confirmPay"
+    ></pay-action-sheet>
     <van-dialog
       v-model="dialogObj.showDialog"
       width="20.19rem"
@@ -70,6 +82,7 @@
 
 <script>
 import { Icon, Dialog, Button } from 'vant'
+import PayActionSheet from '@/components/pay-action-sheet'
 import ListItem from '@/components/listItem'
 import http from '@/api'
 import { toYMDHMS } from '@/utils/filters'
@@ -80,12 +93,14 @@ export default {
     'van-icon': Icon,
     'van-button': Button,
     'list-item': ListItem,
+    'pay-action-sheet': PayActionSheet,
     [Dialog.Component.name]: Dialog.Component // 必须这样局部注册，否则会调用全局方法
   },
   data() {
     return {
       detail: null,
-      statusText: ['', '待支付', '已完成', '已关闭'],
+      now: null,
+      actionSheetObj: { showPay: false, totalMoney: '', expireTime: 0, id: null, url: '' },
       dialogObj: {
         id: null,
         type: '',
@@ -104,6 +119,17 @@ export default {
     getOrderDetail() {
       http.getOrderDetail({ id: this.id }).then(res => {
         this.detail = res.data
+        if (this.detail.status === 1) {
+          // 待支付需要计算倒计时
+          setInterval(() => {
+            this.now = Date.parse(new Date()) / 1000
+            if (this.now >= this.detail.expireTime) {
+              this.detail.status = 6
+              this.dialogCancel()
+              this.$toast('您的订单已超时')
+            }
+          }, 1000)
+        }
       })
     },
     cancelOrder(id) {
@@ -119,14 +145,8 @@ export default {
       Object.assign(this.dialogObj, obj)
     },
     payOrder(item) {
-      const totalMoney = item.sum
-      const list = item.classListDTOList
-      const classIdList = []
-      list.map(i => {
-        classIdList.push(i.classId)
-      })
-      this.$store.commit('setConfirmOrderList', { classIdList, list, totalMoney })
-      this.$router.push({ name: 'ConfirmOrder' })
+      const obj = { showPay: true, totalMoney: item.sum, expireTime: item.expireTime, id: item.id, url: item.url }
+      Object.assign(this.actionSheetObj, obj)
     },
     deleteOrder(id) {
       const obj = {
@@ -140,30 +160,60 @@ export default {
       }
       Object.assign(this.dialogObj, obj)
     },
+    confirmPay() {
+      location.href = this.actionSheetObj.url
+    },
+    handleCancel() {
+      const obj = {
+        type: 'cancelPay',
+        showDialog: true,
+        'confirm-button-text': '继续支付',
+        'cancel-button-text': '放弃',
+        title: '是否放弃本次支付',
+        message: `${this.dialogRemainTime}内未支付将被取消`
+      }
+      Object.assign(this.dialogObj, obj)
+    },
     dialogCancel() {
       this.dialogObj.showDialog = false
+      this.actionSheetObj.showPay = false
     },
     dialogConfirm() {
-      http[this.dialogObj.type]({ id: this.dialogObj.id }).then(res => {
-        this.$router.replace({ name: 'Order' })
-      })
+      this.dialogObj.type !== 'cancelPay' &&
+        http[this.dialogObj.type]({ id: this.dialogObj.id }).then(res => {
+          this.$router.replace({ name: 'Order', query: { index: 2 } })
+        })
     }
   },
   computed: {
     id() {
       return parseInt(this.$route.query.id)
     },
-    // countDown() {
-    //   return item => {
-    //     const val = (item.endTime - this.now) / 60
-    //     if (Math.ceil(val) <= 0) {
-    //       item.status = 3
-    //       return 0
-    //     } else {
-    //       return Math.ceil(val)
-    //     }
-    //   }
-    // },
+    remainTime() {
+      if (!this.now || this.now >= this.detail.expireTime) return '00:00:00'
+      const reamin = this.detail.expireTime - this.now
+      const H = parseInt(reamin / 3600) < 10 ? `0${parseInt(reamin / 3600)}` : parseInt(reamin / 3600)
+      const M = parseInt((reamin - 3600 * H) / 60) < 10 ? `0${parseInt((reamin - 3600 * H) / 60)}` : parseInt((reamin - 3600 * H) / 60)
+      const S = parseInt(reamin - 3600 * H - 60 * M) < 10 ? `0${parseInt(reamin - 3600 * H - 60 * M)}` : parseInt(reamin - 3600 * H - 60 * M)
+      return `${H}:${M}:${S}`
+    },
+    dialogRemainTime() {
+      const H = parseInt(this.remainTime.split(':')[0])
+      const M = parseInt(this.remainTime.split(':')[1])
+      return `${H ? H + '小时' : ''}${M}分钟`
+    },
+    statusText() {
+      if (!this.detail) return []
+      return [
+        { title: '', subtitle: '' },
+        { title: '待支付', subtitle: `${this.dialogRemainTime}后自动取消`, icon: require('@/assets/images/order/count-down.png') },
+        { title: '已完成', subtitle: '订单完成，进入班群一起学习吧~', icon: require('@/assets/images/order/success.png') },
+        { title: '已完成', subtitle: '订单完成，进入班群一起学习吧~', icon: require('@/assets/images/order/success.png') },
+        { title: '已关闭', subtitle: '退款完成', icon: require('@/assets/images/order/cancel.png') },
+        { title: '已关闭', subtitle: '您已取消该订单', icon: require('@/assets/images/order/cancel.png') },
+        { title: '已关闭', subtitle: '超时自动取消', icon: require('@/assets/images/order/cancel.png') }
+      ]
+    },
     transTime() {
       return time => {
         return toYMDHMS(time)
@@ -264,6 +314,7 @@ export default {
       }
     }
   }
+
   & > .time-box {
     width: 100%;
     padding: 0 0.94rem;
@@ -271,24 +322,25 @@ export default {
     border-bottom: 0.63rem solid #f7f7f7;
     box-sizing: border-box;
     @include flex(flex-start, flex-start, column, nowrap);
-    .time {
-      width: 100%;
-      @include flex(flex-start, center, row, nowrap);
-      .left,
-      .right {
-        line-height: 1.66rem;
-        @include font(PingFang SC, 1.19rem, rgba(153, 153, 153, 1), 400);
+    & > .time-wrap {
+      padding: 0.94rem 0;
+      box-sizing: border-box;
+      .time {
+        width: 100%;
+        @include flex(flex-start, center, row, nowrap);
+        .left,
+        .right {
+          line-height: 1.66rem;
+          @include font(PingFang SC, 1.19rem, rgba(153, 153, 153, 1), 400);
+        }
+        .right {
+          margin-left: 0.63rem;
+          color: #333;
+        }
       }
-      .right {
-        margin-left: 0.63rem;
-        color: #333;
+      .time2 {
+        margin-top: 0.31rem;
       }
-    }
-    .time1 {
-      margin-top: 0.94rem;
-    }
-    .time2 {
-      margin-bottom: 0.94rem;
     }
   }
   & > footer {

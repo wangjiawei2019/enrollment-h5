@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-25 11:35:52
+ * @LastEditTime: 2020-05-26 18:36:56
 --> 
 <template>
   <div class="order-page">
@@ -63,6 +63,13 @@
         </van-pull-refresh>
       </van-tab>
     </van-tabs>
+    <pay-action-sheet
+      :showPay="actionSheetObj.showPay"
+      :totalMoney="actionSheetObj.totalMoney"
+      :remainTime="remainTime(actionSheetObj.expireTime)"
+      @handleCancel="handleCancel"
+      @confirmPay="confirmPay"
+    ></pay-action-sheet>
     <van-dialog
       v-model="dialogObj.showDialog"
       width="20.19rem"
@@ -81,6 +88,7 @@
 
 <script>
 import { Empty, PullRefresh, Tabs, Tab, Dialog, Button } from 'vant'
+import PayActionSheet from '@/components/pay-action-sheet'
 import ListItem from '@/components/listItem'
 import http from '@/api'
 import { toYMDHM } from '@/utils/filters'
@@ -94,6 +102,7 @@ export default {
     'van-tab': Tab,
     'van-button': Button,
     'list-item': ListItem,
+    'pay-action-sheet': PayActionSheet,
     [Dialog.Component.name]: Dialog.Component // 必须这样局部注册，否则会调用全局方法
   },
   data() {
@@ -107,7 +116,8 @@ export default {
         1: [], // 待支付
         2: [] // 已完成
       },
-      statusText: ['', '待支付', '已完成', '已关闭'],
+      statusText: ['', '待支付', '已完成', '已关闭', '已关闭', '已关闭', '已关闭'],
+      actionSheetObj: { showPay: false, totalMoney: '', expireTime: 0, id: null, url: '' },
       dialogObj: {
         id: null,
         type: '',
@@ -120,10 +130,16 @@ export default {
     }
   },
   mounted() {
+    const { index } = this.$route.query
+    index ? (this.active = parseInt(index)) : this.getOrderList() // 从别的页面跳转过来
     setInterval(() => {
       this.now = Date.parse(new Date()) / 1000
+      if (this.now >= this.actionSheetObj.expireTime && this.actionSheetObj.showPay) {
+        this.dialogCancel()
+        this.$toast('您的订单已超时')
+        this.getOrderList()
+      }
     }, 1000)
-    this.getOrderList()
   },
   methods: {
     onRefresh() {
@@ -153,14 +169,8 @@ export default {
     },
     payOrder(e, item) {
       e.stopPropagation()
-      const totalMoney = item.sum
-      const list = item.classListDTOList
-      const classIdList = []
-      list.map(i => {
-        classIdList.push(i.classId)
-      })
-      this.$store.commit('setConfirmOrderList', { classIdList, list, totalMoney })
-      this.$router.push({ name: 'ConfirmOrder' })
+      const obj = { showPay: true, totalMoney: item.sum, expireTime: item.expireTime, id: item.id, url: item.url }
+      Object.assign(this.actionSheetObj, obj)
     },
     deleteOrder(e, id) {
       e.stopPropagation()
@@ -175,25 +185,51 @@ export default {
       }
       Object.assign(this.dialogObj, obj)
     },
+    confirmPay() {
+      location.href = this.actionSheetObj.url
+    },
+    handleCancel() {
+      const obj = {
+        type: 'cancelPay',
+        showDialog: true,
+        'confirm-button-text': '继续支付',
+        'cancel-button-text': '放弃',
+        title: '是否放弃本次支付',
+        message: `${this.dialogRemainTime}内未支付将被取消`
+      }
+      Object.assign(this.dialogObj, obj)
+    },
     dialogCancel() {
       this.dialogObj.showDialog = false
+      this.actionSheetObj.showPay = false
     },
     dialogConfirm() {
-      http[this.dialogObj.type]({ id: this.dialogObj.id }).then(res => {
-        this.getOrderList()
-      })
+      this.dialogObj.type !== 'cancelPay' &&
+        http[this.dialogObj.type]({ id: this.dialogObj.id }).then(res => {
+          this.getOrderList()
+        })
     }
   },
   computed: {
+    remainTime() {
+      return expireTime => {
+        if (!expireTime) return '00:00:00'
+        const reamin = expireTime - this.now
+        const H = parseInt(reamin / 3600) < 10 ? `0${parseInt(reamin / 3600)}` : parseInt(reamin / 3600)
+        const M = parseInt((reamin - 3600 * H) / 60) < 10 ? `0${parseInt((reamin - 3600 * H) / 60)}` : parseInt((reamin - 3600 * H) / 60)
+        const S = parseInt(reamin - 3600 * H - 60 * M) < 10 ? `0${parseInt(reamin - 3600 * H - 60 * M)}` : parseInt(reamin - 3600 * H - 60 * M)
+        return `${H}:${M}:${S}`
+      }
+    },
+    dialogRemainTime() {
+      const H = parseInt(this.remainTime(this.actionSheetObj.expireTime).split(':')[0])
+      const M = parseInt(this.remainTime(this.actionSheetObj.expireTime).split(':')[1])
+      return `${H ? H + '小时' : ''}${M}分钟`
+    },
     countDown() {
       return item => {
         const val = (item.endTime - this.now) / 60
-        if (Math.ceil(val) <= 0) {
-          item.status = 3
-          return 0
-        } else {
-          return Math.ceil(val)
-        }
+        return Math.ceil(val)
       }
     },
     transTime() {
@@ -218,9 +254,9 @@ export default {
     width: 100%;
     height: 100%;
     // box-sizing: border-box;
-    // min-height: calc(100% - 6.57rem);
-    // min-height: calc(100% - 6.57rem - constant(safe-area-inset-bottom));
-    // min-height: calc(100% - 6.57rem - env(safe-area-inset-bottom));
+    // height: calc(100% - 6.57rem);
+    // height: calc(100% - 6.57rem - constant(safe-area-inset-bottom));
+    // height: calc(100% - 6.57rem - env(safe-area-inset-bottom));
     // border-color: #fff;
     // border-width: 3.63rem;
     // border-width: calc(3.63rem + constant(safe-area-inset-bottom));
@@ -228,6 +264,7 @@ export default {
     @include flex(flex-start, flex-start, column, nowrap);
     .item-wrapper {
       width: 100%;
+      height: 100%;
       background-color: #fff;
       box-sizing: border-box;
       padding: 0 0.94rem;
