@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-21 10:12:23
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-26 17:38:00
+ * @LastEditTime: 2020-05-27 10:05:25
 --> 
 <template>
   <div class="confirm-order-page">
@@ -59,6 +59,7 @@ import PayActionSheet from '@/components/pay-action-sheet'
 import ListItem from '@/components/listItem'
 import PayBar from '@/components/payBar'
 import http from '@/api'
+import { domainBaseUrl } from '@/utils/BASE'
 
 export default {
   name: 'ConfirmOrder',
@@ -95,7 +96,8 @@ export default {
       })
     },
     confirmPay() {
-      location.href = this.url
+      const redirect_url = `${domainBaseUrl}/#/order-detail?id=${this.id}`
+      location.href = `${this.url}&redirect_url=${encodeURIComponent(redirect_url)}`
     },
     handleCancel() {
       this.showDialog = true

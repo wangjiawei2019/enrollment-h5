@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-22 14:50:38
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-26 18:19:20
+ * @LastEditTime: 2020-05-26 19:48:34
 --> 
 <template>
   <div class="order-detail-page" v-if="detail">
@@ -85,6 +85,7 @@ import { Icon, Dialog, Button } from 'vant'
 import PayActionSheet from '@/components/pay-action-sheet'
 import ListItem from '@/components/listItem'
 import http from '@/api'
+import { domainBaseUrl } from '@/utils/BASE'
 import { toYMDHMS } from '@/utils/filters'
 
 export default {
@@ -161,7 +162,8 @@ export default {
       Object.assign(this.dialogObj, obj)
     },
     confirmPay() {
-      location.href = this.actionSheetObj.url
+      const redirect_url = `${domainBaseUrl}/#/order-detail?id=${this.actionSheetObj.id}`
+      location.href = `${this.actionSheetObj.url}&redirect_url=${encodeURIComponent(redirect_url)}`
     },
     handleCancel() {
       const obj = {

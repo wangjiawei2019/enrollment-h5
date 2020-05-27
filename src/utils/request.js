@@ -1,11 +1,11 @@
 /*
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-04-20 16:14:58
- * @LastEditors: zxk
- * @LastEditTime: 2020-05-25 09:10:19
+ * @LastEditors: wjw
+ * @LastEditTime: 2020-05-27 10:05:10
  */
 import axios from 'axios'
-import { httpBaseUrl, domainBaseUrl } from './BASE'
+import { httpBaseUrl } from './BASE'
 import qs from 'qs'
 import { Toast } from 'vant'
 import router from '@/router'
