@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-20 09:22:14
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-27 17:59:38
+ * @LastEditTime: 2020-05-27 18:06:57
 --> 
 <template>
   <div class="search-page">
@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { Empty, List, PullRefresh, Search } from 'vant'
+import { Empty, List, PullRefresh, Search,Dialog } from 'vant'
 import ListItem from '@/components/listItem'
 import CurrTip from '@/components/currTip'
 import http from '@/api/index.js'

@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-27 18:00:12
+ * @LastEditTime: 2020-05-27 18:06:33
 --> 
 <template>
   <div class="lesson">
@@ -17,7 +17,7 @@
         <div class="search-ipt">搜索学习课程</div>
       </div>
     </div>
-    <div class="class-list" v-show="showClassify" @click="changeClassify">
+    <div class="class-list" v-show="showClassify" @click="changeClassify" @touchmove.prevent>
       <div @click.stop>
         <van-tree-select
           @click-nav="selectedClass"
@@ -62,7 +62,7 @@
 <script>
 import ListItem from '@/components/listItem'
 import CurrTip from '@/components/currTip'
-import { TreeSelect, Empty, List, PullRefresh } from 'vant'
+import { TreeSelect, Empty, List, PullRefresh,Dialog } from 'vant'
 import http from '@/api/index.js'
 export default {
   name: 'Lesson',
