@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-22 11:41:33
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-27 09:21:15
+ * @LastEditTime: 2020-05-27 09:22:26
 --> 
 <template>
   <div class="detail-page">
@@ -67,6 +67,7 @@ export default {
         alert('请在浏览器上打开')
       }else{
         console.log(isApp)
+        //如果是在APP环境下
         // if(window.ReactNativeWebView.postMessage){
         //   window.ReactNativeWebView.postMessage('enrollment')
         // }else{
