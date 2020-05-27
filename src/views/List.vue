@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-22 18:57:45
+ * @LastEditTime: 2020-05-27 15:02:21
 --> 
 <template>
   <div class="list-page">
@@ -108,6 +108,7 @@ export default {
         cartIdList.push(this.list.filter(v => v.classId === i)[0].cartId)
       })
       http.cancelApplyCourse({ cartIdList }).then(res => {
+        this.result = []
         this.getCartList()
       })
     },

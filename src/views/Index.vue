@@ -2,7 +2,7 @@
  * @Author: zxk
  * @Date: 2020-05-18 14:01:48
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-25 09:39:36
+ * @LastEditTime: 2020-05-27 14:51:33
 --> 
 <template>
   <div id="index">
@@ -58,6 +58,14 @@ export default {
           }
         }
       ]
+    }
+  },
+  watch: {
+    '$route.meta.tab': {
+      handler(newVal, oldVal) {
+        this.active = newVal
+      },
+      deep: true
     }
   }
 }

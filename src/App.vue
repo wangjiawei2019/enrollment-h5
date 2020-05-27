@@ -2,13 +2,38 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-26 18:29:28
+ * @LastEditTime: 2020-05-27 15:58:03
 --> 
 <template>
   <div id="app">
     <router-view />
   </div>
 </template>
+
+<script>
+export default {
+  mounted() {
+    const { terminal } = this.$route.query
+    const userAgent = navigator.userAgent
+    // 存储用户环境
+    if (terminal === 'App') {
+      this.$store.commit('setEnvironment', 'App-brower')
+    } else if (userAgent.toLowerCase().indexOf('micromessenger') !== -1) {
+      this.$store.commit('setEnvironment', 'WEIXIN-brower')
+    } else {
+      this.$store.commit('setEnvironment', 'other-brower')
+    }
+    // 存储用户终端
+    if (userAgent.indexOf('Android') > -1 || userAgent.indexOf('Linux') > -1) {
+      this.$store.commit('setUserAgent', 'Android')
+    } else if (!!userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)) {
+      this.$store.commit('setUserAgent', 'IOS')
+    } else {
+      this.$store.commit('setUserAgent', 'brower')
+    }
+  }
+}
+</script> 
 
 <style lang="scss">
 #app {
