@@ -2,7 +2,7 @@
  * @Author: zxk
  * @Date: 2020-05-18 14:01:20
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-27 09:19:39
+ * @LastEditTime: 2020-05-27 09:47:57
 --> 
 <template>
   <div id="login">
@@ -12,13 +12,17 @@
     </div>
     <div class="login-info">
       <div class="writeInfo">
-        <img class="icon-ipt" src="@/assets/images/lesson/phone.png" alt="logo" />
+        <div class="icon-ipt">
+          <img src="@/assets/images/lesson/phone.png" alt="logo" />
+        </div>
         <div class="phone-ipt">
           <input type="text" maxlength="11" placeholder="请输入手机号" v-model="phone" />
         </div>
       </div>
       <div class="writeInfo">
-        <img class="icon-code" src="@/assets/images/lesson/security.png" alt="logo" />
+        <div class="icon-code">
+          <img src="@/assets/images/lesson/security.png" alt="logo" />
+        </div>
         <div class="auth-code">
           <input minlength="4" maxlength="4" type="text" placeholder="请输入验证码" v-model="smsCode" />
         </div>
@@ -162,41 +166,41 @@ export default {
     align-items: center;
     margin: 0 1.875rem /* 30/16 */ 0.9375rem /* 15/16 */ 1.875rem;
     padding: 0 1.25rem /* 20/16 */;
-    & > img {
+    .icon-ipt,
+    .icon-code{
       width: 0.9375rem /* 15/16 */;
       height: 1.375rem /* 22/16 */;
+      img{
+        width: 100%;
+        height: 100%;
+      }
     }
     .icon-code {
       width: 1.1875rem /* 19/16 */;
     }
-    .phone-ipt {
+    .phone-ipt,
+    .auth-code {
       flex: 1;
-      margin-left: 0.625rem /* 10/16 */;
-      height: 2.15625rem /* 34.5/16 */;
-      display: flex;
-      align-items: center;
-      line-height: 2.15625rem /* 34.5/16 */;
-      height: 2.25rem /* 36/16 */;
-      line-height: 36px;
+      padding: .625rem /* 10/16 */;
+      font-size:1.4375rem /* 23/16 */;
+      font-family:PingFangSC-Regular,PingFang SC;
+      font-weight:400;
+      color:rgba(51,51,51,1);
+      line-height:2.03125rem /* 32.5/16 */;
       &>input{
+        width: 100%;
         border: none;
         background: none;
+        padding: 0;
       }
     }
     .auth-code {
-      flex: 1;
       width: 8.96875rem /* 143.5/16 */;
-      margin-left: 0.625rem /* 10/16 */;
-      line-height: 2.15625rem /* 34.5/16 */;
       position: relative;
-      &>input{
-        border: none;
-        background: none;
-      }
     }
     .send-code {
       position: relative;
-      width: 6.375rem /* 102/16 */;
+      // width: 6.375rem /* 102/16 */;
       height: 100%;
       line-height: 3.4375rem;
       font-size: 0.9375rem /* 15/16 */;
