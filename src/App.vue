@@ -1,8 +1,8 @@
 <!--
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
- * @LastEditors: zxk
- * @LastEditTime: 2020-05-27 16:07:18
+ * @LastEditors: wjw
+ * @LastEditTime: 2020-05-27 18:06:57
 --> 
 <template>
   <div id="app">
@@ -11,38 +11,11 @@
 </template>
 
 <script>
+import { JSAPIAPPID, domainBaseUrl } from '@/utils/BASE'
+
 export default {
-  methods: {
-    handleFontSize() {
-      // 设置网页字体为默认大小
-      WeixinJSBridge.invoke('setFontSizeCallback', { fontSize: 0 })
-      // 重写设置网页字体大小的事件
-      WeixinJSBridge.on('menu:setfont', function() {
-        WeixinJSBridge.invoke('setFontSizeCallback', { fontSize: 0 })
-      })
-    },
-    getAgent(){ //获取用户环境
-      const { terminal } = this.$route.query
-      const userAgent = navigator.userAgent
-      // 存储用户环境
-      if (terminal === 'App') {
-        this.$store.commit('setEnvironment', 'App-brower')
-      } else if (userAgent.toLowerCase().indexOf('micromessenger') !== -1) {
-        this.$store.commit('setEnvironment', 'WEIXIN-brower')
-      } else {
-        this.$store.commit('setEnvironment', 'other-brower')
-      }
-      // 存储用户终端
-      if (userAgent.indexOf('Android') > -1 || userAgent.indexOf('Linux') > -1) {
-        this.$store.commit('setUserAgent', 'Android')
-      } else if (!!userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)) {
-        this.$store.commit('setUserAgent', 'IOS')
-      } else {
-        this.$store.commit('setUserAgent', 'brower')
-      }
-    }
-  },
   mounted() {
+    this.getAgent()
     //android禁止微信浏览器调整字体大小
     //TODO: 可能会在刚刚进去的时候大字体，1秒之后变回来
     if (typeof WeixinJSBridge == 'object' && typeof WeixinJSBridge.invoke == 'function') {
@@ -55,7 +28,49 @@ export default {
         document.attachEvent('onWeixinJSBridgeReady', this.handleFontSize)
       }
     }
-    this.getAgent()
+  },
+  methods: {
+    handleFontSize() {
+      // 设置网页字体为默认大小
+      WeixinJSBridge.invoke('setFontSizeCallback', { fontSize: 0 })
+      // 重写设置网页字体大小的事件
+      WeixinJSBridge.on('menu:setfont', function() {
+        WeixinJSBridge.invoke('setFontSizeCallback', { fontSize: 0 })
+      })
+    },
+    getAgent() {
+      //获取用户环境
+      const { terminal } = this.$route.query
+      const userAgent = navigator.userAgent
+      // 存储用户环境
+      if (terminal === 'App') {
+        this.$store.commit('setEnvironment', 'App-brower')
+      } else if (userAgent.toLowerCase().indexOf('micromessenger') !== -1) {
+        this.$store.commit('setEnvironment', 'WEIXIN-brower')
+        this.getCode() // 获取 JSAPI 支付所需 code
+      } else {
+        this.$store.commit('setEnvironment', 'other-brower')
+      }
+      // 存储用户终端
+      if (userAgent.indexOf('Android') > -1 || userAgent.indexOf('Linux') > -1) {
+        this.$store.commit('setUserAgent', 'Android')
+      } else if (!!userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)) {
+        this.$store.commit('setUserAgent', 'IOS')
+      } else {
+        this.$store.commit('setUserAgent', 'brower')
+      }
+    },
+    getCode() {
+      const { code } = this.$route.query
+      if (code) {
+        console.log('mounted -> code', code)
+        this.$store.commit('setCode', code)
+      } else {
+        location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${JSAPIAPPID}&redirect_uri=${encodeURIComponent(
+          domainBaseUrl
+        )}&response_type=code&scope=snsapi_userinfo&state=1#wechat_redirect`
+      }
+    }
   }
 }
 </script>

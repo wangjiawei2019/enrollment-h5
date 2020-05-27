@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-21 10:12:23
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-27 10:05:25
+ * @LastEditTime: 2020-05-27 17:47:11
 --> 
 <template>
   <div class="confirm-order-page">
@@ -87,7 +87,14 @@ export default {
   },
   methods: {
     submitOrder(classIdList) {
+      // const params = { classIdList }
+      // if (this.$store.state.environment === 'WEIXIN-brower') {
+      //   Object.assign(params, { tradeType: 'JSAPI', openId: this.$store.state.openId })
+      // } else {
+      //   Object.assign(params, { tradeType: 'MWEB' })
+      // }
       http.createOrder({ classIdList }).then(res => {
+        console.log('submitOrder -> params', params)
         this.showPay = true
         const { url, id, expireTime } = res.data
         this.url = url
