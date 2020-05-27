@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-26 10:28:36
+ * @LastEditTime: 2020-05-27 15:40:22
 --> 
 <template>
   <div class="lesson">
@@ -259,7 +259,8 @@ export default {
     }
     .search {
       flex: 1;
-      // width: 11.25rem /* 180/16 */;
+      max-width: 11.25rem /* 180/16 */;
+      overflow: hidden;
       height: 2.5rem /* 40/16 */;
       padding: 0 0.90625rem /* 14.5/16 */;
       margin-left: 1.9375rem /* 31/16 */;
@@ -282,6 +283,9 @@ export default {
         font-family: PingFangSC-Regular, PingFang SC;
         font-weight: 400;
         color: rgba(153, 153, 153, 1);
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
     }
   }
@@ -295,7 +299,7 @@ export default {
     background: rgba(0, 0, 0, 0.6);
   }
   .curr-list {
-    margin-top: 4.375rem /* 70/16 */;
+    margin: 4.375rem  .9375rem 0 .9375rem;
   }
   .no-list {
     margin-top: 4.375rem /* 70/16 */;
@@ -311,6 +315,10 @@ export default {
 }
 .van-tree-select__nav {
   background: rgba(247, 247, 247, 1);
+}
+.van-sidebar-item__text{
+  height: 1.75rem;
+  line-height: 1.75rem;
 }
 .van-sidebar-item {
   width: 100%;

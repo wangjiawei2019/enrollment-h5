@@ -1,14 +1,43 @@
 <!--
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
- * @LastEditors: wjw
- * @LastEditTime: 2020-05-26 18:29:28
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-05-27 14:58:55
 --> 
 <template>
   <div id="app">
     <router-view />
   </div>
 </template>
+
+<script>
+export default {
+  methods: {
+    handleFontSize() {
+      // 设置网页字体为默认大小
+      WeixinJSBridge.invoke('setFontSizeCallback', { fontSize: 0 })
+      // 重写设置网页字体大小的事件
+      WeixinJSBridge.on('menu:setfont', function() {
+        WeixinJSBridge.invoke('setFontSizeCallback', { fontSize: 0 })
+      })
+    }
+  },
+  mounted() {
+    //android禁止微信浏览器调整字体大小
+    //TODO: 可能会在刚刚进去的时候大字体，1秒之后变回来
+    if (typeof WeixinJSBridge == 'object' && typeof WeixinJSBridge.invoke == 'function') {
+      this.handleFontSize()
+    } else {
+      if (document.addEventListener) {
+        document.addEventListener('WeixinJSBridgeReady', this.handleFontSize, false)
+      } else if (document.attachEvent) {
+        document.attachEvent('WeixinJSBridgeReady', this.handleFontSize)
+        document.attachEvent('onWeixinJSBridgeReady', this.handleFontSize)
+      }
+    }
+  }
+}
+</script>
 
 <style lang="scss">
 #app {
