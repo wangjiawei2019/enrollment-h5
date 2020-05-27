@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-27 16:55:08
+ * @LastEditTime: 2020-05-27 18:00:12
 --> 
 <template>
   <div class="lesson">
@@ -17,24 +17,26 @@
         <div class="search-ipt">搜索学习课程</div>
       </div>
     </div>
-    <div class="class-list" v-show="showClassify">
-      <van-tree-select
-        @click-nav="selectedClass"
-        :items="majorList"
-        :main-active-index.sync="majorIndex"
-      >
-        <div slot="content">
-          <div
-            :class="['van-tree-select__item',{'van-tree-select__item--active':item.id==courseId}]"
-            @click="selectedCourse(item)"
-            v-for="(item,index) in courseList"
-            :key="index"
-          >
-            <div class="van-ellipsis">{{item.text}}</div>
-            <img v-show="item.id==courseId" src="@/assets/images/lesson/selected.png" alt />
+    <div class="class-list" v-show="showClassify" @click="changeClassify">
+      <div @click.stop>
+        <van-tree-select
+          @click-nav="selectedClass"
+          :items="majorList"
+          :main-active-index.sync="majorIndex"
+        >
+          <div slot="content">
+            <div
+              :class="['van-tree-select__item',{'van-tree-select__item--active':item.id==courseId}]"
+              @click.stop="selectedCourse(item)"
+              v-for="(item,index) in courseList"
+              :key="index"
+            >
+              <div class="class-ellipsis">{{item.text}}</div>
+              <img v-show="item.id==courseId" src="@/assets/images/lesson/selected.png" alt />
+            </div>
           </div>
-        </div>
-      </van-tree-select>
+        </van-tree-select>
+      </div>
     </div>
 
     <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
@@ -45,7 +47,6 @@
               <div slot="lesson" class="join" @click.stop="applyCourse($event,item)">立即报名</div>
             </list-item>
           </div>
-          <!--Curriculums @changeShow="changeShow" v-for="(item,index) in classList" :key="index" :classItem="item"></Curriculums-->
         </div>
         <div class="no-list" v-else>
           <van-empty :image="require('@/assets/no-list1.png')" description="暂无相关课程" />
@@ -59,7 +60,6 @@
 </template>
 
 <script>
-import Curriculums from '@/components/curriculums'
 import ListItem from '@/components/listItem'
 import CurrTip from '@/components/currTip'
 import { TreeSelect, Empty, List, PullRefresh } from 'vant'
@@ -104,7 +104,6 @@ export default {
         })
     },
     applyCourse(e,item) {
-      console.log(e,item)
       let params = { id: item.id }
       //立即报名，提交订单
       let info = {
@@ -267,7 +266,6 @@ export default {
     }
   },
   components: {
-    Curriculums,
     CurrTip,
     'list-item':ListItem,
     'van-tree-select': TreeSelect,
@@ -278,7 +276,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .lesson {
   flex: 1;
   .header {
@@ -359,6 +357,18 @@ export default {
   }
   .curr-list {
     margin: 4.375rem  .9375rem 0 .9375rem;
+    .join {
+      width: 4rem /* 64/16 */;
+      padding: 0.125rem /* 2/16 */ 0.3125rem /* 5/16 */;
+      height: 1.3125rem /* 21/16 */;
+      font-size: 0.9375rem /* 15/16 */;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      background: #f2323a;
+      border-radius: 0.3125rem /* 5/16 */;
+      color: rgba(255, 255, 255, 1);
+      line-height: 1.3125rem /* 21/16 */;
+    }
   }
   .no-list {
     margin-top: 4.375rem /* 70/16 */;
@@ -375,10 +385,7 @@ export default {
 .van-tree-select__nav {
   background: rgba(247, 247, 247, 1);
 }
-.van-sidebar-item__text{
-  height: 1.75rem;
-  line-height: 1.75rem;
-}
+
 .van-sidebar-item {
   width: 100%;
   // width: 8.125rem /* 130/16 */;
@@ -387,6 +394,10 @@ export default {
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
   color: #666666;
+  .van-sidebar-item__text{
+    height: 1.75rem;
+    line-height: 1.75rem;
+  }
 }
 .van-sidebar-item--select {
   color: #f2323a;
@@ -396,7 +407,7 @@ export default {
 }
 
 //超出省略改成多行省略
-.van-ellipsis {
+.class-ellipsis {
   display: -webkit-box;
   white-space: normal;
   overflow: hidden;
@@ -444,16 +455,4 @@ export default {
   right: 0.90625rem /* 14.5/16 */;
 }
 
-.join {
-  width: 4rem /* 64/16 */;
-  padding: 0.125rem /* 2/16 */ 0.3125rem /* 5/16 */;
-  height: 1.3125rem /* 21/16 */;
-  font-size: 0.9375rem /* 15/16 */;
-  font-family: PingFangSC-Regular, PingFang SC;
-  font-weight: 400;
-  background: #f2323a;
-  border-radius: 0.3125rem /* 5/16 */;
-  color: rgba(255, 255, 255, 1);
-  line-height: 1.3125rem /* 21/16 */;
-}
 </style>

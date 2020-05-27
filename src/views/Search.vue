@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-20 09:22:14
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-27 16:57:22
+ * @LastEditTime: 2020-05-27 17:59:38
 --> 
 <template>
   <div class="search-page">
@@ -55,7 +55,6 @@
 <script>
 import { Empty, List, PullRefresh, Search } from 'vant'
 import ListItem from '@/components/listItem'
-import Curriculums from '@/components/curriculums'
 import CurrTip from '@/components/currTip'
 import http from '@/api/index.js'
 export default {
@@ -178,7 +177,6 @@ export default {
     'van-pull-refresh': PullRefresh,
     'van-empty': Empty,
     'van-search': Search,
-    Curriculums,
     CurrTip
   }
 }
@@ -190,6 +188,18 @@ export default {
   min-height: 100vh;
   .curr-list {
     margin: 4.375rem  .9375rem 0 .9375rem;
+    .join {
+      width: 4rem /* 64/16 */;
+      padding: 0.125rem /* 2/16 */ 0.3125rem /* 5/16 */;
+      height: 1.3125rem /* 21/16 */;
+      font-size: 0.9375rem /* 15/16 */;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      background: #f2323a;
+      border-radius: 0.3125rem /* 5/16 */;
+      color: rgba(255, 255, 255, 1);
+      line-height: 1.3125rem /* 21/16 */;
+    }
   }
   .none-list {
     margin-top: 4.375rem /* 70/16 */;
@@ -255,16 +265,5 @@ export default {
   color:rgba(51,51,51,1);
 }
 
-.join {
-  width: 4rem /* 64/16 */;
-  padding: 0.125rem /* 2/16 */ 0.3125rem /* 5/16 */;
-  height: 1.3125rem /* 21/16 */;
-  font-size: 0.9375rem /* 15/16 */;
-  font-family: PingFangSC-Regular, PingFang SC;
-  font-weight: 400;
-  background: #f2323a;
-  border-radius: 0.3125rem /* 5/16 */;
-  color: rgba(255, 255, 255, 1);
-  line-height: 1.3125rem /* 21/16 */;
-}
+
 </style>
