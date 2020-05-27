@@ -2,8 +2,8 @@
  * @Github: https://github.com/IdlerHub
  * @Author: zxk
  * @Date: 2020-05-18 11:30:39
- * @LastEditors: zxk
- * @LastEditTime: 2020-05-27 10:16:51
+ * @LastEditors: wjw
+ * @LastEditTime: 2020-05-27 15:21:42
  */
 
 import Vue from 'vue'
@@ -16,7 +16,8 @@ export default new Vuex.Store({
   state: {
     token: localStorage.getItem('token') ? localStorage.getItem('token') : '',
     confirmOrder: { list: [], classIdList: [], totalMoney: 0 },
-    terminal: 'brower'
+    environment: '', // 用户环境 'WEIXIN-brower' 'App-brower' 'other-brower' 微信浏览器或者App或其他浏览器
+    userAgent: '' // 用户机型 'Android' 'IOS' 'brower'
   },
   mutations: {
     setToken(state, token) {
@@ -26,8 +27,11 @@ export default new Vuex.Store({
     setConfirmOrderList(state, info) {
       state.confirmOrder = info
     },
-    setTerminal(state, terminal) {
-      state.terminal = terminal
+    setEnvironment(state, environment) {
+      state.environment = environment
+    },
+    setUserAgent(state, userAgent) {
+      state.userAgent = userAgent
     }
   },
   actions: {},

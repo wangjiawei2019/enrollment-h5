@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-27 14:58:55
+ * @LastEditTime: 2020-05-27 16:07:18
 --> 
 <template>
   <div id="app">
@@ -20,6 +20,26 @@ export default {
       WeixinJSBridge.on('menu:setfont', function() {
         WeixinJSBridge.invoke('setFontSizeCallback', { fontSize: 0 })
       })
+    },
+    getAgent(){ //获取用户环境
+      const { terminal } = this.$route.query
+      const userAgent = navigator.userAgent
+      // 存储用户环境
+      if (terminal === 'App') {
+        this.$store.commit('setEnvironment', 'App-brower')
+      } else if (userAgent.toLowerCase().indexOf('micromessenger') !== -1) {
+        this.$store.commit('setEnvironment', 'WEIXIN-brower')
+      } else {
+        this.$store.commit('setEnvironment', 'other-brower')
+      }
+      // 存储用户终端
+      if (userAgent.indexOf('Android') > -1 || userAgent.indexOf('Linux') > -1) {
+        this.$store.commit('setUserAgent', 'Android')
+      } else if (!!userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)) {
+        this.$store.commit('setUserAgent', 'IOS')
+      } else {
+        this.$store.commit('setUserAgent', 'brower')
+      }
     }
   },
   mounted() {
@@ -35,6 +55,7 @@ export default {
         document.attachEvent('onWeixinJSBridgeReady', this.handleFontSize)
       }
     }
+    this.getAgent()
   }
 }
 </script>
