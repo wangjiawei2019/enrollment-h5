@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-18 11:30:39
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-27 15:21:42
+ * @LastEditTime: 2020-05-27 16:23:12
  */
 
 import Vue from 'vue'
@@ -16,6 +16,8 @@ export default new Vuex.Store({
   state: {
     token: localStorage.getItem('token') ? localStorage.getItem('token') : '',
     confirmOrder: { list: [], classIdList: [], totalMoney: 0 },
+    code: '', // JSAPI 支付的 code
+    openID: '', // JSAPI 支付的 openID
     environment: '', // 用户环境 'WEIXIN-brower' 'App-brower' 'other-brower' 微信浏览器或者App或其他浏览器
     userAgent: '' // 用户机型 'Android' 'IOS' 'brower'
   },
@@ -26,6 +28,12 @@ export default new Vuex.Store({
     },
     setConfirmOrderList(state, info) {
       state.confirmOrder = info
+    },
+    setCode(state, code) {
+      state.code = code
+    },
+    setOpenID(state, openID) {
+      state.openID = openID
     },
     setEnvironment(state, environment) {
       state.environment = environment

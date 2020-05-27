@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-27 15:58:03
+ * @LastEditTime: 2020-05-27 17:23:10
 --> 
 <template>
   <div id="app">
@@ -11,10 +11,18 @@
 </template>
 
 <script>
+import { JSAPIAPPID, domainBaseUrl } from '@/utils/BASE'
+
 export default {
   mounted() {
-    const { terminal } = this.$route.query
+    const { terminal, code } = this.$route.query
     const userAgent = navigator.userAgent
+    if (code) {
+      console.log('mounted -> code', code)
+      this.$store.commit('setCode', code)
+    } else {
+      this.getCode()
+    }
     // 存储用户环境
     if (terminal === 'App') {
       this.$store.commit('setEnvironment', 'App-brower')
@@ -31,6 +39,18 @@ export default {
     } else {
       this.$store.commit('setUserAgent', 'brower')
     }
+  },
+  methods: {
+    getCode() {
+      if (!this.$store.state.code) {
+        location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${JSAPIAPPID}&redirect_uri=${encodeURIComponent(
+          domainBaseUrl
+        )}&response_type=code&scope=snsapi_userinfo&state=1#wechat_redirect`
+      } else {
+        this.getOpenID()
+      }
+    },
+    getOpenID() {}
   }
 }
 </script> 
