@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-22 11:41:33
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-27 14:44:09
+ * @LastEditTime: 2020-05-27 18:29:38
 --> 
 <template>
   <div class="detail-page">
@@ -26,7 +26,7 @@
       <div class="detail-info" v-html="detail.classInfo"></div>
     </div>
     
-    <div class="footer" v-if="detail.flag" @click="toAPP">报名完成，进入班群</div>
+    <div class="footer" v-if="true" @click="saveImg">报名完成，进入班群</div>
     <div class="footer" v-else>
       <div class="left" @click="applyCourse">加入选课单</div>
       <div class="right" @click="applyCourse($event,true)">立即报名</div>
@@ -55,7 +55,10 @@ export default {
     CurrTip
   },
   methods: {
-    // toAPP(){
+    saveImg(){  //保存图片
+      console.log("保存图片")
+    },
+    // toAPP(){ //进入班群
     //   var u = navigator.userAgent
     //   var isWeixin = u.toLowerCase().indexOf('micromessenger') !== -1; // 微信内
     //   var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //android终端

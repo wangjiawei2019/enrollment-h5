@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-20 09:22:14
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-27 18:06:57
+ * @LastEditTime: 2020-05-27 18:27:02
 --> 
 <template>
   <div class="search-page">
@@ -35,7 +35,7 @@
     <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
       <van-list v-model="loading" :finished="finished" @load="downPull">
         <div class="curr-list" v-if="classList.length">
-          <div v-for="(item,index) in classList" :key="index">
+          <div class="curr-list-item" v-for="(item,index) in classList" :key="index">
             <list-item :lesson="true" :item="item" @toDetail="toDetail">
               <div slot="lesson" @click="applyCourse($event,item)" class="join" @click.stop="applyCourse">立即报名</div>
             </list-item>
@@ -188,6 +188,9 @@ export default {
   min-height: 100vh;
   .curr-list {
     margin: 4.375rem  .9375rem 0 .9375rem;
+    .curr-list-item{
+      border-bottom: 1px solid #E9E9E9;
+    }
     .join {
       width: 4rem /* 64/16 */;
       padding: 0.125rem /* 2/16 */ 0.3125rem /* 5/16 */;
