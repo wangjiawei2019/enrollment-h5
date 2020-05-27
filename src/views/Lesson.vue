@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-26 10:28:36
+ * @LastEditTime: 2020-05-27 18:00:12
 --> 
 <template>
   <div class="lesson">
@@ -17,30 +17,36 @@
         <div class="search-ipt">搜索学习课程</div>
       </div>
     </div>
-    <div class="class-list" v-show="showClassify">
-      <van-tree-select
-        @click-nav="selectedClass"
-        :items="majorList"
-        :main-active-index.sync="majorIndex"
-      >
-        <div slot="content">
-          <div
-            :class="['van-tree-select__item',{'van-tree-select__item--active':item.id==courseId}]"
-            @click="selectedCourse(item)"
-            v-for="(item,index) in courseList"
-            :key="index"
-          >
-            <div class="van-ellipsis">{{item.text}}</div>
-            <img v-show="item.id==courseId" src="@/assets/images/lesson/selected.png" alt />
+    <div class="class-list" v-show="showClassify" @click="changeClassify">
+      <div @click.stop>
+        <van-tree-select
+          @click-nav="selectedClass"
+          :items="majorList"
+          :main-active-index.sync="majorIndex"
+        >
+          <div slot="content">
+            <div
+              :class="['van-tree-select__item',{'van-tree-select__item--active':item.id==courseId}]"
+              @click.stop="selectedCourse(item)"
+              v-for="(item,index) in courseList"
+              :key="index"
+            >
+              <div class="class-ellipsis">{{item.text}}</div>
+              <img v-show="item.id==courseId" src="@/assets/images/lesson/selected.png" alt />
+            </div>
           </div>
-        </div>
-      </van-tree-select>
+        </van-tree-select>
+      </div>
     </div>
 
     <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
       <van-list v-model="loading" :finished="finished" @load="downPull">
         <div class="curr-list" v-if="classList.length">
-          <Curriculums @changeShow="changeShow" v-for="(item,index) in classList" :key="index" :classItem="item"></Curriculums>
+          <div v-for="(item,index) in classList" :key="index">
+            <list-item :lesson="true" :item="item" @toDetail="toDetail">
+              <div slot="lesson" class="join" @click.stop="applyCourse($event,item)">立即报名</div>
+            </list-item>
+          </div>
         </div>
         <div class="no-list" v-else>
           <van-empty :image="require('@/assets/no-list1.png')" description="暂无相关课程" />
@@ -54,7 +60,7 @@
 </template>
 
 <script>
-import Curriculums from '@/components/curriculums'
+import ListItem from '@/components/listItem'
 import CurrTip from '@/components/currTip'
 import { TreeSelect, Empty, List, PullRefresh } from 'vant'
 import http from '@/api/index.js'
@@ -80,6 +86,57 @@ export default {
     }
   },
   methods: {
+    toDetail(id){
+      this.$router.push({path:'/lesson-detail',query:{id}})
+    },
+    dialog(title,message,text,name,query={}){
+      Dialog.confirm({
+          title,
+          message,
+          confirmButtonText: text,
+          confirmButtonColor: '#F2323A',
+          cancelButtonColor: '#999999'
+        }).then(res=>{
+          this.$router.push({name,query})
+        })
+        .catch(err=>{
+          console.log('取消',err)
+        })
+    },
+    applyCourse(e,item) {
+      let params = { id: item.id }
+      //立即报名，提交订单
+      let info = {
+        list:[item],
+        classIdList: [item.id],
+        totalMoney: item.money
+      }
+      http.applyCourse(params).then(res=>{
+        if(res.data.status === 3){  //该课程已经完成报名
+          this.$router.push({path:'/lesson-detail',query:{id: item.id}})
+        }else if(res.data.status === 0 || res.data.status === 1 || res.data.status === 2){  //班级或者同类班级已经在选课单内,去提交订单--2
+          this.$store.commit('setConfirmOrderList', info)
+          this.$router.push({name: 'ConfirmOrder'})
+        }else if(res.data.status === 4){  //已报名完成该课程的其他班级--3
+          this.repeatShow = true
+        }else if(res.data.status === 5){  //去支付--5 
+          // this.$store.commit('setConfirmOrderList', info)
+          this.dialog('您已提交该班级报名','点\'去支付\'完成报名','去支付','Order',{index:1})
+        }else if(res.data.status === 6){  //去支付--6
+          // info = {
+          //   list:[res.data.classDetail],
+          //   classIdList: [res.data.classDetail.classId],
+          //   totalMoney: res.data.classDetail.money
+          // }
+          // this.$store.commit('setConfirmOrderList', info)
+          this.dialog('您已提交相同课程报名','点\'去支付\'完成报名','去支付','Order',{index:1})
+        }
+      })
+      .catch(err=>{
+        console.log(err)
+        this.$toast(err)
+      })
+    },
     changeShow(flag){
       this.repeatShow = flag
     },
@@ -209,8 +266,8 @@ export default {
     }
   },
   components: {
-    Curriculums,
     CurrTip,
+    'list-item':ListItem,
     'van-tree-select': TreeSelect,
     'van-empty': Empty,
     'van-list': List,
@@ -219,7 +276,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .lesson {
   flex: 1;
   .header {
@@ -259,7 +316,8 @@ export default {
     }
     .search {
       flex: 1;
-      // width: 11.25rem /* 180/16 */;
+      max-width: 11.25rem /* 180/16 */;
+      overflow: hidden;
       height: 2.5rem /* 40/16 */;
       padding: 0 0.90625rem /* 14.5/16 */;
       margin-left: 1.9375rem /* 31/16 */;
@@ -282,6 +340,9 @@ export default {
         font-family: PingFangSC-Regular, PingFang SC;
         font-weight: 400;
         color: rgba(153, 153, 153, 1);
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
     }
   }
@@ -295,7 +356,19 @@ export default {
     background: rgba(0, 0, 0, 0.6);
   }
   .curr-list {
-    margin-top: 4.375rem /* 70/16 */;
+    margin: 4.375rem  .9375rem 0 .9375rem;
+    .join {
+      width: 4rem /* 64/16 */;
+      padding: 0.125rem /* 2/16 */ 0.3125rem /* 5/16 */;
+      height: 1.3125rem /* 21/16 */;
+      font-size: 0.9375rem /* 15/16 */;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      background: #f2323a;
+      border-radius: 0.3125rem /* 5/16 */;
+      color: rgba(255, 255, 255, 1);
+      line-height: 1.3125rem /* 21/16 */;
+    }
   }
   .no-list {
     margin-top: 4.375rem /* 70/16 */;
@@ -312,6 +385,7 @@ export default {
 .van-tree-select__nav {
   background: rgba(247, 247, 247, 1);
 }
+
 .van-sidebar-item {
   width: 100%;
   // width: 8.125rem /* 130/16 */;
@@ -320,6 +394,10 @@ export default {
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
   color: #666666;
+  .van-sidebar-item__text{
+    height: 1.75rem;
+    line-height: 1.75rem;
+  }
 }
 .van-sidebar-item--select {
   color: #f2323a;
@@ -329,7 +407,7 @@ export default {
 }
 
 //超出省略改成多行省略
-.van-ellipsis {
+.class-ellipsis {
   display: -webkit-box;
   white-space: normal;
   overflow: hidden;
@@ -376,4 +454,5 @@ export default {
   font-weight: bold;
   right: 0.90625rem /* 14.5/16 */;
 }
+
 </style>

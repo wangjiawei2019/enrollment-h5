@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-20 09:22:14
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-25 16:47:27
+ * @LastEditTime: 2020-05-27 17:59:38
 --> 
 <template>
   <div class="search-page">
@@ -35,7 +35,11 @@
     <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
       <van-list v-model="loading" :finished="finished" @load="downPull">
         <div class="curr-list" v-if="classList.length">
-          <Curriculums v-for="(item,index) in classList" :key="index" :classItem="item"></Curriculums>
+          <div v-for="(item,index) in classList" :key="index">
+            <list-item :lesson="true" :item="item" @toDetail="toDetail">
+              <div slot="lesson" @click="applyCourse($event,item)" class="join" @click.stop="applyCourse">立即报名</div>
+            </list-item>
+          </div>
         </div>
         <div class="none-list" v-else>
           <van-empty :image="require('@/assets/no-list1.png')" description="暂无相关搜索课程" />
@@ -50,7 +54,7 @@
 
 <script>
 import { Empty, List, PullRefresh, Search } from 'vant'
-import Curriculums from '@/components/curriculums'
+import ListItem from '@/components/listItem'
 import CurrTip from '@/components/currTip'
 import http from '@/api/index.js'
 export default {
@@ -68,6 +72,51 @@ export default {
     }
   },
   methods: {
+    toDetail(id){
+      this.$router.push({path:'/lesson-detail',query:{id}})
+    },
+    dialog(title,message,text,name,query={}){
+      Dialog.confirm({
+          title,
+          message,
+          confirmButtonText: text,
+          confirmButtonColor: '#F2323A',
+          cancelButtonColor: '#999999'
+        }).then(res=>{
+          this.$router.push({name,query})
+        })
+        .catch(err=>{
+          console.log('取消',err)
+        })
+    },
+    applyCourse(e,item) {
+      let params = { id: item.id }
+      //立即报名，提交订单
+      let info = {
+        list:[item],
+        classIdList: [item.id],
+        totalMoney: item.money
+      }
+      http.applyCourse(params).then(res=>{
+        if(res.data.status === 3){  //该课程已经完成报名
+          this.$router.push({path:'/lesson-detail',query:{id: item.id}})
+        }else if(res.data.status === 0 || res.data.status === 1 || res.data.status === 2){  //班级或者同类班级已经在选课单内,去提交订单--2
+          this.$store.commit('setConfirmOrderList', info)
+          this.$router.push({name: 'ConfirmOrder'})
+        }else if(res.data.status === 4){  //已报名完成该课程的其他班级--3
+          this.repeatShow = true
+        }else if(res.data.status === 5){  //去支付--5 
+          // this.$store.commit('setConfirmOrderList', info)
+          this.dialog('您已提交该班级报名','点\'去支付\'完成报名','去支付','Order',{index:1})
+        }else if(res.data.status === 6){  //去支付--6
+          this.dialog('您已提交相同课程报名','点\'去支付\'完成报名','去支付','Order',{index:1})
+        }
+      })
+      .catch(err=>{
+        console.log(err)
+        this.$toast(err)
+      })
+    },
     delWorld() {
       this.keyWord = ''
       this.classList = []
@@ -123,11 +172,11 @@ export default {
     }
   },
   components: {
+    'list-item':ListItem,
     'van-list': List,
     'van-pull-refresh': PullRefresh,
     'van-empty': Empty,
     'van-search': Search,
-    Curriculums,
     CurrTip
   }
 }
@@ -138,7 +187,19 @@ export default {
   width: 100%;
   min-height: 100vh;
   .curr-list {
-    margin-top: 4.375rem /* 70/16 */;
+    margin: 4.375rem  .9375rem 0 .9375rem;
+    .join {
+      width: 4rem /* 64/16 */;
+      padding: 0.125rem /* 2/16 */ 0.3125rem /* 5/16 */;
+      height: 1.3125rem /* 21/16 */;
+      font-size: 0.9375rem /* 15/16 */;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      background: #f2323a;
+      border-radius: 0.3125rem /* 5/16 */;
+      color: rgba(255, 255, 255, 1);
+      line-height: 1.3125rem /* 21/16 */;
+    }
   }
   .none-list {
     margin-top: 4.375rem /* 70/16 */;
@@ -203,4 +264,6 @@ export default {
   font-weight:400;
   color:rgba(51,51,51,1);
 }
+
+
 </style>
