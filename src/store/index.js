@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-18 11:30:39
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-26 18:31:46
+ * @LastEditTime: 2020-05-27 10:16:51
  */
 
 import Vue from 'vue'
@@ -16,7 +16,7 @@ export default new Vuex.Store({
   state: {
     token: localStorage.getItem('token') ? localStorage.getItem('token') : '',
     confirmOrder: { list: [], classIdList: [], totalMoney: 0 },
-    terminal: ''
+    terminal: 'brower'
   },
   mutations: {
     setToken(state, token) {
@@ -26,7 +26,7 @@ export default new Vuex.Store({
     setConfirmOrderList(state, info) {
       state.confirmOrder = info
     },
-    setTerminal(state, terminal){
+    setTerminal(state, terminal) {
       state.terminal = terminal
     }
   },

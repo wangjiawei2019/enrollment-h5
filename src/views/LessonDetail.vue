@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-22 11:41:33
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-27 10:07:22
+ * @LastEditTime: 2020-05-27 14:44:09
 --> 
 <template>
   <div class="detail-page">
@@ -55,56 +55,31 @@ export default {
     CurrTip
   },
   methods: {
-    toAPP(){
-      var u = navigator.userAgent
-      console.log(u)
-      console.log("进入班群")
-      var isWeixin = u.toLowerCase().indexOf('micromessenger') !== -1; // 微信内
-      var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //android终端
-      var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
-      var isApp = store.terminal  //APP端
-      if(isWeixin) {
-        alert('请在浏览器上打开')
-      }else{
-        console.log('APP环境下',isApp)
-        //如果是在APP环境下
-        if(window.ReactNativeWebView.postMessage){
-          window.ReactNativeWebView.postMessage({route: 'enrollment'})
-        }else{
-          window.location.href = 'j24swr://https://appxw.jinlingkeji.cn/?type=ENROLLMENT'
-          setTimeout(function(){
-            let hidden = window.document.hidden || window.document.mozHidden || window.document.msHidden ||window.document.webkitHidden 
-            if(typeof hidden =="undefined" || hidden ==false){
-              window.location.href ="https://appxw.jinlingkeji.cn/share.html"
-            }
-          }, 2000)
-        }
-        //android端
-        // if (isAndroid) {
-            //安卓app的scheme协议
-            // window.location.href = 'j24swr://https://appxw.jinlingkeji.cn/?type=ENROLLMENT'
-            // setTimeout(function(){
-            //     let hidden = window.document.hidden || window.document.mozHidden || window.document.msHidden ||window.document.webkitHidden 
-            //     if(typeof hidden =="undefined" || hidden ==false){
-            //       window.location.href ="https://appxw.jinlingkeji.cn/share.html"
-            //     }
-            // }, 2000)
-        // }
-        // //ios端
-        // if (isIOS) {
-        //     //ios的scheme协议
-        //     // window.location.href = 'taobao://'
-        //     setTimeout(function(){
-        //         let hidden = window.document.hidden || window.document.mozHidden || window.document.msHidden ||window.document.webkitHidden 
-        //         // if(typeof hidden =="undefined" || hidden ==false){
-        //         //     //App store下载地址
-        //         //     window.location.href = "http://itunes.apple.com/app/id387682726"
-        //         // }
-        //     }, 2000)
-        // }
-      }
-      
-    },
+    // toAPP(){
+    //   var u = navigator.userAgent
+    //   var isWeixin = u.toLowerCase().indexOf('micromessenger') !== -1; // 微信内
+    //   var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //android终端
+    //   var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+    //   var isApp = store.state.terminal  //APP端
+    //   if(isWeixin) {
+    //     alert('请在浏览器上打开')
+    //   }else{
+    //     //如果是在APP环境下
+    //     if(isApp === 'App'){
+    //       console.log('APP环境下',isApp)
+    //       window.ReactNativeWebView.postMessage(JSON.stringify({route: 'enrollment'}))
+    //     }else{
+    //       console.log("浏览器环境下")
+    //       location.href = 'j24swr://https://appxw.jinlingkeji.cn/?type=ENROLLMENT'
+    //       setTimeout(function(){
+    //         let hidden = window.document.hidden || window.document.mozHidden || window.document.msHidden ||window.document.webkitHidden 
+    //         if(typeof hidden =="undefined" || hidden ==false){
+    //           window.location.href ="https://appxw.jinlingkeji.cn/share.html"
+    //         }
+    //       }, 2000)
+    //     }
+    //   }
+    // },
     changeShow(flag){
       this.repeatShow = flag
     },
@@ -115,7 +90,7 @@ export default {
         // console.log(res)
       })
     },
-    dialog(title,message,text,name,params={}){
+    dialog(title,message,text,name,query={}){
       Dialog.confirm({
           title,
           message,
@@ -124,7 +99,7 @@ export default {
           cancelButtonColor: '#999999'
         }).then(res=>{
           console.log('确认',res)
-          this.$router.push({name,params})
+          this.$router.push({name,query})
         })
         .catch(err=>{
           console.log('取消',err)
@@ -164,15 +139,15 @@ export default {
           this.className = res.data.className
           this.repeatShow = true
         }else if(res.data.status === 5){  //去支付--5 
-          this.$store.commit('setConfirmOrderList', info)
+          // this.$store.commit('setConfirmOrderList', info)
           this.dialog('您已提交该班级报名','点\'去支付\'完成报名','去支付','Order',{index:1})
         }else if(res.data.status === 6){  //去支付--6
-          info = {
-            list:[res.data.classDetail],
-            classIdList: [res.data.classDetail.classId],
-            totalMoney: res.data.classDetail.money
-          }
-          this.$store.commit('setConfirmOrderList', info)
+          // info = {
+          //   list:[res.data.classDetail],
+          //   classIdList: [res.data.classDetail.classId],
+          //   totalMoney: res.data.classDetail.money
+          // }
+          // this.$store.commit('setConfirmOrderList', info)
           this.dialog('您已提交相同课程报名','点\'去支付\'完成报名','去支付','Order',{index:1})
         }
       })
@@ -237,11 +212,11 @@ export default {
             color: rgba(242, 50, 58, 1);
           }
           & > span:first-child {
-            font-size: 0.9375rem /* 15/16 */;
+            font-size:0.9375rem /* 15/16 */;
           }
         }
         .count {
-          font-size: 0.9375rem /* 15/16 */;
+          font-size:  0.9375rem /* 15/16 */;
           font-family: PingFangSC-Regular, PingFang SC;
           font-weight: 400;
           color: #666;
@@ -251,7 +226,7 @@ export default {
   }
   .content {
     padding: 0.9375rem /* 15/16 */;
-    font-size: 1.3125rem /* 21/16 */;
+    font-size: 21px;
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: rgba(51, 51, 51, 1);
@@ -260,7 +235,7 @@ export default {
       margin-bottom: 0.625rem /* 10/16 */;
     }
     .detail-info {
-      font-size: 1.1875rem /* 19/16 */;
+      font-size: 19px;
       font-family: PingFangSC-Regular, PingFang SC;
       font-weight: 400;
       color: rgba(102, 102, 102, 1);
@@ -277,7 +252,7 @@ export default {
     align-items: center;
     border-radius: 1.71875rem /* 27.5/16 */;
     overflow: hidden;
-    font-size: 1.3125rem /* 21/16 */;
+    font-size: 21px;
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: rgba(255, 255, 255, 1);

@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-19 11:15:15
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-26 15:08:59
+ * @LastEditTime: 2020-05-27 14:44:53
 --> 
 <template>
   <div class="curriculums" @click="toDetail">
@@ -29,7 +29,7 @@ export default {
     classItem: Object
   },
   methods: {
-    dialog(title,message,text,name){
+    dialog(title,message,text,name,query={}){
       Dialog.confirm({
           title,
           message,
@@ -37,8 +37,7 @@ export default {
           confirmButtonColor: '#F2323A',
           cancelButtonColor: '#999999'
         }).then(res=>{
-          console.log('确认',res)
-          this.$router.push({name: name})
+          this.$router.push({name,query})
         })
         .catch(err=>{
           console.log('取消',err)
@@ -61,16 +60,16 @@ export default {
         }else if(res.data.status === 4){  //已报名完成该课程的其他班级--3
           this.repeatShow = true
         }else if(res.data.status === 5){  //去支付--5 
-          this.$store.commit('setConfirmOrderList', info)
-          this.dialog('您已提交该班级报名','点\'去支付\'完成报名','去支付','ConfirmOrder')
+          // this.$store.commit('setConfirmOrderList', info)
+          this.dialog('您已提交该班级报名','点\'去支付\'完成报名','去支付','Order',{index:1})
         }else if(res.data.status === 6){  //去支付--6
-          info = {
-            list:[res.data.classDetail],
-            classIdList: [res.data.classDetail.classId],
-            totalMoney: res.data.classDetail.money
-          }
-          this.$store.commit('setConfirmOrderList', info)
-          this.dialog('您已提交相同课程报名','点\'去支付\'完成报名','去支付','ConfirmOrder')
+          // info = {
+          //   list:[res.data.classDetail],
+          //   classIdList: [res.data.classDetail.classId],
+          //   totalMoney: res.data.classDetail.money
+          // }
+          // this.$store.commit('setConfirmOrderList', info)
+          this.dialog('您已提交相同课程报名','点\'去支付\'完成报名','去支付','Order',{index:1})
         }
       })
       .catch(err=>{

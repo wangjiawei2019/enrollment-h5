@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-26 19:28:38
+ * @LastEditTime: 2020-05-27 11:59:43
  */
 
 import Vue from 'vue'
@@ -118,14 +118,13 @@ router.beforeEach((to, from, next) => {
     const query = qs.parse(to.hash.split('?')[1])
     if (query.terminal === 'App'){  //App的环境
       console.log(query.terminal)
-      store.commit('terminal', query.terminal);
+      store.commit('setTerminal', query.terminal)
     }
     if (query.token) {
       //更新token,直接登录
       // console.log(query)
       store.commit('setToken', query.token)
       // store.commit('setToken', token);
-      next({ path: '/index', replace: true })
       //是否需要去报名须知
       http.getReadStatus().then(res => {
         console.log(res)
@@ -146,6 +145,7 @@ router.beforeEach((to, from, next) => {
       }
     }
   } else {
+    console.log(to)
     next()
   }
 })
