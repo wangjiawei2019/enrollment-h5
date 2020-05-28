@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-26 19:47:52
+ * @LastEditTime: 2020-05-28 20:24:59
 --> 
 <template>
   <div class="order-page">
@@ -118,7 +118,7 @@ export default {
         2: [] // 已完成
       },
       statusText: ['', '待支付', '已完成', '已关闭', '已关闭', '已关闭', '已关闭'],
-      actionSheetObj: { showPay: false, totalMoney: '', expireTime: 0, id: null, url: '' },
+      actionSheetObj: { showPay: false, totalMoney: '', expireTime: 0, id: null, url: '', brandWCPayRequestDO: {} },
       dialogObj: {
         id: null,
         type: '',
@@ -170,7 +170,14 @@ export default {
     },
     payOrder(e, item) {
       e.stopPropagation()
-      const obj = { showPay: true, totalMoney: item.sum, expireTime: item.expireTime, id: item.id, url: item.url }
+      const obj = {
+        showPay: true,
+        totalMoney: item.sum,
+        expireTime: item.expireTime,
+        id: item.id,
+        url: item.url,
+        brandWCPayRequestDO: item.brandWCPayRequestDO
+      }
       Object.assign(this.actionSheetObj, obj)
     },
     deleteOrder(e, id) {
@@ -187,8 +194,31 @@ export default {
       Object.assign(this.dialogObj, obj)
     },
     confirmPay() {
-      const redirect_url = `${domainBaseUrl}/#/order-detail?id=${this.actionSheetObj.id}`
-      location.href = `${this.actionSheetObj.url}&redirect_url=${encodeURIComponent(redirect_url)}`
+      if (this.$store.state.environment === 'WEIXIN-brower') {
+        const { appId, timeStamp, nonceStr, packageInfo, signType, paySign } = this.actionSheetObj.brandWCPayRequestDO
+        WeixinJSBridge.invoke(
+          'getBrandWCPayRequest',
+          {
+            appId, //公众号名称，由商户传入
+            timeStamp, //时间戳，自1970年以来的秒数
+            nonceStr, //随机串
+            package: packageInfo,
+            signType, //微信签名方式：
+            paySign //微信签名
+          },
+          res => {
+            if (res.err_msg == 'get_brand_wcpay_request:ok') {
+              this.$toast('支付成功')
+              this.$router.replace({ name: 'OrderDetail', query: { id: this.actionSheetObj.id } })
+            } else {
+              this.$toast('支付失败，请重试')
+            }
+          }
+        )
+      } else {
+        const redirect_url = `${domainBaseUrl}/#/order-detail?id=${this.actionSheetObj.id}`
+        location.href = `${this.actionSheetObj.url}&redirect_url=${encodeURIComponent(redirect_url)}`
+      }
     },
     handleCancel() {
       const obj = {

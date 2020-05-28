@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-21 10:12:23
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-28 16:13:39
+ * @LastEditTime: 2020-05-28 18:01:03
 --> 
 <template>
   <div class="confirm-order-page">
@@ -106,19 +106,20 @@ export default {
     },
     confirmPay() {
       if (this.$store.state.environment === 'WEIXIN-brower') {
-        const { appId, timeStamp, nonceStr, signType, paySign } = this.brandWCPayRequestDO
+        const { appId, timeStamp, nonceStr, packageInfo, signType, paySign } = this.brandWCPayRequestDO
         WeixinJSBridge.invoke(
           'getBrandWCPayRequest',
           {
             appId, //公众号名称，由商户传入
             timeStamp, //时间戳，自1970年以来的秒数
             nonceStr, //随机串
-            package: this.brandWCPayRequestDO.package, // 解构出来打包会出现错误（ package 关键字 ）
+            package: packageInfo,
             signType, //微信签名方式：
             paySign //微信签名
           },
           res => {
             if (res.err_msg == 'get_brand_wcpay_request:ok') {
+              this.$toast('支付成功')
               this.$router.replace({ name: 'OrderDetail', query: { id: this.id } })
             } else {
               this.$toast('支付失败，请重试')

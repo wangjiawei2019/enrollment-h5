@@ -2,11 +2,10 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-04-20 16:14:58
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-27 14:09:44
+ * @LastEditTime: 2020-05-28 17:48:18
  */
 import axios from 'axios'
 import { httpBaseUrl } from './BASE'
-import qs from 'qs'
 import { Toast } from 'vant'
 import router from '@/router'
 import store from '@/store'

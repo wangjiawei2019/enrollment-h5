@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-28 17:02:58
+ * @LastEditTime: 2020-05-28 20:24:24
 --> 
 <template>
   <div id="app">
@@ -276,12 +276,20 @@ export default {
 .van-tabs--line {
   height: 100%;
   .van-tabs__content {
-    height: 100%;
     .van-tab__pane {
       height: 100%;
     }
   }
 }
+
+// van-cell
+.van-cell {
+  padding: 1.03rem 0 !important;
+  border-bottom: 0.03rem solid rgba(233, 233, 233, 1) !important;
+  box-sizing: border-box !important;
+  align-items: flex-start !important;
+}
+
 //PullRefresh
 .van-pull-refresh {
   min-height: 100% !important;

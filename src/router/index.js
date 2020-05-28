@@ -1,13 +1,8 @@
 /*
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
-<<<<<<< HEAD
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-28 14:09:39
-=======
- * @LastEditors: zxk
- * @LastEditTime: 2020-05-27 19:45:07
->>>>>>> 8d529e6a43575c2b2f33460915c1616fdfad6a41
+ * @LastEditTime: 2020-05-28 17:29:16
  */
 
 import Vue from 'vue'
@@ -25,7 +20,9 @@ import Login from '@/views/Login'
 import Notice from '@/views/Notice'
 import Search from '@/views/Search'
 import ApplyRule from '@/views/ApplyRule'
+import Address from '@/views/Address'
 import LessonDetail from '@/views/LessonDetail'
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -104,6 +101,14 @@ const routes = [
     component: ApplyRule,
     meta: {
       title: '报名须知'
+    }
+  },
+  {
+    path: '/address',
+    name: 'Address',
+    component: Address,
+    meta: {
+      title: '收货地址'
     }
   }
 ]

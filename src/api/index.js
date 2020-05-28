@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 17:03:31
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-28 14:44:40
+ * @LastEditTime: 2020-05-28 20:37:03
  */
 import { get, post } from '@/utils/request'
 import store from '@/store'
@@ -116,6 +116,14 @@ function getOrderDetail(param) {
 }
 
 /**
+ * @description: 提交收货地址
+ * @param {orderId,userName,mobile,address}
+ */
+function setOrderAddress(param) {
+  return post('/major/api/course/setOrderAddress', param)
+}
+
+/**
  * @description: 获取 openid
  * @param {code}
  */
@@ -147,5 +155,6 @@ export default {
   cancelOrder,
   deleteOrder,
   getOrderDetail,
+  setOrderAddress,
   getOpenID
 }
