@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-20 09:22:14
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-27 18:27:02
+ * @LastEditTime: 2020-05-28 09:58:17
 --> 
 <template>
   <div class="search-page">
@@ -202,6 +202,7 @@ export default {
       border-radius: 0.3125rem /* 5/16 */;
       color: rgba(255, 255, 255, 1);
       line-height: 1.3125rem /* 21/16 */;
+      text-align: center;
     }
   }
   .none-list {
@@ -228,6 +229,7 @@ export default {
 .van-search__content {
   padding-left: 0.9375rem /* 15/16 */;
   height: 100%;
+  align-items: center;
 }
 .c-img {
   width: 1.1875rem /* 19/16 */;
@@ -259,6 +261,7 @@ export default {
   font-family:PingFangSC-Regular,PingFang SC;
   font-weight:400;
   color:rgba(51,51,51,1);
+  line-height: 1.75rem /* 28/16 */;
 }
 .van-search__action{
   padding: 0 .9375rem;

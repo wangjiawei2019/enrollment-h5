@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-27 17:27:24
+ * @LastEditTime: 2020-05-27 19:45:07
  */
 
 import Vue from 'vue'
@@ -145,7 +145,8 @@ router.beforeEach((to, from, next) => {
     }
   } else {
     if (!store.state.token && visitorPages.indexOf(to.name) === -1) { //非游客页面 需要登录
-      next({ path: '/login' })
+      console.log("当前页面",to.name)
+      // next({ path: '/login' })
     } else {  //已登录
       next()
     }
