@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-21 10:12:23
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-28 10:44:07
+ * @LastEditTime: 2020-05-28 16:13:39
 --> 
 <template>
   <div class="confirm-order-page">
@@ -88,13 +88,14 @@ export default {
   },
   methods: {
     submitOrder(classIdList) {
-      const params = { classIdList }
-      if (this.environment === 'WEIXIN-brower') {
-        Object.assign(params, { tradeType: 'JSAPI', openId: this.openId })
+      if (this.$store.state.environment === 'WEIXIN-brower') {
+        this.createOrder('/major/api/course/createOrderJSAPI', { classIdList, tradeType: 'JSAPI', openId: this.$store.state.openId })
       } else {
-        Object.assign(params, { tradeType: 'MWEB' })
+        this.createOrder('/major/api/course/createOrderH5', { classIdList, tradeType: 'MWEB' })
       }
-      http.createOrder(params).then(res => {
+    },
+    createOrder(url, params) {
+      http.createOrder(url, params).then(res => {
         this.showPay = true
         const { url, id, expireTime, brandWCPayRequestDO } = res.data
         this.url = url
@@ -104,15 +105,15 @@ export default {
       })
     },
     confirmPay() {
-      if (this.environment === 'WEIXIN-brower') {
-        const { appId, timeStamp, nonceStr, package, signType, paySign } = this.brandWCPayRequestDO
+      if (this.$store.state.environment === 'WEIXIN-brower') {
+        const { appId, timeStamp, nonceStr, signType, paySign } = this.brandWCPayRequestDO
         WeixinJSBridge.invoke(
           'getBrandWCPayRequest',
           {
             appId, //公众号名称，由商户传入
             timeStamp, //时间戳，自1970年以来的秒数
             nonceStr, //随机串
-            package,
+            package: this.brandWCPayRequestDO.package, // 解构出来打包会出现错误（ package 关键字 ）
             signType, //微信签名方式：
             paySign //微信签名
           },
@@ -157,12 +158,6 @@ export default {
       const H = parseInt(this.remainTime.split(':')[0])
       const M = parseInt(this.remainTime.split(':')[1])
       return `${H ? H + '小时' : ''}${M}分钟`
-    },
-    environment() {
-      return this.$store.state.environment
-    },
-    openId() {
-      return this.$store.state.openId
     }
   }
 }
@@ -181,7 +176,7 @@ export default {
     @include flex(center, flex-start, column, nowrap);
     .title {
       line-height: 1.84rem;
-      @include font(PingFang SC, 1.31rem, rgba(51, 51, 51, 1), 500);
+      @include font(PingFang SC, 1.3125rem, rgba(51, 51, 51, 1), 500);
     }
     .subtitle {
       margin-top: 0.31rem;

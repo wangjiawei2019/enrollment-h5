@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-28 10:09:48
+ * @LastEditTime: 2020-05-28 17:02:58
 --> 
 <template>
   <div id="app">
@@ -13,6 +13,7 @@
 <script>
 import { JSAPIAPPID, domainBaseUrl } from '@/utils/BASE'
 import http from '@/api'
+import store from '@/store'
 
 export default {
   mounted() {
@@ -45,36 +46,39 @@ export default {
       const userAgent = navigator.userAgent
       // 存储用户环境
       if (terminal === 'App') {
-        this.$store.commit('setEnvironment', 'App-brower')
+        store.commit('setEnvironment', 'App-brower')
       } else if (userAgent.toLowerCase().indexOf('micromessenger') !== -1) {
-        this.$store.commit('setEnvironment', 'WEIXIN-brower')
+        store.commit('setEnvironment', 'WEIXIN-brower')
+        console.log(store)
         this.getCode() // 获取 JSAPI 支付所需 code
       } else {
-        this.$store.commit('setEnvironment', 'other-brower')
+        store.commit('setEnvironment', 'other-brower')
       }
       // 存储用户终端
       if (userAgent.indexOf('Android') > -1 || userAgent.indexOf('Linux') > -1) {
-        this.$store.commit('setUserAgent', 'Android')
+        store.commit('setUserAgent', 'Android')
       } else if (!!userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)) {
-        this.$store.commit('setUserAgent', 'IOS')
+        store.commit('setUserAgent', 'IOS')
       } else {
-        this.$store.commit('setUserAgent', 'brower')
+        store.commit('setUserAgent', 'brower')
       }
     },
     getCode() {
       const { code } = this.$route.query
-      if (code) {
-        this.$store.commit('setCode', code)
-        this.getOpenID(code)
-      } else {
+      if (!store.state.code && !code) {
+        console.log('!store.state.code && !code')
         location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${JSAPIAPPID}&redirect_uri=${encodeURIComponent(
           domainBaseUrl
-        )}&response_type=code&scope=snsapi_base&state=1#wechat_redirect`
+        )}&response_type=code&scope=snsapi_base&state=123#wechat_redirect`
+      } else if (!store.state.code && code) {
+        console.log('!store.state.code && code')
+        store.commit('setCode', code)
+        this.getOpenID(code)
       }
     },
     getOpenID(code) {
       http.getOpenID({ code }).then(res => {
-        this.$store.commit('setOpenID', res.data)
+        store.commit('setOpenID', res.data)
       })
     }
   }
@@ -254,12 +258,16 @@ export default {
 
 // tabs
 .van-tabs__wrap {
-  height: 2.94rem;
-  .van-tab__text {
-    font-size: 1.31rem;
-    font-family: PingFang SC;
-    font-weight: 500;
-    line-height: 1.84rem;
+  height: 2.94rem !important;
+  .van-tab {
+    padding-top: 0.64rem !important;
+    align-items: flex-start !important;
+    .van-tab__text {
+      font-size: 1.31rem !important;
+      font-family: PingFang SC !important;
+      font-weight: 500 !important;
+      line-height: 1.84rem !important;
+    }
   }
   .van-tabs__line {
     border-radius: 0.09rem !important;

@@ -2,9 +2,11 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 17:03:31
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-28 10:38:17
+ * @LastEditTime: 2020-05-28 14:44:40
  */
 import { get, post } from '@/utils/request'
+import store from '@/store'
+const environment = store.state.environment
 
 //post 是否需要阅读招生简章
 function getReadStatus() {
@@ -76,8 +78,9 @@ function cancelApplyCourse(param) {
  * @description: 创建订单
  * @param {classIdList,tradeType}
  */
-function createOrder(param) {
-  return post(`/major/api/course/${this.$store.state.environment === 'WEIXIN-brower' ? 'createOrderJSAPI' : 'createOrderH5'}`, param)
+function createOrder(url, param) {
+  console.log('createOrder -> url, param', url, param)
+  return post(url, param)
 }
 
 /**

@@ -1,8 +1,8 @@
 /*
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
- * @LastEditors: zxk
- * @LastEditTime: 2020-05-27 17:27:24
+ * @LastEditors: wjw
+ * @LastEditTime: 2020-05-28 14:09:39
  */
 
 import Vue from 'vue'
@@ -144,9 +144,11 @@ router.beforeEach((to, from, next) => {
       }
     }
   } else {
-    if (!store.state.token && visitorPages.indexOf(to.name) === -1) { //非游客页面 需要登录
+    if (!store.state.token && visitorPages.indexOf(to.name) === -1) {
+      //非游客页面 需要登录
       next({ path: '/login' })
-    } else {  //已登录
+    } else {
+      //已登录
       next()
     }
   }
