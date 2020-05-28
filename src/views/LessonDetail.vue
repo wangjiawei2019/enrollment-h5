@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-22 11:41:33
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-27 18:29:38
+ * @LastEditTime: 2020-05-28 15:42:15
 --> 
 <template>
   <div class="detail-page">
@@ -17,7 +17,7 @@
             <span>￥</span>
             <span>{{detail.money}}</span>
           </div>
-          <div class="join">{{detail.num}}人已报名</div>
+          <div class="count">{{detail.num}}人已报名</div>
         </div>
       </div>
     </div>
@@ -26,11 +26,14 @@
       <div class="detail-info" v-html="detail.classInfo"></div>
     </div>
     
-    <div class="footer" v-if="true" @click="saveImg">报名完成，进入班群</div>
+    <div class="footer" v-if="detail.flag" @click="controlEr">报名完成，进入班群</div>
     <div class="footer" v-else>
       <div class="left" @click="applyCourse">加入选课单</div>
       <div class="right" @click="applyCourse($event,true)">立即报名</div>
     </div>
+
+    <!-- 二维码 -->
+    <erCode v-if="joinClass" @closeEr="closeEr" :erCode="erCodeUrl"></erCode>
     <!-- 提示内容 -->
     <currTip :repeat-show="repeatShow" :class-name="className" @changeShow="changeShow"></currTip>
   </div>
@@ -39,7 +42,8 @@
 <script>
 import http from '@/api'
 import store from '@/store'
-import CurrTip from '@/components/currTip'
+import currTip from '@/components/currTip'
+import erCode from '@/components/erCode'
 import { Dialog } from 'vant';
 export default {
   name: 'LessonDetail',
@@ -48,15 +52,21 @@ export default {
       id: 0,
       detail: {},
       repeatShow: false, //重复报名提示
-      className: '啥啥班级'
+      className: '啥啥班级',
+      joinClass: false,   //加入班群二维码显示
+      erCodeUrl: ''
     }
   },
   components:{
-    CurrTip
+    currTip,
+    erCode
   },
   methods: {
-    saveImg(){  //保存图片
-      console.log("保存图片")
+    controlEr(){
+      this.joinClass = true
+    },
+    closeEr(flag){
+      this.joinClass = flag
     },
     // toAPP(){ //进入班群
     //   var u = navigator.userAgent

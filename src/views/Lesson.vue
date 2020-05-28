@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-27 18:26:20
+ * @LastEditTime: 2020-05-28 09:42:27
 --> 
 <template>
   <div class="lesson">
@@ -288,6 +288,7 @@ export default {
     background: #fff;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 0 0.9375rem /* 15/16 */;
     border-bottom: 1px solid #e9e9e9;
     z-index: 1;
@@ -371,6 +372,7 @@ export default {
       border-radius: 0.3125rem /* 5/16 */;
       color: rgba(255, 255, 255, 1);
       line-height: 1.3125rem /* 21/16 */;
+      text-align: center;
     }
   }
   .no-list {

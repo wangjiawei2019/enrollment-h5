@@ -1,8 +1,13 @@
 /*
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
+<<<<<<< HEAD
  * @LastEditors: wjw
  * @LastEditTime: 2020-05-28 14:09:39
+=======
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-05-27 19:45:07
+>>>>>>> 8d529e6a43575c2b2f33460915c1616fdfad6a41
  */
 
 import Vue from 'vue'

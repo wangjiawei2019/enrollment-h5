@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-19 16:44:12
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-27 16:50:45
+ * @LastEditTime: 2020-05-28 09:48:46
 --> 
 <template>
   <div class="list-item">
@@ -103,7 +103,7 @@ export default {
     .title {
       width: 100%;
       line-height: 1.64rem;
-      @include font(PingFang SC, 1.17rem, rgba(51, 51, 51, 1), 400);
+      @include font(PingFang SC, 1.3125rem, rgba(51, 51, 51, 1), 400);
     }
     .subtitle {
       width: 100%;
@@ -123,7 +123,7 @@ export default {
         }
         & span:nth-child(2) {
           line-height: 1.47rem;
-          @include font(PingFang SC, 1.06rem, rgba(51, 51, 51, 1), 500);
+          @include font(PingFang SC, 1.1875rem, rgba(51, 51, 51, 1), 500);
         }
       }
       .red {

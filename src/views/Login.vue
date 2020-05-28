@@ -2,7 +2,7 @@
  * @Author: zxk
  * @Date: 2020-05-18 14:01:20
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-27 09:47:57
+ * @LastEditTime: 2020-05-28 09:41:37
 --> 
 <template>
   <div id="login">
@@ -31,7 +31,7 @@
       </div>
     </div>
     <div class="btn">
-      <div class="submit" @click="userLogin">确认</div>
+      <div class="submit" @click="userLogin">确定</div>
     </div>
   </div>
 </template>
