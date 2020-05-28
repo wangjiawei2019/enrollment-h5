@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-27 18:06:57
+ * @LastEditTime: 2020-05-28 10:09:48
 --> 
 <template>
   <div id="app">
@@ -12,6 +12,7 @@
 
 <script>
 import { JSAPIAPPID, domainBaseUrl } from '@/utils/BASE'
+import http from '@/api'
 
 export default {
   mounted() {
@@ -63,13 +64,18 @@ export default {
     getCode() {
       const { code } = this.$route.query
       if (code) {
-        console.log('mounted -> code', code)
         this.$store.commit('setCode', code)
+        this.getOpenID(code)
       } else {
         location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${JSAPIAPPID}&redirect_uri=${encodeURIComponent(
           domainBaseUrl
-        )}&response_type=code&scope=snsapi_userinfo&state=1#wechat_redirect`
+        )}&response_type=code&scope=snsapi_base&state=1#wechat_redirect`
       }
+    },
+    getOpenID(code) {
+      http.getOpenID({ code }).then(res => {
+        this.$store.commit('setOpenID', res.data)
+      })
     }
   }
 }

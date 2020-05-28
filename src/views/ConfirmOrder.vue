@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-21 10:12:23
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-27 17:47:11
+ * @LastEditTime: 2020-05-28 10:44:07
 --> 
 <template>
   <div class="confirm-order-page">
@@ -77,7 +77,8 @@ export default {
       url: '',
       now: null,
       expireTime: null, // 到期时间
-      id: null // 订单 id
+      id: null, // 订单 id
+      brandWCPayRequestDO: null // JSAPI 支付
     }
   },
   mounted() {
@@ -87,24 +88,46 @@ export default {
   },
   methods: {
     submitOrder(classIdList) {
-      // const params = { classIdList }
-      // if (this.$store.state.environment === 'WEIXIN-brower') {
-      //   Object.assign(params, { tradeType: 'JSAPI', openId: this.$store.state.openId })
-      // } else {
-      //   Object.assign(params, { tradeType: 'MWEB' })
-      // }
-      http.createOrder({ classIdList }).then(res => {
-        console.log('submitOrder -> params', params)
+      const params = { classIdList }
+      if (this.environment === 'WEIXIN-brower') {
+        Object.assign(params, { tradeType: 'JSAPI', openId: this.openId })
+      } else {
+        Object.assign(params, { tradeType: 'MWEB' })
+      }
+      http.createOrder(params).then(res => {
         this.showPay = true
-        const { url, id, expireTime } = res.data
+        const { url, id, expireTime, brandWCPayRequestDO } = res.data
         this.url = url
         this.id = id
         this.expireTime = parseInt(expireTime / 1000)
+        this.brandWCPayRequestDO = brandWCPayRequestDO
       })
     },
     confirmPay() {
-      const redirect_url = `${domainBaseUrl}/#/order-detail?id=${this.id}`
-      location.href = `${this.url}&redirect_url=${encodeURIComponent(redirect_url)}`
+      if (this.environment === 'WEIXIN-brower') {
+        const { appId, timeStamp, nonceStr, package, signType, paySign } = this.brandWCPayRequestDO
+        WeixinJSBridge.invoke(
+          'getBrandWCPayRequest',
+          {
+            appId, //公众号名称，由商户传入
+            timeStamp, //时间戳，自1970年以来的秒数
+            nonceStr, //随机串
+            package,
+            signType, //微信签名方式：
+            paySign //微信签名
+          },
+          res => {
+            if (res.err_msg == 'get_brand_wcpay_request:ok') {
+              this.$router.replace({ name: 'OrderDetail', query: { id: this.id } })
+            } else {
+              this.$toast('支付失败，请重试')
+            }
+          }
+        )
+      } else {
+        const redirect_url = `${domainBaseUrl}/#/order-detail?id=${this.id}`
+        location.href = `${this.url}&redirect_url=${encodeURIComponent(redirect_url)}`
+      }
     },
     handleCancel() {
       this.showDialog = true
@@ -134,6 +157,12 @@ export default {
       const H = parseInt(this.remainTime.split(':')[0])
       const M = parseInt(this.remainTime.split(':')[1])
       return `${H ? H + '小时' : ''}${M}分钟`
+    },
+    environment() {
+      return this.$store.state.environment
+    },
+    openId() {
+      return this.$store.state.openId
     }
   }
 }
