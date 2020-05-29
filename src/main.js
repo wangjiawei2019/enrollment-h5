@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-29 11:10:07
+ * @LastEditTime: 2020-05-29 17:52:08
  */
 
 /*
@@ -17,10 +17,10 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import 'reset-css'
-import { Toast } from 'vant'
+import { Toast, Lazyload } from 'vant'
 
 Vue.use(Toast)
-
+Vue.use(Lazyload, { loading: require('@/assets/site.png'), error: require('@/assets/site.png') })
 Toast.setDefaultOptions({ className: 'bm-toast', getContainer: '#app' }) // 修改默认配置
 
 Vue.config.productionTip = false

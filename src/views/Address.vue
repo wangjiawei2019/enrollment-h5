@@ -2,13 +2,14 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-28 17:27:45
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-29 14:42:45
+ * @LastEditTime: 2020-05-29 17:17:54
 --> 
 <template>
   <div class="address-page">
     <van-form @submit="onSubmit" @failed="failed" :show-error-message="false">
       <van-field
         v-model="courseClassAddress.username"
+        clearable
         name="username"
         maxlength="8"
         :border="false"
@@ -20,6 +21,7 @@
       />
       <van-field
         v-model="courseClassAddress.mobile"
+        clearable
         name="mobile"
         :border="false"
         type="tel"
@@ -27,10 +29,11 @@
         label-class="desc"
         label-width="6.8rem"
         :placeholder="$store.state.mobile"
-        :rules="[{ required: true,pattern: /^1(3|4|5|6|7|8|9)\d{9}$/, message: '请填写手机号码' }]"
+        :rules="[{ required:true, pattern: /^1(3|4|5|6|7|8|9)\d{9}$/, message: '请填写正确的手机号码' }]"
       />
       <van-field
         v-model="courseClassAddress.address"
+        clearable
         name="address"
         maxlength="35"
         :border="false"

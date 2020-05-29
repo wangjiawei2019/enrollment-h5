@@ -1,14 +1,14 @@
 <!--
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-19 16:44:12
- * @LastEditors: zxk
- * @LastEditTime: 2020-05-29 15:37:00
+ * @LastEditors: wjw
+ * @LastEditTime: 2020-05-29 17:47:47
 --> 
 <template>
   <div class="list-item">
     <div class="top-box" @click="toDetail">
       <div class="img-wapper">
-        <img :src="item.image || require('@/assets/site.png')" alt="课程缩略图" class="lesson-img" />
+        <img class="lesson-img" alt="课程缩略图" v-lazy="item.image || require('@/assets/site.png')" />
         <div :class="status"></div>
       </div>
       <div class="desc-box" :class="{checked:checked}">
@@ -41,10 +41,11 @@ export default {
       }
     }
   },
-  methods:{
-    toDetail(){
-      if(this.lesson){  //首页和搜索页可以进入详情
-        this.$emit('toDetail',this.item.id)
+  methods: {
+    toDetail() {
+      if (this.lesson) {
+        //首页和搜索页可以进入详情
+        this.$emit('toDetail', this.item.id)
       }
     }
   }

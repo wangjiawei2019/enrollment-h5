@@ -1,8 +1,8 @@
 <!--
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
- * @LastEditors: zxk
- * @LastEditTime: 2020-05-29 15:51:16
+ * @LastEditors: wjw
+ * @LastEditTime: 2020-05-29 17:36:13
 --> 
 <template>
   <div class="lesson">
@@ -61,27 +61,27 @@
 <script>
 import ListItem from '@/components/listItem'
 import CurrTip from '@/components/currTip'
-import { TreeSelect, Empty, List, PullRefresh,Dialog } from 'vant'
+import { TreeSelect, Empty, List, PullRefresh, Dialog } from 'vant'
 import http from '@/api/index.js'
 export default {
   name: 'Lesson',
   data() {
     return {
       repeatShow: false, //重复报名提示
-      className:'啥啥班级',
+      className: '啥啥班级',
       showClassify: false, //课程分类
       majorList: [], //专业分类
       courseList: [], //课程分类
       courseId: 0, //课程id
       majorIndex: 0, //专业下标
       majorTitle: '课程分类',
-      classList: [],  //班级列表
+      classList: [], //班级列表
       page: 1,
       totalPage: 1,
       list: [],
       loading: false, //是否处于加载中
       finished: false, //是否加载完成
-      refreshing: false,  //下拉刷新是否完成
+      refreshing: false //下拉刷新是否完成
     }
   },
   created() {
@@ -89,55 +89,64 @@ export default {
     this.init()
   },
   methods: {
-    toDetail(id){
-      this.$router.push({path:'/lesson-detail',query:{id}})
+    toDetail(id) {
+      this.$router.push({ path: '/lesson-detail', query: { id } })
     },
-    dialog(title,message,text,name,query={}){
+    dialog(title, message, text, name, query = {}) {
       Dialog.confirm({
-          title,
-          message,
-          confirmButtonText: text,
-          confirmButtonColor: '#F2323A',
-          cancelButtonColor: '#999999'
-        }).then(res=>{
-          this.$router.push({name,query})
+        title,
+        message,
+        confirmButtonText: text,
+        confirmButtonColor: '#F2323A',
+        cancelButtonColor: '#999999'
+      })
+        .then(res => {
+          this.$router.push({ name, query })
         })
-        .catch(err=>{
-          console.log('取消',err)
+        .catch(err => {
+          console.log('取消', err)
         })
     },
-    applyCourse(e,item) { //立即报名，item为对象
-      if(!this.$store.state.token){
-        this.$router.push({name: 'Login'})
-        return 
+    applyCourse(e, item) {
+      //立即报名，item为对象
+      if (!this.$store.state.token) {
+        this.$router.push({ name: 'Login' })
+        return
       }
       let params = { id: item.id }
       //立即报名，提交订单
       let info = {
-        list:[item],
+        list: [item],
         classIdList: [item.id],
         totalMoney: item.money
       }
-      http.applyCourse(params).then(res=>{
-        if(res.data.status === 3){  //该课程已经完成报名
-          this.$router.push({path:'/lesson-detail',query:{id: item.id}})
-        }else if(res.data.status === 0 || res.data.status === 1 || res.data.status === 2){  //班级或者同类班级已经在选课单内,去提交订单--2
-          this.$store.commit('setConfirmOrderList', info)
-          this.$router.push({name: 'ConfirmOrder'})
-        }else if(res.data.status === 4){  //已报名完成该课程的其他班级--3
-          this.repeatShow = true
-        }else if(res.data.status === 5){  //去支付--5 
-          // this.$store.commit('setConfirmOrderList', info)
-          this.dialog('您已提交该班级报名','点\'去支付\'完成报名','去支付','Order',{index:1})
-        }else if(res.data.status === 6){  //去支付--6
-          this.dialog('您已提交相同课程报名','点\'去支付\'完成报名','去支付','Order',{index:1})
-        }
-      })
-      .catch(err=>{
-        this.$toast(err)
-      })
+      http
+        .applyCourse(params)
+        .then(res => {
+          if (res.data.status === 3) {
+            //该课程已经完成报名
+            this.$router.push({ path: '/lesson-detail', query: { id: item.id } })
+          } else if (res.data.status === 0 || res.data.status === 1 || res.data.status === 2) {
+            //班级或者同类班级已经在选课单内,去提交订单--2
+            this.$store.commit('setConfirmOrderList', info)
+            this.$router.push({ name: 'ConfirmOrder' })
+          } else if (res.data.status === 4) {
+            //已报名完成该课程的其他班级--3
+            this.repeatShow = true
+          } else if (res.data.status === 5) {
+            //去支付--5
+            // this.$store.commit('setConfirmOrderList', info)
+            this.dialog('您已提交该班级报名', "点'去支付'完成报名", '去支付', 'Order', { index: 1 })
+          } else if (res.data.status === 6) {
+            //去支付--6
+            this.dialog('您已提交相同课程报名', "点'去支付'完成报名", '去支付', 'Order', { index: 1 })
+          }
+        })
+        .catch(err => {
+          this.$toast(err)
+        })
     },
-    changeShow(flag){
+    changeShow(flag) {
       this.repeatShow = flag
     },
     toSearch() {
@@ -146,12 +155,11 @@ export default {
     changeClassify() {
       //课程分类组件展示
       this.showClassify = !this.showClassify
-
     },
     selectedClass(index) {
       //选择专业
       // let majorItem = this.majorList[index]
-      // let text = majorItem.text  
+      // let text = majorItem.text
       // if (majorItem.text === '全部') {
       //   text = '课程分类'
       // }
@@ -172,18 +180,20 @@ export default {
         majorId: major.id,
         courseId: item.id
       }
-      this.page = 1;
+      this.page = 1
       this.getClassList(id)
     },
     getMajorList() {
       //获取课程分类初始列表
-      http.getMajorList().then(res => {
-        this.majorList = res.data.majorNodeDTOS
-        this.courseList = res.data.courseNodeDTOS
-      })
-      .catch(err=>{
-        console.log(err)
-      })
+      http
+        .getMajorList()
+        .then(res => {
+          this.majorList = res.data.majorNodeDTOS
+          this.courseList = res.data.courseNodeDTOS
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
     getCourseList() {
       //获取课程分类
@@ -204,28 +214,30 @@ export default {
         pageSize: 10,
         pageNum: page
       }
-      http.getClassList(params).then(res => {
-        if (page == 1) {
-          this.classList = res.dataList
-          this.totalPage = Math.ceil(res.total/res.pageSize)
-        } else {
-          console.log("分页加载")
-          this.classList = this.classList.concat(res.dataList);
-        }
-        this.page++
-        //加载状态完成
-        this.loading = false
-        // 数据全部加载完成
-        // this.finished = true
-        //下拉刷新完成
-        this.refreshing = false
-        console.log(this.page)
-      })
-      .catch(err=>{
-        this.finished = true
-        // this.$toast.fail(err)
-        console.log(err)
-      })
+      http
+        .getClassList(params)
+        .then(res => {
+          if (page == 1) {
+            this.classList = res.dataList
+            this.totalPage = Math.ceil(res.total / res.pageSize)
+          } else {
+            console.log('分页加载')
+            this.classList = this.classList.concat(res.dataList)
+          }
+          this.page++
+          //加载状态完成
+          this.loading = false
+          // 数据全部加载完成
+          // this.finished = true
+          //下拉刷新完成
+          this.refreshing = false
+          console.log(this.page)
+        })
+        .catch(err => {
+          this.finished = true
+          // this.$toast.fail(err)
+          console.log(err)
+        })
     },
     init() {
       // console.log("获取初始数据",navigator.userAgent)
@@ -262,10 +274,10 @@ export default {
       this.getClassList(id, 1)
     }
   },
-  
+
   components: {
     CurrTip,
-    'list-item':ListItem,
+    'list-item': ListItem,
     'van-tree-select': TreeSelect,
     'van-empty': Empty,
     'van-list': List,
@@ -288,7 +300,7 @@ export default {
     align-items: center;
     justify-content: space-between;
     padding: 0 0.9375rem /* 15/16 */;
-    border-bottom: 1px solid #e9e9e9;
+    border-bottom: 0.03rem solid #e9e9e9;
     z-index: 1;
     .classify {
       height: 100%;
@@ -355,13 +367,13 @@ export default {
     background: rgba(0, 0, 0, 0.6);
   }
   .curr-list {
-    margin: 4.375rem  .9375rem 0 .9375rem;
-    .curr-list-item{
-      border-bottom: 1px solid #E9E9E9;
+    margin: 4.375rem 0.9375rem 0 0.9375rem;
+    .curr-list-item {
+      border-bottom: 0.03rem solid #e9e9e9;
     }
     .join {
       position: absolute;
-      bottom: .84375rem /* 13.5/16 */;
+      bottom: 0.84375rem /* 13.5/16 */;
       right: 0;
       width: 4rem /* 64/16 */;
       padding: 0.125rem /* 2/16 */ 0.3125rem /* 5/16 */;
@@ -400,7 +412,7 @@ export default {
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
   color: #666666;
-  .van-sidebar-item__text{
+  .van-sidebar-item__text {
     height: 1.75rem;
     line-height: 1.75rem;
   }
@@ -430,7 +442,7 @@ export default {
   max-height: 3.5rem /* 56/16 */;
   padding: 0.9375rem 2rem 0.9375rem 0;
   margin: 0 0.9375rem /* 15/16 */;
-  border-bottom: 1px solid #e9e9e9;
+  border-bottom: 0.03rem solid #e9e9e9;
   line-height: 1.75rem /* 28/16 */;
   font-size: 1.25rem /* 20/16 */;
   font-family: PingFangSC-Regular, PingFang SC;
@@ -460,5 +472,4 @@ export default {
   font-weight: bold;
   right: 0.90625rem /* 14.5/16 */;
 }
-
 </style>

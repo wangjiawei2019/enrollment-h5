@@ -1,14 +1,14 @@
 <!--
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
- * @LastEditors: zxk
- * @LastEditTime: 2020-05-29 14:56:56
+ * @LastEditors: wjw
+ * @LastEditTime: 2020-05-29 17:22:28
 --> 
 <template>
   <div id="app">
-  <keep-alive>
-    <router-view v-if="$route.meta.keepAlive" />
-  </keep-alive>
+    <keep-alive>
+      <router-view v-if="$route.meta.keepAlive" />
+    </keep-alive>
     <router-view v-if="!$route.meta.keepAlive" />
   </div>
 </template>
@@ -69,20 +69,23 @@ export default {
     getCode() {
       const { code } = this.$route.query
       if (!store.state.code && !code) {
-        console.log('!store.state.code && !code')
         location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${JSAPIAPPID}&redirect_uri=${encodeURIComponent(
           domainBaseUrl
         )}&response_type=code&scope=snsapi_base&state=123#wechat_redirect`
       } else if (!store.state.code && code) {
-        console.log('!store.state.code && code')
         store.commit('setCode', code)
         this.getOpenID(code)
       }
     },
     getOpenID(code) {
-      http.getOpenID({ code }).then(res => {
-        store.commit('setOpenID', res.data)
-      })
+      http
+        .getOpenID({ code })
+        .then(res => {
+          store.commit('setOpenID', res.data)
+        })
+        .catch(err => {
+          this.getCode()
+        })
     }
   }
 }

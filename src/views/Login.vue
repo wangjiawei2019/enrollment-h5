@@ -2,7 +2,7 @@
  * @Author: zxk
  * @Date: 2020-05-18 14:01:20
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-29 14:26:27
+ * @LastEditTime: 2020-05-29 17:36:34
 --> 
 <template>
   <div id="login">
@@ -214,7 +214,7 @@ export default {
       content: '';
       position: absolute;
       top: 1.09375rem /* 17.5/16 */;
-      width: 1px;
+      width: 0.03rem;
       left: -0.625rem /* 10/16 */;
       height: 1.25rem /* 20/16 */;
       background: #bebec0;

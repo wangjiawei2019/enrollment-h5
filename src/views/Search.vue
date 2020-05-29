@@ -64,7 +64,7 @@ export default {
   data() {
     return {
       repeatShow: false, //重复报名提示
-      showDel: false,   //展示清除按钮
+      showDel: false, //展示清除按钮
       keyWord: '', //搜索关键词
       classList: [], //班级列表
       page: 0,
@@ -93,10 +93,11 @@ export default {
           console.log('取消', err)
         })
     },
-    applyCourse(e, item) {  //立即报名
-      if(!this.$store.state.token){
-        this.$router.push({name: 'Login'})
-        return 
+    applyCourse(e, item) {
+      //立即报名
+      if (!this.$store.state.token) {
+        this.$router.push({ name: 'Login' })
+        return
       }
       let params = { id: item.id }
       //立即报名，提交订单
@@ -140,8 +141,8 @@ export default {
     cancel() {
       this.$router.back()
     },
-    focusIpt(){
-      if(this.keyWord.length){
+    focusIpt() {
+      if (this.keyWord.length) {
         this.showDel = true
       }
     },
@@ -211,11 +212,11 @@ export default {
   .curr-list {
     margin: 4.375rem 0.9375rem 0 0.9375rem;
     .curr-list-item {
-      border-bottom: 1px solid #e9e9e9;
+      border-bottom: 0.03rem solid #e9e9e9;
     }
     .join {
       position: absolute;
-      bottom: .84375rem /* 13.5/16 */;
+      bottom: 0.84375rem /* 13.5/16 */;
       right: 0;
       width: 4rem /* 64/16 */;
       padding: 0.125rem /* 2/16 */ 0.3125rem /* 5/16 */;
@@ -248,7 +249,7 @@ export default {
   top: 0;
   background: #fff;
   z-index: 1;
-  border-bottom: 1px solid #e9e9e9;
+  border-bottom: 0.03rem solid #e9e9e9;
   padding: 0.9375rem 0 0.9375rem 0.9375rem;
 }
 .van-search__content {
