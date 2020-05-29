@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-20 09:22:14
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-29 15:51:25
+ * @LastEditTime: 2020-05-29 17:00:40
 --> 
 <template>
   <div class="search-page">
@@ -73,6 +73,12 @@ export default {
       finished: true, //是否加载完成
       refreshing: false
     }
+  },
+  beforeRouteLeave (to, from, next) {
+    if(to.name == 'Lesson'){
+      this.delWorld()
+    }
+    next()
   },
   methods: {
     toDetail(id) {
