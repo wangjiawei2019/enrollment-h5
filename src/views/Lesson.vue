@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-29 15:51:16
+ * @LastEditTime: 2020-05-29 17:13:25
 --> 
 <template>
   <div class="lesson">
@@ -27,13 +27,13 @@
         >
           <div slot="content">
             <div
-              :class="['van-tree-select__item',{'van-tree-select__item--active':item.id==courseId}]"
+              :class="['van-tree-select__item',{'van-tree-select__item--active':oldMajorIndex==majorIndex&&item.id==courseId}]"
               @click.stop="selectedCourse(item)"
               v-for="(item,index) in courseList"
               :key="index"
             >
               <div class="class-ellipsis">{{item.text}}</div>
-              <img v-show="item.id==courseId" src="@/assets/images/lesson/selected.png" alt />
+              <img v-show="oldMajorIndex==majorIndex&&item.id==courseId" src="@/assets/images/lesson/selected.png" alt />
             </div>
           </div>
         </van-tree-select>
@@ -73,6 +73,7 @@ export default {
       majorList: [], //专业分类
       courseList: [], //课程分类
       courseId: 0, //课程id
+      oldMajorIndex: 0, //历史下标
       majorIndex: 0, //专业下标
       majorTitle: '课程分类',
       classList: [],  //班级列表
@@ -85,7 +86,6 @@ export default {
     }
   },
   created() {
-    console.log(111)
     this.init()
   },
   methods: {
@@ -146,7 +146,8 @@ export default {
     changeClassify() {
       //课程分类组件展示
       this.showClassify = !this.showClassify
-
+      // this.majorIndex = this.oldMajorIndex
+      // this.getCourseList()
     },
     selectedClass(index) {
       //选择专业
@@ -159,6 +160,7 @@ export default {
       this.getCourseList()
     },
     selectedCourse(item, flag = false) {
+      this.oldMajorIndex = this.majorIndex
       //选择课程
       let major = this.majorList[this.majorIndex]
       this.courseId = item.id
@@ -219,7 +221,6 @@ export default {
         // this.finished = true
         //下拉刷新完成
         this.refreshing = false
-        console.log(this.page)
       })
       .catch(err=>{
         this.finished = true
@@ -228,7 +229,6 @@ export default {
       })
     },
     init() {
-      // console.log("获取初始数据",navigator.userAgent)
       let id = {
         majorId: 0,
         courseId: 0
