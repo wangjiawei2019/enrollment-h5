@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-22 14:50:38
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-26 19:48:34
+ * @LastEditTime: 2020-05-29 14:45:24
 --> 
 <template>
   <div class="order-detail-page" v-if="detail">
@@ -18,7 +18,11 @@
       <div class="wrap" v-for="item in detail.classListDTOList" :key="item.classId">
         <list-item :item="item">
           <template v-slot:button>
-            <div class="join-button-box" v-if="item.status === 2">
+            <div
+              class="join-button-box"
+              v-if="item.status === 2"
+              @click="() =>{qrCodeUrl = item.qrcode}"
+            >
               <img src="@/assets/images/order/class.png" alt class="join-icon" />
               <span class="text">进入班群</span>
               <van-icon name="arrow" color="#999999" size="1rem" />
@@ -52,10 +56,13 @@
     </div>
     <footer v-if="detail.status !== 2">
       <template v-if="detail.status === 1">
-        <van-button color="#333" plain @click="cancelOrder(detail.id)">取消订单</van-button>
+        <van-button color="#666" plain @click="cancelOrder(detail.id)">取消订单</van-button>
         <van-button type="danger" @click="payOrder(detail)">去支付</van-button>
       </template>
-      <van-button color="#333" plain v-else @click="deleteOrder(detail.id)">删除订单</van-button>
+      <van-button color="#666" plain v-else @click="deleteOrder(detail.id)">删除订单</van-button>
+    </footer>
+    <footer v-else>
+      <van-button type="danger" @click="editAddress">{{ courseClassAddress ? '修改地址' : '填写地址' }}</van-button>
     </footer>
     <pay-action-sheet
       :showPay="actionSheetObj.showPay"
@@ -77,6 +84,7 @@
       @cancel="dialogCancel"
       @confirm="dialogConfirm"
     ></van-dialog>
+    <qr-code v-if="qrCodeUrl" @closeQr="() => { qrCodeUrl = '' }" :qrCodeUrl="qrCodeUrl"></qr-code>
   </div>
 </template>
 
@@ -84,6 +92,7 @@
 import { Icon, Dialog, Button } from 'vant'
 import PayActionSheet from '@/components/pay-action-sheet'
 import ListItem from '@/components/listItem'
+import QrCode from '@/components/qrCode'
 import http from '@/api'
 import { domainBaseUrl } from '@/utils/BASE'
 import { toYMDHMS } from '@/utils/filters'
@@ -94,14 +103,17 @@ export default {
     'van-icon': Icon,
     'van-button': Button,
     'list-item': ListItem,
+    'qr-code': QrCode,
     'pay-action-sheet': PayActionSheet,
     [Dialog.Component.name]: Dialog.Component // 必须这样局部注册，否则会调用全局方法
   },
   data() {
     return {
       detail: null,
+      brandWCPayRequestDO: null,
+      courseClassAddress: null,
       now: null,
-      actionSheetObj: { showPay: false, totalMoney: '', expireTime: 0, id: null, url: '' },
+      actionSheetObj: { showPay: false, totalMoney: '', expireTime: 0, id: null, url: '', brandWCPayRequestDO: {} },
       dialogObj: {
         id: null,
         type: '',
@@ -110,7 +122,8 @@ export default {
         'cancel-button-text': '',
         title: '',
         message: ''
-      }
+      },
+      qrCodeUrl: ''
     }
   },
   mounted() {
@@ -119,7 +132,11 @@ export default {
   methods: {
     getOrderDetail() {
       http.getOrderDetail({ id: this.id }).then(res => {
-        this.detail = res.data
+        const { orderListDTO, courseClassAddress, brandWCPayRequestDO } = res.data
+        this.detail = orderListDTO
+        this.courseClassAddress = courseClassAddress
+        this.brandWCPayRequestDO = brandWCPayRequestDO
+        this.$store.commit('setCourseClassAddress', Object.assign(courseClassAddress ? courseClassAddress : {}, { orderId: orderListDTO.id }))
         if (this.detail.status === 1) {
           // 待支付需要计算倒计时
           setInterval(() => {
@@ -146,7 +163,14 @@ export default {
       Object.assign(this.dialogObj, obj)
     },
     payOrder(item) {
-      const obj = { showPay: true, totalMoney: item.sum, expireTime: item.expireTime, id: item.id, url: item.url }
+      const obj = {
+        showPay: true,
+        totalMoney: item.sum,
+        expireTime: item.expireTime,
+        id: item.id,
+        url: item.url,
+        brandWCPayRequestDO: this.brandWCPayRequestDO
+      }
       Object.assign(this.actionSheetObj, obj)
     },
     deleteOrder(id) {
@@ -162,8 +186,31 @@ export default {
       Object.assign(this.dialogObj, obj)
     },
     confirmPay() {
-      const redirect_url = `${domainBaseUrl}/#/order-detail?id=${this.actionSheetObj.id}`
-      location.href = `${this.actionSheetObj.url}&redirect_url=${encodeURIComponent(redirect_url)}`
+      if (this.$store.state.environment === 'WEIXIN-brower') {
+        const { appId, timeStamp, nonceStr, packageInfo, signType, paySign } = this.actionSheetObj.brandWCPayRequestDO
+        WeixinJSBridge.invoke(
+          'getBrandWCPayRequest',
+          {
+            appId, //公众号名称，由商户传入
+            timeStamp, //时间戳，自1970年以来的秒数
+            nonceStr, //随机串
+            package: packageInfo,
+            signType, //微信签名方式：
+            paySign //微信签名
+          },
+          res => {
+            if (res.err_msg == 'get_brand_wcpay_request:ok') {
+              this.$toast('支付成功')
+              this.$router.replace({ name: 'OrderDetail', query: { id: this.actionSheetObj.id } })
+            } else {
+              this.$toast('支付失败，请重试')
+            }
+          }
+        )
+      } else {
+        const redirect_url = `${domainBaseUrl}/#/order-detail?id=${this.actionSheetObj.id}`
+        location.href = `${this.actionSheetObj.url}&redirect_url=${encodeURIComponent(redirect_url)}`
+      }
     },
     handleCancel() {
       const obj = {
@@ -185,6 +232,9 @@ export default {
         http[this.dialogObj.type]({ id: this.dialogObj.id }).then(res => {
           this.$router.replace({ name: 'Order', query: { index: 2 } })
         })
+    },
+    editAddress() {
+      this.$router.push({ name: 'Address' })
     }
   },
   computed: {
@@ -306,6 +356,7 @@ export default {
       @include font(PingFang SC, 0.94rem, #333, 400);
       .price {
         color: #f2323a;
+        font-weight: 500;
         & span:nth-child(1) {
           line-height: 4.07rem;
         }
@@ -321,7 +372,7 @@ export default {
     width: 100%;
     padding: 0 0.94rem;
     background-color: #fff;
-    border-bottom: 0.63rem solid #f7f7f7;
+    border-bottom: 5rem solid #fff;
     box-sizing: border-box;
     @include flex(flex-start, flex-start, column, nowrap);
     & > .time-wrap {
@@ -346,13 +397,19 @@ export default {
     }
   }
   & > footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
     width: 100%;
     height: 4.38rem;
     background-color: #fff;
     box-sizing: border-box;
     padding: 0 0.94rem;
-    border-bottom: 0.63rem solid #f7f7f7;
+    border-top: 0.63rem solid #f7f7f7;
     @include flex(flex-end, center, row, nowrap);
+    .van-button--danger {
+      font-size: 1.19rem !important;
+    }
     button {
       margin-left: 0.91rem;
       width: 6rem !important;

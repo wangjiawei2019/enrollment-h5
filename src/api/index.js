@@ -2,9 +2,11 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 17:03:31
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-27 17:09:48
+ * @LastEditTime: 2020-05-29 10:53:51
  */
 import { get, post } from '@/utils/request'
+import store from '@/store'
+const environment = store.state.environment
 
 //post 是否需要阅读招生简章
 function getReadStatus() {
@@ -47,9 +49,14 @@ function getClassList(params) {
   return post('/major/api/course/getClassList', params)
 }
 
-//post 获取班级详情
+//post 获取班级详情 (未登录)
 function getClassDetail(params) {
   return post('/major/api/course/getClassDetail', params)
+}
+
+//post 获取班级详情 (已登录)
+function getClassDetailInner(params) {
+  return post('/major/api/course/getClassDetailInner', params)
 }
 
 //post 搜索班级 {keyword:关键字,pageSize,pageNum},此处的页码从0开始,三个参数都必须要
@@ -74,10 +81,11 @@ function cancelApplyCourse(param) {
 
 /**
  * @description: 创建订单
- * @param {classIdList,tradeType,openId}
+ * @param {classIdList,tradeType}
  */
-function createOrder(param) {
-  return post('/major/api/course/createOrder', param)
+function createOrder(url, param) {
+  console.log('createOrder -> url, param', url, param)
+  return post(url, param)
 }
 
 /**
@@ -112,6 +120,22 @@ function getOrderDetail(param) {
   return post('/major/api/course/getOrderDetail', param)
 }
 
+/**
+ * @description: 提交收货地址
+ * @param {orderId,userName,mobile,address}
+ */
+function setOrderAddress(param) {
+  return post('/major/api/course/setOrderAddress', param)
+}
+
+/**
+ * @description: 获取 openid
+ * @param {code}
+ */
+function getOpenID(param) {
+  return post('/weixin-mp/wx/redirect/greet', param)
+}
+
 //post 立即报名，添加购物车
 function applyCourse(params) {
   return post('/major/api/course/applyCourse', params)
@@ -126,6 +150,7 @@ export default {
   getMajorList,
   getClassList,
   getClassDetail,
+  getClassDetailInner,
   searchCourseClass,
   getCartList,
   cancelApplyCourse,
@@ -135,5 +160,7 @@ export default {
   applyCourse,
   cancelOrder,
   deleteOrder,
-  getOrderDetail
+  getOrderDetail,
+  setOrderAddress,
+  getOpenID
 }

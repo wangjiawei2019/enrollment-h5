@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-20 09:35:54
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-22 14:42:43
+ * @LastEditTime: 2020-05-29 11:53:59
 --> 
 <template>
   <div class="pay-bar" :class="{'safe-area':safeArea}">
@@ -101,15 +101,24 @@ export default {
       @include font(PingFang SC, 0.94rem, rgba(51, 51, 51, 1), 400);
     }
     & span:nth-child(2) {
+      line-height: 1.5rem;
+      align-self: flex-end;
       white-space: nowrap;
-      line-height: 1.31rem;
       @include font(PingFang SC, 0.94rem, #f2323a, 500);
     }
     & span:nth-child(3) {
       white-space: nowrap;
       line-height: 1.84rem;
-      @include font(PingFang SC, 1.31rem, #f2323a, 500);
+      @include font(PingFang SC, 1.3125rem, #f2323a, 500);
     }
+  }
+  .van-button--danger {
+    width: 6rem !important;
+    height: 2.56rem !important;
+    padding: 0 !important;
+    border-radius: 0.31rem !important;
+    font-size: 1.19rem !important;
+    line-height: 1.66rem !important;
   }
 }
 .safe-area {

@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-27 18:06:57
+ * @LastEditTime: 2020-05-29 14:13:30
 --> 
 <template>
   <div id="app">
@@ -12,6 +12,8 @@
 
 <script>
 import { JSAPIAPPID, domainBaseUrl } from '@/utils/BASE'
+import http from '@/api'
+import store from '@/store'
 
 export default {
   mounted() {
@@ -44,32 +46,40 @@ export default {
       const userAgent = navigator.userAgent
       // 存储用户环境
       if (terminal === 'App') {
-        this.$store.commit('setEnvironment', 'App-brower')
+        store.commit('setEnvironment', 'App-brower')
       } else if (userAgent.toLowerCase().indexOf('micromessenger') !== -1) {
-        this.$store.commit('setEnvironment', 'WEIXIN-brower')
+        store.commit('setEnvironment', 'WEIXIN-brower')
+        console.log(store)
         this.getCode() // 获取 JSAPI 支付所需 code
       } else {
-        this.$store.commit('setEnvironment', 'other-brower')
+        store.commit('setEnvironment', 'other-brower')
       }
       // 存储用户终端
       if (userAgent.indexOf('Android') > -1 || userAgent.indexOf('Linux') > -1) {
-        this.$store.commit('setUserAgent', 'Android')
+        store.commit('setUserAgent', 'Android')
       } else if (!!userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)) {
-        this.$store.commit('setUserAgent', 'IOS')
+        store.commit('setUserAgent', 'IOS')
       } else {
-        this.$store.commit('setUserAgent', 'brower')
+        store.commit('setUserAgent', 'brower')
       }
     },
     getCode() {
       const { code } = this.$route.query
-      if (code) {
-        console.log('mounted -> code', code)
-        this.$store.commit('setCode', code)
-      } else {
+      if (!store.state.code && !code) {
+        console.log('!store.state.code && !code')
         location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${JSAPIAPPID}&redirect_uri=${encodeURIComponent(
           domainBaseUrl
-        )}&response_type=code&scope=snsapi_userinfo&state=1#wechat_redirect`
+        )}&response_type=code&scope=snsapi_base&state=123#wechat_redirect`
+      } else if (!store.state.code && code) {
+        console.log('!store.state.code && code')
+        store.commit('setCode', code)
+        this.getOpenID(code)
       }
+    },
+    getOpenID(code) {
+      http.getOpenID({ code }).then(res => {
+        store.commit('setOpenID', res.data)
+      })
     }
   }
 }
@@ -79,6 +89,20 @@ export default {
 #app {
   overflow: hidden;
 }
+
+.bm-toast {
+  width: fit-content !important;
+  padding: 1.25rem 1.56rem;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 0.5rem;
+  opacity: 0.8;
+  font-size: 1.31rem;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 1);
+  line-height: 1.84rem;
+}
+
 // tabbar
 .van-tabbar {
   height: 3.63rem !important;
@@ -198,8 +222,9 @@ export default {
   font-size: 1.19rem !important;
   font-family: PingFang SC !important;
   font-weight: 400 !important;
-  color: rgba(51, 51, 51, 1) !important;
+  color: #666 !important;
   line-height: 1.66rem !important;
+  border-color: #666 !important;
 }
 .van-button--disabled {
   opacity: 1 !important;
@@ -248,12 +273,16 @@ export default {
 
 // tabs
 .van-tabs__wrap {
-  height: 2.94rem;
-  .van-tab__text {
-    font-size: 1.31rem;
-    font-family: PingFang SC;
-    font-weight: 500;
-    line-height: 1.84rem;
+  height: 2.94rem !important;
+  .van-tab {
+    padding-top: 0.64rem !important;
+    align-items: flex-start !important;
+    .van-tab__text {
+      font-size: 1.31rem !important;
+      font-family: PingFang SC !important;
+      font-weight: 500 !important;
+      line-height: 1.84rem !important;
+    }
   }
   .van-tabs__line {
     border-radius: 0.09rem !important;
@@ -262,15 +291,15 @@ export default {
 .van-tabs--line {
   height: 100%;
   .van-tabs__content {
-    height: 100%;
     .van-tab__pane {
       height: 100%;
     }
   }
 }
+
 //PullRefresh
 .van-pull-refresh {
-  min-height: 100% !important;
+  min-height: calc(100vh - 6.57rem) !important;
   height: 100%;
 }
 </style>

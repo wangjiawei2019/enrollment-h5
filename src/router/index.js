@@ -1,8 +1,13 @@
 /*
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
+<<<<<<< HEAD
  * @LastEditors: zxk
  * @LastEditTime: 2020-05-29 14:23:18
+=======
+ * @LastEditors: wjw
+ * @LastEditTime: 2020-05-29 11:49:11
+>>>>>>> 1a6f3e96a925597546b32d056becdb62f3827181
  */
 
 import Vue from 'vue'
@@ -20,7 +25,9 @@ import Login from '@/views/Login'
 import Notice from '@/views/Notice'
 import Search from '@/views/Search'
 import ApplyRule from '@/views/ApplyRule'
+import Address from '@/views/Address'
 import LessonDetail from '@/views/LessonDetail'
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -32,10 +39,7 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login,
-    children: [{ path: '/login/notice', component: Notice }],
-    meta: {
-      title: '网上老年大学招生'
-    }
+    children: [{ path: '/login/notice', component: Notice }]
   },
   {
     path: '/index',
@@ -101,6 +105,14 @@ const routes = [
     meta: {
       title: '报名须知'
     }
+  },
+  {
+    path: '/address',
+    name: 'Address',
+    component: Address,
+    meta: {
+      title: '收货地址'
+    }
   }
 ]
 
@@ -126,6 +138,8 @@ router.beforeEach((to, from, next) => {
   if (to.meta.title) {
     //判断是否有标题
     document.title = to.meta.title
+  } else {
+    document.title = '网上老年大学招生'
   }
   if (to.name === 'Login') {
     const query = qs.parse(to.hash.split('?')[1])
@@ -155,10 +169,11 @@ router.beforeEach((to, from, next) => {
       }
     }
   } else {
-    if (!store.state.token && visitorPages.indexOf(to.name) === -1) { //非游客页面 需要登录
-      console.log("当前页面",to.name)
-      // next({ path: '/login' })
-    } else {  //已登录
+    if (!store.state.token && visitorPages.indexOf(to.name) === -1) {
+      //非游客页面 需要登录
+      next({ path: '/login' })
+    } else {
+      //已登录
       next()
     }
   }

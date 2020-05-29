@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-27 09:59:18
+ * @LastEditTime: 2020-05-29 11:10:07
  */
 
 /*
@@ -17,6 +17,11 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import 'reset-css'
+import { Toast } from 'vant'
+
+Vue.use(Toast)
+
+Toast.setDefaultOptions({ className: 'bm-toast', getContainer: '#app' }) // 修改默认配置
 
 Vue.config.productionTip = false
 

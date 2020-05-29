@@ -2,17 +2,14 @@
  * @Github: https://github.com/IdlerHub
  * @Author: zxk
  * @Date: 2020-05-27 19:19:40
- * @LastEditors: zxk
- * @LastEditTime: 2020-05-28 15:36:48
+ * @LastEditors: wjw
+ * @LastEditTime: 2020-05-29 11:40:28
 --> 
 <template>
-  <van-overlay class="ercode-page" :show="true">
+  <van-overlay class="qrCode-page" show>
     <div class="code-box" @click.stop>
       <div class="code-img">
-        <img
-          src="https://hwcdn.jinlingkeji.cn/uploads/images/54582fc4179402f699171759bbbf7306.png"
-          alt
-        />
+        <img :src="qrCodeUrl" alt="班群二维码" />
       </div>
       <div class="content">
         <div class="con-first">长按识别二维码进群</div>
@@ -20,11 +17,11 @@
       </div>
       <div class="code-save" @click="saveImg">保存图片</div>
       <div class="code-img2">
-        <img src="https://hwcdn.jinlingkeji.cn/uploads/images/54582fc4179402f699171759bbbf7306.png" alt />
+        <img :src="qrCodeUrl" alt="班群二维码" />
       </div>
     </div>
     <div class="close">
-        <img src="@/assets/images/lesson/close.png" alt="" @click.stop="closeJoin" />
+      <img src="@/assets/images/lesson/close.png" alt @click.stop="closeJoin" />
     </div>
   </van-overlay>
 </template>
@@ -33,25 +30,21 @@
 import { Overlay } from 'vant'
 export default {
   props: {
-    erCode: {
+    qrCodeUrl: {
       type: String,
       default: ''
     }
   },
-  data() {
-    return {
-      imgUrl: this.erCode
-    }
-  },
+
   components: {
     'van-overlay': Overlay
   },
   methods: {
     saveImg() {
-        this.$toast("长按保存图片")
+      this.$toast('长按保存图片')
     },
-    closeJoin(){
-        this.$emit('closeEr',false)
+    closeJoin() {
+      this.$emit('closeQr', false)
     },
     getBase64Img(url) {
       //网络资源图片转成base64
@@ -80,7 +73,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.ercode-page {
+.qrCode-page {
   position: fixed;
   top: 0;
   bottom: 0;
@@ -113,18 +106,18 @@ export default {
         height: 100%;
       }
     }
-    .code-img2{
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 4.375rem /* 70/16 */;
-        left: 0;
-        // z-index: 99;
-        opacity: 0;
-        img{
-            width: 100%;
-            height: 100%;
-        }
+    .code-img2 {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 4.375rem /* 70/16 */;
+      left: 0;
+      // z-index: 99;
+      opacity: 0;
+      img {
+        width: 100%;
+        height: 100%;
+      }
     }
     .content {
       font-size: 1.3125rem /* 21/16 */;
@@ -148,14 +141,14 @@ export default {
       color: rgba(255, 255, 255, 1);
     }
   }
-  .close{
-      margin-top: .9375rem /* 15/16 */;
-      width: 100%;
-      text-align: center;
-      img{
-          width: 2.1875rem /* 35/16 */;
-          height: 2.1875rem /* 35/16 */;
-      }
+  .close {
+    margin-top: 0.9375rem /* 15/16 */;
+    width: 100%;
+    text-align: center;
+    img {
+      width: 2.1875rem /* 35/16 */;
+      height: 2.1875rem /* 35/16 */;
+    }
   }
 }
 </style>
