@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-20 09:35:54
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-28 16:50:12
+ * @LastEditTime: 2020-05-29 11:53:59
 --> 
 <template>
   <div class="pay-bar" :class="{'safe-area':safeArea}">
@@ -101,6 +101,8 @@ export default {
       @include font(PingFang SC, 0.94rem, rgba(51, 51, 51, 1), 400);
     }
     & span:nth-child(2) {
+      line-height: 1.5rem;
+      align-self: flex-end;
       white-space: nowrap;
       @include font(PingFang SC, 0.94rem, #f2323a, 500);
     }

@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 17:03:31
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-28 20:37:03
+ * @LastEditTime: 2020-05-29 10:53:51
  */
 import { get, post } from '@/utils/request'
 import store from '@/store'
@@ -49,9 +49,14 @@ function getClassList(params) {
   return post('/major/api/course/getClassList', params)
 }
 
-//post 获取班级详情
+//post 获取班级详情 (未登录)
 function getClassDetail(params) {
   return post('/major/api/course/getClassDetail', params)
+}
+
+//post 获取班级详情 (已登录)
+function getClassDetailInner(params) {
+  return post('/major/api/course/getClassDetailInner', params)
 }
 
 //post 搜索班级 {keyword:关键字,pageSize,pageNum},此处的页码从0开始,三个参数都必须要
@@ -145,6 +150,7 @@ export default {
   getMajorList,
   getClassList,
   getClassDetail,
+  getClassDetailInner,
   searchCourseClass,
   getCartList,
   cancelApplyCourse,

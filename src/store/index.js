@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-18 11:30:39
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-28 18:55:25
+ * @LastEditTime: 2020-05-29 14:25:34
  */
 
 import Vue from 'vue'
@@ -14,6 +14,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    mobile: null,
     token: localStorage.getItem('token') ? localStorage.getItem('token') : '',
     confirmOrder: { list: [], classIdList: [], totalMoney: 0 },
     courseClassAddress: null, // 收货地址
@@ -23,6 +24,9 @@ export default new Vuex.Store({
     userAgent: '' // 用户机型 'Android' 'IOS' 'brower'
   },
   mutations: {
+    setMobile(state, mobile) {
+      state.mobile = mobile
+    },
     setToken(state, token) {
       state.token = token
       localStorage.setItem('token', token)

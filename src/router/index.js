@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-28 17:29:16
+ * @LastEditTime: 2020-05-29 11:49:11
  */
 
 import Vue from 'vue'
@@ -34,10 +34,7 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login,
-    children: [{ path: '/login/notice', component: Notice }],
-    meta: {
-      title: '网上老年大学招生'
-    }
+    children: [{ path: '/login/notice', component: Notice }]
   },
   {
     path: '/index',
@@ -125,6 +122,8 @@ router.beforeEach((to, from, next) => {
   if (to.meta.title) {
     //判断是否有标题
     document.title = to.meta.title
+  } else {
+    document.title = '网上老年大学招生'
   }
   if (to.name === 'Login') {
     const query = qs.parse(to.hash.split('?')[1])

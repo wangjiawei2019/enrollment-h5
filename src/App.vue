@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-28 20:24:24
+ * @LastEditTime: 2020-05-29 14:13:30
 --> 
 <template>
   <div id="app">
@@ -89,6 +89,20 @@ export default {
 #app {
   overflow: hidden;
 }
+
+.bm-toast {
+  width: fit-content !important;
+  padding: 1.25rem 1.56rem;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 0.5rem;
+  opacity: 0.8;
+  font-size: 1.31rem;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 1);
+  line-height: 1.84rem;
+}
+
 // tabbar
 .van-tabbar {
   height: 3.63rem !important;
@@ -208,8 +222,9 @@ export default {
   font-size: 1.19rem !important;
   font-family: PingFang SC !important;
   font-weight: 400 !important;
-  color: rgba(51, 51, 51, 1) !important;
+  color: #666 !important;
   line-height: 1.66rem !important;
+  border-color: #666 !important;
 }
 .van-button--disabled {
   opacity: 1 !important;
@@ -282,17 +297,9 @@ export default {
   }
 }
 
-// van-cell
-.van-cell {
-  padding: 1.03rem 0 !important;
-  border-bottom: 0.03rem solid rgba(233, 233, 233, 1) !important;
-  box-sizing: border-box !important;
-  align-items: flex-start !important;
-}
-
 //PullRefresh
 .van-pull-refresh {
-  min-height: 100% !important;
+  min-height: calc(100vh - 6.57rem) !important;
   height: 100%;
 }
 </style>

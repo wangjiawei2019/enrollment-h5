@@ -1,8 +1,8 @@
 <!--
  * @Author: zxk
  * @Date: 2020-05-18 14:01:20
- * @LastEditors: zxk
- * @LastEditTime: 2020-05-28 09:41:37
+ * @LastEditors: wjw
+ * @LastEditTime: 2020-05-29 14:26:27
 --> 
 <template>
   <div id="login">
@@ -16,7 +16,7 @@
           <img src="@/assets/images/lesson/phone.png" alt="logo" />
         </div>
         <div class="phone-ipt">
-          <input type="text" maxlength="11" placeholder="请输入手机号" v-model="phone" />
+          <input type="tel" maxlength="11" placeholder="请输入手机号" v-model="phone" />
         </div>
       </div>
       <div class="writeInfo">
@@ -24,7 +24,7 @@
           <img src="@/assets/images/lesson/security.png" alt="logo" />
         </div>
         <div class="auth-code">
-          <input minlength="4" maxlength="4" type="text" placeholder="请输入验证码" v-model="smsCode" />
+          <input minlength="4" maxlength="4" type="tel" placeholder="请输入验证码" v-model="smsCode" />
         </div>
         <div class="send-code count-down" v-if="sendcode">重新发送({{sendcode}}s)</div>
         <div class="send-code" @click.prevent="sendCode" v-else>获取验证码</div>
@@ -59,8 +59,8 @@ export default {
       }
     },
     sendsms() {
-      let that = this;
-      let timer = null;
+      let that = this
+      let timer = null
       const TIME_COUNT = 60
       //发送验证码
       let params = {
@@ -69,7 +69,7 @@ export default {
       http
         .sendsms(params)
         .then(res => {
-          this.$toast.success('验证码已发送');
+          this.$toast.success('验证码已发送')
           that.sendcode = TIME_COUNT
           timer = setInterval(() => {
             if (that.sendcode > 0 && that.sendcode <= TIME_COUNT) {
@@ -84,11 +84,11 @@ export default {
           this.$toast.fail(err)
         })
     },
-    getReadStatus(){
-      http.getReadStatus().then(res=>{
-        if(res.data){
+    getReadStatus() {
+      http.getReadStatus().then(res => {
+        if (res.data) {
           this.$router.push({ path: '/index/lesson' })
-        }else{
+        } else {
           this.$router.push({ path: '/apply-rule' })
         }
       })
@@ -103,6 +103,7 @@ export default {
         .then(res => {
           //存一下token，看是否要去报名须知
           store.commit('setToken', res.data)
+          store.commit('setMobile', this.phone)
           this.getReadStatus()
         })
         .catch(err => {
@@ -167,10 +168,10 @@ export default {
     margin: 0 1.875rem /* 30/16 */ 0.9375rem /* 15/16 */ 1.875rem;
     padding: 0 1.25rem /* 20/16 */;
     .icon-ipt,
-    .icon-code{
+    .icon-code {
       width: 0.9375rem /* 15/16 */;
       height: 1.375rem /* 22/16 */;
-      img{
+      img {
         width: 100%;
         height: 100%;
       }
@@ -181,13 +182,13 @@ export default {
     .phone-ipt,
     .auth-code {
       flex: 1;
-      padding: .625rem /* 10/16 */;
-      font-size:1.4375rem /* 23/16 */;
-      font-family:PingFangSC-Regular,PingFang SC;
-      font-weight:400;
-      color:rgba(51,51,51,1);
-      line-height:2.03125rem /* 32.5/16 */;
-      &>input{
+      padding: 0.625rem /* 10/16 */;
+      font-size: 1.4375rem /* 23/16 */;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: rgba(51, 51, 51, 1);
+      line-height: 2.03125rem /* 32.5/16 */;
+      & > input {
         width: 100%;
         border: none;
         background: none;

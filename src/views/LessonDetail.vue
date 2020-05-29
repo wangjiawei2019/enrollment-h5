@@ -2,8 +2,8 @@
  * @Github: https://github.com/IdlerHub
  * @Author: zxk
  * @Date: 2020-05-22 11:41:33
- * @LastEditors: zxk
- * @LastEditTime: 2020-05-28 15:42:15
+ * @LastEditors: wjw
+ * @LastEditTime: 2020-05-29 11:22:44
 --> 
 <template>
   <div class="detail-page">
@@ -25,15 +25,15 @@
       <div class="text">课程详情</div>
       <div class="detail-info" v-html="detail.classInfo"></div>
     </div>
-    
-    <div class="footer" v-if="detail.flag" @click="controlEr">报名完成，进入班群</div>
+
+    <div class="footer" v-if="detail.flag" @click="controlQr">报名完成，进入班群</div>
     <div class="footer" v-else>
       <div class="left" @click="applyCourse">加入选课单</div>
       <div class="right" @click="applyCourse($event,true)">立即报名</div>
     </div>
 
     <!-- 二维码 -->
-    <erCode v-if="joinClass" @closeEr="closeEr" :erCode="erCodeUrl"></erCode>
+    <qr-code v-if="joinClass" @closeQr="closeQr" :qrCodeUrl="detail.qrcode"></qr-code>
     <!-- 提示内容 -->
     <currTip :repeat-show="repeatShow" :class-name="className" @changeShow="changeShow"></currTip>
   </div>
@@ -43,8 +43,8 @@
 import http from '@/api'
 import store from '@/store'
 import currTip from '@/components/currTip'
-import erCode from '@/components/erCode'
-import { Dialog } from 'vant';
+import QrCode from '@/components/qrCode'
+import { Dialog } from 'vant'
 export default {
   name: 'LessonDetail',
   data() {
@@ -53,19 +53,23 @@ export default {
       detail: {},
       repeatShow: false, //重复报名提示
       className: '啥啥班级',
-      joinClass: false,   //加入班群二维码显示
-      erCodeUrl: ''
+      joinClass: false, //加入班群二维码显示
+      qrCodeUrl: ''
     }
   },
-  components:{
+  components: {
     currTip,
-    erCode
+    'qr-code': QrCode
+  },
+  mounted() {
+    this.id = this.$route.query.id
+    this.getClassDetail(this.id)
   },
   methods: {
-    controlEr(){
+    controlQr() {
       this.joinClass = true
     },
-    closeEr(flag){
+    closeQr(flag) {
       this.joinClass = flag
     },
     // toAPP(){ //进入班群
@@ -85,7 +89,7 @@ export default {
     //       console.log("浏览器环境下")
     //       location.href = 'j24swr://https://appxw.jinlingkeji.cn/?type=ENROLLMENT'
     //       setTimeout(function(){
-    //         let hidden = window.document.hidden || window.document.mozHidden || window.document.msHidden ||window.document.webkitHidden 
+    //         let hidden = window.document.hidden || window.document.mozHidden || window.document.msHidden ||window.document.webkitHidden
     //         if(typeof hidden =="undefined" || hidden ==false){
     //           window.location.href ="https://appxw.jinlingkeji.cn/share.html"
     //         }
@@ -93,86 +97,98 @@ export default {
     //     }
     //   }
     // },
-    changeShow(flag){
+    changeShow(flag) {
       this.repeatShow = flag
     },
     getClassDetail(id) {
-      http.getClassDetail({ id }).then(res => {
+      http[this.token ? 'getClassDetailInner' : 'getClassDetail']({ id }).then(res => {
         this.detail = res.data
         document.title = res.data.name
-        // console.log(res)
       })
     },
-    dialog(title,message,text,name,query={}){
+    dialog(title, message, text, name, query = {}) {
       Dialog.confirm({
-          title,
-          message,
-          confirmButtonText: text,
-          confirmButtonColor: '#F2323A',
-          cancelButtonColor: '#999999'
-        }).then(res=>{
-          console.log('确认',res)
-          this.$router.push({name,query})
+        title,
+        message,
+        confirmButtonText: text,
+        confirmButtonColor: '#F2323A',
+        cancelButtonColor: '#999999'
+      })
+        .then(res => {
+          console.log('确认', res)
+          this.$router.push({ name, query })
         })
-        .catch(err=>{
-          console.log('取消',err)
+        .catch(err => {
+          console.log('取消', err)
         })
     },
-    applyCourse(e,flag=false) {//flag==true: 立即报名
+    applyCourse(e, flag = false) {
+      //flag==true: 立即报名
       let params = { id: this.detail.id }
       //立即报名，提交订单
       let info = {
-        list:[this.detail],
+        list: [this.detail],
         classIdList: [this.detail.id],
         totalMoney: this.detail.money
       }
-      http.applyCourse(params).then(res=>{
-        if(res.data.status === 0){  //成功--1
-          if(flag){
-            this.$store.commit('setConfirmOrderList', info)
-            this.$router.push({name: 'ConfirmOrder'})
-          }else{
-            this.$toast("成功添加到选课单")
+      http
+        .applyCourse(params)
+        .then(res => {
+          if (res.data.status === 0) {
+            //成功--1
+            if (flag) {
+              this.$store.commit('setConfirmOrderList', info)
+              this.$router.push({ name: 'ConfirmOrder' })
+            } else {
+              this.$toast('成功添加到选课单')
+            }
+          } else if (res.data.status === 1) {
+            //课程已经在选课单内,去选课单--2
+            if (flag) {
+              this.$store.commit('setConfirmOrderList', info)
+              this.$router.push({ name: 'ConfirmOrder' })
+            } else {
+              this.dialog('该课程已经在选课单内', '请勿重复添加', '进入选课单', 'List')
+            }
+          } else if (res.data.status === 2) {
+            //选课单里有相似课程，去选课单--4
+            if (flag) {
+              this.$store.commit('setConfirmOrderList', info)
+              this.$router.push({ name: 'ConfirmOrder' })
+            } else {
+              this.dialog('选课单内已有相同课程', '相同课程只能报一个班级', '进入选课单', 'List')
+            }
+          } else if (res.data.status === 3) {
+            this.$toast(res.data.msg)
+          } else if (res.data.status === 4) {
+            //已报名该课程的其他班级--3
+            this.className = res.data.className
+            this.repeatShow = true
+          } else if (res.data.status === 5) {
+            //去支付--5
+            // this.$store.commit('setConfirmOrderList', info)
+            this.dialog('您已提交该班级报名', "点'去支付'完成报名", '去支付', 'Order', { index: 1 })
+          } else if (res.data.status === 6) {
+            //去支付--6
+            // info = {
+            //   list:[res.data.classDetail],
+            //   classIdList: [res.data.classDetail.classId],
+            //   totalMoney: res.data.classDetail.money
+            // }
+            // this.$store.commit('setConfirmOrderList', info)
+            this.dialog('您已提交相同课程报名', "点'去支付'完成报名", '去支付', 'Order', { index: 1 })
           }
-        }else if(res.data.status === 1){  //课程已经在选课单内,去选课单--2
-          if(flag){
-            this.$store.commit('setConfirmOrderList', info)
-            this.$router.push({name: 'ConfirmOrder'})
-          }else{
-            this.dialog('该课程已经在选课单内','请勿重复添加','进入选课单','List')
-          }
-        }else if(res.data.status === 2){  //选课单里有相似课程，去选课单--4
-          if(flag){
-            this.$store.commit('setConfirmOrderList', info)
-            this.$router.push({name: 'ConfirmOrder'})
-          }else{
-            this.dialog('选课单内已有相同课程','相同课程只能报一个班级','进入选课单','List')
-          }
-        }else if(res.data.status === 4){  //已报名该课程的其他班级--3
-          this.className = res.data.className
-          this.repeatShow = true
-        }else if(res.data.status === 5){  //去支付--5 
-          // this.$store.commit('setConfirmOrderList', info)
-          this.dialog('您已提交该班级报名','点\'去支付\'完成报名','去支付','Order',{index:1})
-        }else if(res.data.status === 6){  //去支付--6
-          // info = {
-          //   list:[res.data.classDetail],
-          //   classIdList: [res.data.classDetail.classId],
-          //   totalMoney: res.data.classDetail.money
-          // }
-          // this.$store.commit('setConfirmOrderList', info)
-          this.dialog('您已提交相同课程报名','点\'去支付\'完成报名','去支付','Order',{index:1})
-        }
-      })
-      .catch(err=>{
-        console.log(err)
-        this.$toast(err)
-      })
+        })
+        .catch(err => {
+          console.log(err)
+          this.$toast(err)
+        })
     }
   },
-  mounted() {
-    this.id = this.$route.query.id
-    this.getClassDetail(this.id)
+  computed: {
+    token() {
+      return store.state.token
+    }
   }
 }
 </script>
@@ -192,7 +208,7 @@ export default {
       .name {
         height: 2.03125rem /* 32.5/16 */;
         line-height: 2.03125rem /* 32.5/16 */;
-        margin-bottom: .3125rem /* 5/16 */;
+        margin-bottom: 0.3125rem /* 5/16 */;
         font-size: 1.4375rem /* 23/16 */;
         font-family: PingFangSC-Medium, PingFang SC;
         font-weight: 500;
@@ -208,7 +224,7 @@ export default {
         font-family: PingFangSC-Regular, PingFang SC;
         font-weight: 400;
         color: rgba(102, 102, 102, 1);
-        margin-bottom: .875rem /* 14/16 */;
+        margin-bottom: 0.875rem /* 14/16 */;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -225,11 +241,11 @@ export default {
             color: rgba(242, 50, 58, 1);
           }
           & > span:first-child {
-            font-size:0.9375rem /* 15/16 */;
+            font-size: 0.9375rem /* 15/16 */;
           }
         }
         .count {
-          font-size:  0.9375rem /* 15/16 */;
+          font-size: 0.9375rem /* 15/16 */;
           font-family: PingFangSC-Regular, PingFang SC;
           font-weight: 400;
           color: #666;
@@ -259,8 +275,8 @@ export default {
     height: 3.4375rem /* 55/16 */;
     position: fixed;
     bottom: 2.1875rem /* 35/16 */;
-    left: .9375rem /* 15/16 */;
-    right: .9375rem /* 15/16 */;
+    left: 0.9375rem /* 15/16 */;
+    right: 0.9375rem /* 15/16 */;
     display: flex;
     align-items: center;
     border-radius: 1.71875rem /* 27.5/16 */;
@@ -269,7 +285,7 @@ export default {
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: rgba(255, 255, 255, 1);
-    background: #F2323A;
+    background: #f2323a;
     text-align: center;
     justify-content: center;
     & > div {

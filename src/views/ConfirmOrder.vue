@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-21 10:12:23
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-28 18:01:03
+ * @LastEditTime: 2020-05-29 11:57:21
 --> 
 <template>
   <div class="confirm-order-page">
@@ -192,6 +192,10 @@ export default {
     margin-bottom: calc(3.63rem + 0.94rem + constant(safe-area-inset-bottom));
     margin-bottom: calc(3.63rem + 0.94rem + env(safe-area-inset-bottom));
     @include flex(flex-start, flex-start, column, nowrap);
+    .list-item {
+      box-sizing: border-box;
+      border-bottom: 0.03rem solid rgba(233, 233, 233, 1);
+    }
   }
   .total-box {
     @include font(PingFang SC, 0.94rem, rgba(51, 51, 51, 1), 400);

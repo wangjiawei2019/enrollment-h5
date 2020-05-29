@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-28 17:27:45
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-28 21:01:33
+ * @LastEditTime: 2020-05-29 14:42:45
 --> 
 <template>
   <div class="address-page">
@@ -26,12 +26,13 @@
         label="手机号码*"
         label-class="desc"
         label-width="6.8rem"
-        placeholder="请填写"
+        :placeholder="$store.state.mobile"
         :rules="[{ required: true,pattern: /^1(3|4|5|6|7|8|9)\d{9}$/, message: '请填写手机号码' }]"
       />
       <van-field
         v-model="courseClassAddress.address"
         name="address"
+        maxlength="35"
         :border="false"
         type="textarea"
         rows="2"
@@ -97,6 +98,13 @@ export default {
   .van-form {
     flex: 1;
     @include flex(flex-start, flex-start, column, nowrap);
+    // van-cell
+    .van-cell {
+      padding: 1.03rem 0 !important;
+      border-bottom: 0.03rem solid rgba(233, 233, 233, 1) !important;
+      box-sizing: border-box !important;
+      align-items: flex-start !important;
+    }
     .btn-box {
       width: 100%;
       flex: 1;

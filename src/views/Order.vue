@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-28 20:24:59
+ * @LastEditTime: 2020-05-29 14:19:24
 --> 
 <template>
   <div class="order-page">
@@ -285,6 +285,7 @@ export default {
   .list-box {
     width: 100%;
     height: 100%;
+    background-color: #f7f7f7;
     // box-sizing: border-box;
     // height: calc(100% - 6.57rem);
     // height: calc(100% - 6.57rem - constant(safe-area-inset-bottom));
@@ -296,7 +297,6 @@ export default {
     @include flex(flex-start, flex-start, column, nowrap);
     .item-wrapper {
       width: 100%;
-      height: 100%;
       background-color: #fff;
       box-sizing: border-box;
       padding: 0 0.94rem;
@@ -330,6 +330,7 @@ export default {
         @include font(PingFang SC, 0.94rem, #333, 400);
         .price {
           color: #f2323a;
+          font-weight: 500;
           & span:nth-child(1) {
             line-height: 4.07rem;
           }
