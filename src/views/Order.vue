@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-29 14:19:24
+ * @LastEditTime: 2020-05-29 15:08:18
 --> 
 <template>
   <div class="order-page">
@@ -48,7 +48,7 @@
                   <span>{{ bItem.sum }}</span>
                 </div>
               </div>
-              <div class="btn-box">
+              <div class="btn-box" v-if="bItem.status !== 2">
                 <template v-if="bItem.status === 1">
                   <van-button color="#333" plain @click="cancelOrder($event, bItem.id)">取消订单</van-button>
                   <van-button type="danger" @click="payOrder($event, bItem)">去支付</van-button>
@@ -323,9 +323,7 @@ export default {
       .total-box {
         width: 100%;
         height: 3.75rem;
-        border-bottom: 0.03rem solid #e9e9e9;
         line-height: 3.75rem;
-        box-sizing: border-box;
         @include flex(space-between, flex-start, row, nowrap);
         @include font(PingFang SC, 0.94rem, #333, 400);
         .price {
@@ -343,6 +341,8 @@ export default {
       .btn-box {
         width: 100%;
         height: 5rem;
+        border-top: 0.03rem solid #e9e9e9;
+        box-sizing: border-box;
         @include flex(flex-end, center, row, nowrap);
         .van-button {
           margin-left: 0.91rem;

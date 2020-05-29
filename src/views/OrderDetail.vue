@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-22 14:50:38
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-29 14:45:24
+ * @LastEditTime: 2020-05-29 15:06:09
 --> 
 <template>
   <div class="order-detail-page" v-if="detail">
@@ -201,7 +201,8 @@ export default {
           res => {
             if (res.err_msg == 'get_brand_wcpay_request:ok') {
               this.$toast('支付成功')
-              this.$router.replace({ name: 'OrderDetail', query: { id: this.actionSheetObj.id } })
+              this.dialogCancel()
+              this.getOrderDetail()
             } else {
               this.$toast('支付失败，请重试')
             }
@@ -372,7 +373,8 @@ export default {
     width: 100%;
     padding: 0 0.94rem;
     background-color: #fff;
-    border-bottom: 5rem solid #fff;
+    border-bottom: 0.63rem solid #f7f7f7;
+    margin-bottom: 4.4rem;
     box-sizing: border-box;
     @include flex(flex-start, flex-start, column, nowrap);
     & > .time-wrap {
@@ -405,7 +407,7 @@ export default {
     background-color: #fff;
     box-sizing: border-box;
     padding: 0 0.94rem;
-    border-top: 0.63rem solid #f7f7f7;
+    border-top: 0.03rem solid #e9e9e9;
     @include flex(flex-end, center, row, nowrap);
     .van-button--danger {
       font-size: 1.19rem !important;
