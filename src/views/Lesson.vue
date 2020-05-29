@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-29 15:18:00
+ * @LastEditTime: 2020-05-29 15:35:05
 --> 
 <template>
   <div class="lesson">
@@ -44,7 +44,7 @@
         <div class="curr-list" v-if="classList.length">
           <div class="curr-list-item" v-for="(item,index) in classList" :key="index">
             <list-item :lesson="true" :item="item" @toDetail="toDetail">
-              <div slot="lesson" class="join" @click.stop="applyCourse($event,item)">立即报名</div>
+              <div slot="lesson" class="join">立即报名</div>
             </list-item>
           </div>
         </div>
@@ -106,7 +106,7 @@ export default {
           console.log('取消',err)
         })
     },
-    applyCourse(e,item) {
+    applyCourse(e,item) { //立即报名，item为对象
       if(!this.$store.token){
         this.$router.push({name: 'Login'})
         return 
@@ -360,6 +360,9 @@ export default {
       border-bottom: 1px solid #E9E9E9;
     }
     .join {
+      position: absolute;
+      bottom: .84375rem /* 13.5/16 */;
+      right: 0;
       width: 4rem /* 64/16 */;
       padding: 0.125rem /* 2/16 */ 0.3125rem /* 5/16 */;
       height: 1.3125rem /* 21/16 */;

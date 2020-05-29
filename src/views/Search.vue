@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-20 09:22:14
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-29 15:17:04
+ * @LastEditTime: 2020-05-29 15:36:40
 --> 
 <template>
   <div class="search-page">
@@ -39,7 +39,7 @@
         <div class="curr-list" v-if="classList.length">
           <div class="curr-list-item" v-for="(item,index) in classList" :key="index">
             <list-item :lesson="true" :item="item" @toDetail="toDetail">
-              <div slot="lesson" @click="applyCourse($event,item)" class="join">立即报名</div>
+              <div slot="lesson" class="join">立即报名</div>
             </list-item>
           </div>
         </div>
@@ -93,7 +93,7 @@ export default {
           console.log('取消', err)
         })
     },
-    applyCourse(e, item) {
+    applyCourse(e, item) {  //立即报名
       if(!this.$store.token){
         this.$router.push({name: 'Login'})
         return 
@@ -214,6 +214,9 @@ export default {
       border-bottom: 1px solid #e9e9e9;
     }
     .join {
+      position: absolute;
+      bottom: .84375rem /* 13.5/16 */;
+      right: 0;
       width: 4rem /* 64/16 */;
       padding: 0.125rem /* 2/16 */ 0.3125rem /* 5/16 */;
       height: 1.3125rem /* 21/16 */;

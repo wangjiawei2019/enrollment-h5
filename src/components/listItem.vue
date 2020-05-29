@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-19 16:44:12
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-28 09:48:46
+ * @LastEditTime: 2020-05-29 15:37:00
 --> 
 <template>
   <div class="list-item">
@@ -63,6 +63,7 @@ export default {
   align-items: center;
   padding: 0.94rem 0;
   box-sizing: border-box;
+  position: relative;
   .img-wapper {
     width: 100%;
     flex: 0 0 8.13rem;
