@@ -1,8 +1,8 @@
 /*
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
- * @LastEditors: wjw
- * @LastEditTime: 2020-05-29 11:49:11
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-05-29 16:41:23
  */
 
 import Vue from 'vue'
@@ -145,11 +145,10 @@ router.beforeEach((to, from, next) => {
       http
         .getReadStatus()
         .then(res => {
-          console.log(res)
           if (res.data) {
             next({ path: '/index', replace: true })
           } else {
-            this.$router.push({ path: '/apply-rule' })
+            next({ path: '/apply-rule' })
           }
         })
         .catch(err => {

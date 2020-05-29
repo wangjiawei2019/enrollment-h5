@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-22 11:41:33
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-29 15:50:54
+ * @LastEditTime: 2020-05-29 16:43:51
 --> 
 <template>
   <div class="detail-page">
@@ -65,6 +65,9 @@ export default {
     this.id = this.$route.query.id
     this.getClassDetail(this.id)
   },
+  beforeDestroy(){
+    Dialog.close()
+  },
   methods: {
     controlQr() {
       this.joinClass = true
@@ -115,7 +118,6 @@ export default {
         cancelButtonColor: '#999999'
       })
         .then(res => {
-          console.log('确认', res)
           this.$router.push({ name, query })
         })
         .catch(err => {
@@ -177,7 +179,6 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err)
           this.$toast(err)
         })
     }
