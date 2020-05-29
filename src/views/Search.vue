@@ -2,13 +2,8 @@
  * @Github: https://github.com/IdlerHub
  * @Author: zxk
  * @Date: 2020-05-20 09:22:14
-<<<<<<< HEAD
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-29 14:49:03
-=======
- * @LastEditors: wjw
- * @LastEditTime: 2020-05-29 10:50:16
->>>>>>> 1a6f3e96a925597546b32d056becdb62f3827181
+ * @LastEditTime: 2020-05-29 14:52:40
 --> 
 <template>
   <div class="search-page">
