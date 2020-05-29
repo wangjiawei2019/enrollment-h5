@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-29 15:35:05
+ * @LastEditTime: 2020-05-29 15:51:16
 --> 
 <template>
   <div class="lesson">
@@ -107,7 +107,7 @@ export default {
         })
     },
     applyCourse(e,item) { //立即报名，item为对象
-      if(!this.$store.token){
+      if(!this.$store.state.token){
         this.$router.push({name: 'Login'})
         return 
       }
@@ -201,7 +201,7 @@ export default {
       let params = {
         majorId,
         courseId,
-        pageSize: 9,
+        pageSize: 10,
         pageNum: page
       }
       http.getClassList(params).then(res => {
