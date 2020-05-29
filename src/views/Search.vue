@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-20 09:22:14
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-29 14:52:40
+ * @LastEditTime: 2020-05-29 15:17:04
 --> 
 <template>
   <div class="search-page">
@@ -94,7 +94,10 @@ export default {
         })
     },
     applyCourse(e, item) {
-      console.log('applyCourse -> item', item)
+      if(!this.$store.token){
+        this.$router.push({name: 'Login'})
+        return 
+      }
       let params = { id: item.id }
       //立即报名，提交订单
       let info = {

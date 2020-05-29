@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-29 14:45:43
+ * @LastEditTime: 2020-05-29 15:18:00
 --> 
 <template>
   <div class="lesson">
@@ -107,6 +107,10 @@ export default {
         })
     },
     applyCourse(e,item) {
+      if(!this.$store.token){
+        this.$router.push({name: 'Login'})
+        return 
+      }
       let params = { id: item.id }
       //立即报名，提交订单
       let info = {
@@ -126,17 +130,10 @@ export default {
           // this.$store.commit('setConfirmOrderList', info)
           this.dialog('您已提交该班级报名','点\'去支付\'完成报名','去支付','Order',{index:1})
         }else if(res.data.status === 6){  //去支付--6
-          // info = {
-          //   list:[res.data.classDetail],
-          //   classIdList: [res.data.classDetail.classId],
-          //   totalMoney: res.data.classDetail.money
-          // }
-          // this.$store.commit('setConfirmOrderList', info)
           this.dialog('您已提交相同课程报名','点\'去支付\'完成报名','去支付','Order',{index:1})
         }
       })
       .catch(err=>{
-        console.log(err)
         this.$toast(err)
       })
     },
@@ -149,6 +146,7 @@ export default {
     changeClassify() {
       //课程分类组件展示
       this.showClassify = !this.showClassify
+
     },
     selectedClass(index) {
       //选择专业

@@ -2,8 +2,8 @@
  * @Github: https://github.com/IdlerHub
  * @Author: zxk
  * @Date: 2020-05-22 11:41:33
- * @LastEditors: wjw
- * @LastEditTime: 2020-05-29 11:22:44
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-05-29 15:17:47
 --> 
 <template>
   <div class="detail-page">
@@ -123,6 +123,10 @@ export default {
         })
     },
     applyCourse(e, flag = false) {
+      if(!this.$store.token){
+        this.$router.push({name: 'Login'})
+        return 
+      }
       //flag==true: 立即报名
       let params = { id: this.detail.id }
       //立即报名，提交订单
@@ -166,16 +170,9 @@ export default {
             this.repeatShow = true
           } else if (res.data.status === 5) {
             //去支付--5
-            // this.$store.commit('setConfirmOrderList', info)
             this.dialog('您已提交该班级报名', "点'去支付'完成报名", '去支付', 'Order', { index: 1 })
           } else if (res.data.status === 6) {
             //去支付--6
-            // info = {
-            //   list:[res.data.classDetail],
-            //   classIdList: [res.data.classDetail.classId],
-            //   totalMoney: res.data.classDetail.money
-            // }
-            // this.$store.commit('setConfirmOrderList', info)
             this.dialog('您已提交相同课程报名', "点'去支付'完成报名", '去支付', 'Order', { index: 1 })
           }
         })

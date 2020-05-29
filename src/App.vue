@@ -1,12 +1,15 @@
 <!--
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
- * @LastEditors: wjw
- * @LastEditTime: 2020-05-29 14:13:30
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-05-29 14:56:56
 --> 
 <template>
   <div id="app">
-    <router-view />
+  <keep-alive>
+    <router-view v-if="$route.meta.keepAlive" />
+  </keep-alive>
+    <router-view v-if="!$route.meta.keepAlive" />
   </div>
 </template>
 
