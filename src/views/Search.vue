@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-20 09:22:14
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-29 15:36:40
+ * @LastEditTime: 2020-05-29 15:51:25
 --> 
 <template>
   <div class="search-page">
@@ -94,7 +94,7 @@ export default {
         })
     },
     applyCourse(e, item) {  //立即报名
-      if(!this.$store.token){
+      if(!this.$store.state.token){
         this.$router.push({name: 'Login'})
         return 
       }

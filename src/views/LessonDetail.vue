@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-22 11:41:33
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-29 15:17:47
+ * @LastEditTime: 2020-05-29 15:50:54
 --> 
 <template>
   <div class="detail-page">
@@ -123,7 +123,7 @@ export default {
         })
     },
     applyCourse(e, flag = false) {
-      if(!this.$store.token){
+      if(!this.$store.state.token){
         this.$router.push({name: 'Login'})
         return 
       }
