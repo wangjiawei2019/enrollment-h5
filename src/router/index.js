@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-27 19:45:07
+ * @LastEditTime: 2020-05-29 14:23:18
  */
 
 import Vue from 'vue'
@@ -46,7 +46,7 @@ const routes = [
       {
         path: 'lesson',
         name: 'Lesson',
-        meta: { tab: 0 },
+        meta: { tab: 0, keepAlive: true},
         component: Lesson
       },
       {
@@ -85,7 +85,8 @@ const routes = [
     name: 'Search',
     component: Search,
     meta: {
-      title: '班级搜索'
+      title: '班级搜索',
+      keepAlive: true
     }
   },
   {
@@ -106,7 +107,17 @@ const routes = [
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      if (from.meta.keepAlive) {
+        from.meta.savedPosition = document.body.scrollTop
+      }
+      return { x: 0, y: to.meta.savedPosition || 0 }
+    }
+  }
 })
 
 router.beforeEach((to, from, next) => {

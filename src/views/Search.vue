@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-20 09:22:14
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-28 09:58:17
+ * @LastEditTime: 2020-05-29 14:49:03
 --> 
 <template>
   <div class="search-page">
@@ -15,6 +15,8 @@
         show-action
         autofocus
         placeholder="请输入搜索关键词"
+        @input="focusIpt"
+        @focus="focusIpt"
         @search="searchWorld"
         @cancel="cancel"
       >
@@ -24,7 +26,7 @@
         <img
         slot="right-icon"
           class="d-img"
-          v-show="keyWord"
+          v-show="showDel"
           @click="delWorld"
           src="@/assets/images/lesson/del.png"
           alt
@@ -62,6 +64,7 @@ export default {
   data() {
     return {
       repeatShow: false, //重复报名提示
+      showDel: false,   //展示清除按钮
       keyWord: '', //搜索关键词
       classList: [], //班级列表
       page: 0,
@@ -120,12 +123,19 @@ export default {
     delWorld() {
       this.keyWord = ''
       this.classList = []
+      this.showDel = false
     },
     cancel() {
       this.$router.back()
     },
+    focusIpt(){
+      if(this.keyWord.length){
+        this.showDel = true
+      }
+    },
     searchWorld(e) {
       if (this.keyWord.length) {
+        this.showDel = false
         this.searchCourseClass()
       } else {
         this.classList = []

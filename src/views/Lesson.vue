@@ -2,14 +2,15 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-28 09:42:27
+ * @LastEditTime: 2020-05-29 14:45:43
 --> 
 <template>
   <div class="lesson">
     <div class="header">
       <div class="classify" @click="changeClassify">
         <div class="major-title">{{majorTitle}}</div>
-        <img src="@/assets/images/lesson/down.png" alt />
+        <img v-show="!showClassify" src="@/assets/images/lesson/down.png" alt />
+        <img v-show="showClassify" src="@/assets/images/lesson/up.png" alt />
       </div>
 
       <div class="search" @click="toSearch">
@@ -38,7 +39,6 @@
         </van-tree-select>
       </div>
     </div>
-
     <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
       <van-list v-model="loading" :finished="finished" @load="downPull">
         <div class="curr-list" v-if="classList.length">
@@ -53,7 +53,6 @@
         </div>
       </van-list>
     </van-pull-refresh>
-
     <!-- 提示内容 -->
     <currTip :repeat-show="repeatShow" :class-name="className" @changeShow="changeShow"></currTip>
   </div>
@@ -84,6 +83,10 @@ export default {
       finished: false, //是否加载完成
       refreshing: false,  //下拉刷新是否完成
     }
+  },
+  created() {
+    console.log(111)
+    this.init()
   },
   methods: {
     toDetail(id){
@@ -149,12 +152,12 @@ export default {
     },
     selectedClass(index) {
       //选择专业
-      let majorItem = this.majorList[index]
-      let text = majorItem.text
-      if (majorItem.text === '全部') {
-        text = '课程分类'
-      }
-      this.majorTitle = text
+      // let majorItem = this.majorList[index]
+      // let text = majorItem.text  
+      // if (majorItem.text === '全部') {
+      //   text = '课程分类'
+      // }
+      // this.majorTitle = text
       this.getCourseList()
     },
     selectedCourse(item, flag = false) {
@@ -191,7 +194,7 @@ export default {
       }
       http.getCourseList(params).then(res => {
         this.courseList = res.data
-        this.selectedCourse(res.data[0], true)
+        // this.selectedCourse(res.data[0], true)
       })
     },
     getClassList(id, page = 1) {
@@ -236,20 +239,16 @@ export default {
       this.getClassList(id)
     },
     downPull() {
-      if(this.page == 1){
-        this.init()
-      }else{
-        if (this.page > this.totalPage) {
-          //  数据全部加载完成，可以弹提示
-          this.finished = true
-          return
-        }
-        let id = {
-          majorId: this.majorList[this.majorIndex].id || 0,
-          courseId: this.courseId
-        }
-        this.getClassList(id, this.page)
-        }
+      if (this.page > this.totalPage || this.page == 1) {
+        //  数据全部加载完成，可以弹提示
+        this.finished = true
+        return
+      }
+      let id = {
+        majorId: this.majorList[this.majorIndex].id || 0,
+        courseId: this.courseId
+      }
+      this.getClassList(id, this.page)
     },
     onRefresh() {
       // 将 loading 设置为 true，表示处于加载状态,不加载load
@@ -265,6 +264,7 @@ export default {
       this.getClassList(id, 1)
     }
   },
+  
   components: {
     CurrTip,
     'list-item':ListItem,
