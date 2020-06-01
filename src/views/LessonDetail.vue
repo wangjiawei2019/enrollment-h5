@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-22 11:41:33
  * @LastEditors: zxk
- * @LastEditTime: 2020-06-01 15:28:12
+ * @LastEditTime: 2020-06-01 17:10:36
 --> 
 <template>
   <div class="detail-page">
@@ -21,7 +21,7 @@
         </div>
       </div>
     </div>
-    <div class="content">
+    <div class="content-detail">
       <div class="text">课程详情</div>
       <div class="detail-info" v-html="detail.classInfo"></div>
     </div>
@@ -251,7 +251,7 @@ export default {
       }
     }
   }
-  .content {
+  .content-detail {
     width: 100%;
     font-size: 21px;
     font-family: PingFangSC-Regular, PingFang SC;
@@ -264,7 +264,6 @@ export default {
     }
     .detail-info {
       width: 100%;
-      text-align: center;
       font-size: 19px;
       font-family: PingFangSC-Regular, PingFang SC;
       font-weight: 400;
