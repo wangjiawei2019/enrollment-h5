@@ -3,11 +3,11 @@
  * @Author: zxk
  * @Date: 2020-05-22 11:41:33
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-29 16:43:51
+ * @LastEditTime: 2020-06-01 15:28:12
 --> 
 <template>
   <div class="detail-page">
-    <div class="header">
+    <div class="header-detail">
       <img class="detail-img" :src="detail.image || require('@/assets/site.png')" alt />
       <div class="info">
         <div class="name">{{detail.name}}</div>
@@ -191,9 +191,9 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .detail-page {
-  .header {
+  .header-detail {
     .detail-img {
       width: 100%;
       height: 13.125rem /* 210/16 */;
@@ -252,21 +252,27 @@ export default {
     }
   }
   .content {
-    padding: 0.9375rem /* 15/16 */;
+    width: 100%;
     font-size: 21px;
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: rgba(51, 51, 51, 1);
-    margin-bottom: 5.625rem /* 90/16 */;
+    // margin-bottom: 5.625rem /* 90/16 */;
     .text {
-      margin-bottom: 0.625rem /* 10/16 */;
+      margin: .9375rem 0 0.625rem /* 10/16 */ .9375rem;
+      margin-left: .9375rem /* 15/16 */;
     }
     .detail-info {
+      width: 100%;
+      text-align: center;
       font-size: 19px;
       font-family: PingFangSC-Regular, PingFang SC;
       font-weight: 400;
       color: rgba(102, 102, 102, 1);
       line-height: 1.875rem /* 30/16 */;
+      img{
+        width: 100% !important;
+      }
     }
   }
   .footer {
@@ -302,4 +308,5 @@ export default {
     }
   }
 }
+
 </style>
