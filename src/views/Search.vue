@@ -2,8 +2,8 @@
  * @Github: https://github.com/IdlerHub
  * @Author: zxk
  * @Date: 2020-05-20 09:22:14
- * @LastEditors: zxk
- * @LastEditTime: 2020-05-29 17:00:40
+ * @LastEditors: wjw
+ * @LastEditTime: 2020-05-29 20:47:53
 --> 
 <template>
   <div class="search-page">
@@ -11,26 +11,18 @@
       <van-search
         v-model="keyWord"
         shape="round"
-        :clearable="false"
+        clearable
         show-action
         autofocus
         placeholder="请输入搜索关键词"
-        @input="focusIpt"
-        @focus="focusIpt"
         @search="searchWorld"
         @cancel="cancel"
+        @input="handleFieldClick"
+        @focus="handleFieldClick"
       >
         <div class="c-img" slot="left-icon">
           <img src="@/assets/images/lesson/search.png" alt />
         </div>
-        <img
-          slot="right-icon"
-          class="d-img"
-          v-show="showDel"
-          @click="delWorld"
-          src="@/assets/images/lesson/del.png"
-          alt
-        />
       </van-search>
     </div>
 
@@ -64,7 +56,6 @@ export default {
   data() {
     return {
       repeatShow: false, //重复报名提示
-      showDel: false, //展示清除按钮
       keyWord: '', //搜索关键词
       classList: [], //班级列表
       page: 0,
@@ -74,9 +65,10 @@ export default {
       refreshing: false
     }
   },
-  beforeRouteLeave (to, from, next) {
-    if(to.name == 'Lesson'){
-      this.delWorld()
+  beforeRouteLeave(to, from, next) {
+    if (to.name == 'Lesson') {
+      this.keyWord = ''
+      this.classList = []
     }
     next()
   },
@@ -95,9 +87,7 @@ export default {
         .then(res => {
           this.$router.push({ name, query })
         })
-        .catch(err => {
-          console.log('取消', err)
-        })
+        .catch(err => {})
     },
     applyCourse(e, item) {
       //立即报名
@@ -139,26 +129,11 @@ export default {
           this.$toast(err)
         })
     },
-    delWorld() {
-      this.keyWord = ''
-      this.classList = []
-      this.showDel = false
-    },
     cancel() {
       this.$router.back()
     },
-    focusIpt() {
-      if (this.keyWord.length) {
-        this.showDel = true
-      }
-    },
-    searchWorld(e) {
-      if (this.keyWord.length) {
-        this.showDel = false
-        this.searchCourseClass()
-      } else {
-        this.classList = []
-      }
+    searchWorld() {
+      this.keyWord.length ? this.searchCourseClass() : (this.classList = [])
     },
     searchCourseClass(page = 0) {
       let params = {
@@ -198,6 +173,17 @@ export default {
       this.classList = []
       this.page = 0
       this.searchCourseClass()
+    },
+    handleFieldClick() {
+      this.$nextTick(() => {
+        // 手动更改 icon 样式
+        const clear = document.getElementsByClassName('van-field__clear')[0] || null
+        const img = document.createElement('img')
+        img.src = require('@/assets/images/lesson/del.png')
+        if (clear) {
+          clear.childNodes.length < 2 && clear.appendChild(img) // 保证不重复添加 img 标签
+        }
+      })
     }
   },
   components: {
@@ -241,6 +227,17 @@ export default {
     margin-top: 4.375rem /* 70/16 */;
     padding-top: 5.625rem /* 90/16 */;
     width: 100%;
+  }
+  .van-field__clear::before {
+    content: '' !important;
+  }
+  .van-field__clear {
+    width: 1.25rem !important;
+    height: 1.25rem !important;
+    & > img {
+      width: 100% !important;
+      height: 100% !important;
+    }
   }
 }
 .van-pull-refresh {

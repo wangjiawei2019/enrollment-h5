@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-28 17:27:45
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-29 17:17:54
+ * @LastEditTime: 2020-05-29 20:27:32
 --> 
 <template>
   <div class="address-page">
@@ -18,6 +18,7 @@
         label-width="6.8rem"
         placeholder="请填写"
         :rules="[{ required: true, message: '请填写收货人' }]"
+        @click="handleFieldClick"
       />
       <van-field
         v-model="courseClassAddress.mobile"
@@ -28,14 +29,15 @@
         label="手机号码*"
         label-class="desc"
         label-width="6.8rem"
-        :placeholder="$store.state.mobile"
+        placeholder="请填写"
         :rules="[{ required:true, pattern: /^1(3|4|5|6|7|8|9)\d{9}$/, message: '请填写正确的手机号码' }]"
+        @click="handleFieldClick"
       />
       <van-field
         v-model="courseClassAddress.address"
         clearable
         name="address"
-        maxlength="35"
+        maxlength="36"
         :border="false"
         type="textarea"
         rows="2"
@@ -45,6 +47,7 @@
         label-width="6.8rem"
         placeholder="请填写"
         :rules="[{ required: true, message: '请填写详细地址' }]"
+        @click="handleFieldClick"
       />
       <div class="btn-box">
         <van-button round block type="info" native-type="submit">确认</van-button>
@@ -54,14 +57,15 @@
 </template>
 
 <script>
-import { Form, Field, Button } from 'vant'
+import { Form, Field, Button, Icon } from 'vant'
 import http from '@/api'
 
 export default {
   components: {
     'van-form': Form,
     'van-field': Field,
-    'van-button': Button
+    'van-button': Button,
+    'van-icon': Icon
   },
   data() {
     return {
@@ -86,6 +90,15 @@ export default {
     failed(errorInfo) {
       const { errors, values } = errorInfo
       this.$toast(`${errors[0].message}`)
+    },
+    handleFieldClick() {
+      this.$nextTick(() => {
+        // 手动更改 icon 样式
+        const clear = document.getElementsByClassName('van-field__clear')[0] || null
+        const img = document.createElement('img')
+        img.src = require('@/assets/images/lesson/del.png')
+        clear && clear.appendChild(img)
+      })
     }
   }
 }
@@ -134,6 +147,17 @@ export default {
     // width: calc(100% - 1.88rem) !important;
     height: 3.44rem !important;
     border-radius: 1.72rem !important;
+  }
+  .van-field__clear::before {
+    content: '' !important;
+  }
+  .van-field__clear {
+    width: 1.25rem !important;
+    height: 1.25rem !important;
+    & > img {
+      width: 100% !important;
+      height: 100% !important;
+    }
   }
 }
 </style>
