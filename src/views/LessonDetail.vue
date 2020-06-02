@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-22 11:41:33
  * @LastEditors: zxk
- * @LastEditTime: 2020-06-01 17:10:36
+ * @LastEditTime: 2020-06-02 09:41:42
 --> 
 <template>
   <div class="detail-page">
@@ -259,8 +259,7 @@ export default {
     color: rgba(51, 51, 51, 1);
     // margin-bottom: 5.625rem /* 90/16 */;
     .text {
-      margin: .9375rem 0 0.625rem /* 10/16 */ .9375rem;
-      margin-left: .9375rem /* 15/16 */;
+      margin: .9375rem .9375rem 0.625rem /* 10/16 */ .9375rem;
     }
     .detail-info {
       width: 100%;
