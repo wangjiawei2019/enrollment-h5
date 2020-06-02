@@ -3,19 +3,22 @@
  * @Author: zxk
  * @Date: 2020-05-27 19:19:40
  * @LastEditors: zxk
- * @LastEditTime: 2020-06-02 09:59:31
+ * @LastEditTime: 2020-06-02 15:06:21
 --> 
 <template>
   <van-overlay class="qrCode-page" show>
     <div class="code-box" @click.stop>
       <div class="code-img">
-        <img :src="qrCodeUrl" alt="班群二维码" />
+        <img :src="qrCodeUrl" style="webkitTouchCallout: none;" alt="班群二维码" />
       </div>
       <div class="content">
         <div class="con-first">长按识别二维码进群</div>
         <div class="con-second">或点击下方按钮保存</div>
       </div>
       <div class="code-save" @click="saveImg">保存图片</div>
+      <div class="code-img2">
+        <img :src="qrCodeUrl"  style="webkitTouchCallout: none;" alt="班群二维码" />	
+      </div>
     </div>
     <div class="close">
       <img src="@/assets/images/lesson/close.png" alt @click.stop="closeJoin" />
@@ -108,10 +111,10 @@ export default {
       position: absolute;
       top: 0;
       right: 0;
-      // bottom: 4.375rem /* 70/16 */;
-      bottom: 0;
+      bottom: 4.375rem /* 70/16 */;
+      // bottom: 0;
       left: 0;
-      // z-index: 99;
+      z-index: 99;
       opacity: 0;
       img {
         width: 100%;
