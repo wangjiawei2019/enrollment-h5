@@ -1,8 +1,8 @@
 /*
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
- * @LastEditors: zxk
- * @LastEditTime: 2020-05-29 16:56:57
+ * @LastEditors: wjw
+ * @LastEditTime: 2020-05-30 10:55:45
  */
 
 import Vue from 'vue'
@@ -28,7 +28,7 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    redirect: '/login'
+    redirect: { name: 'Lesson' }
   },
   {
     path: '/login',
@@ -45,7 +45,7 @@ const routes = [
       {
         path: 'lesson',
         name: 'Lesson',
-        meta: { tab: 0, keepAlive: true},
+        meta: { tab: 0, keepAlive: true },
         component: Lesson
       },
       {

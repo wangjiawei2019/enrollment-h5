@@ -3,27 +3,29 @@
  * @Author: zxk
  * @Date: 2020-05-20 09:22:14
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-29 20:47:53
+ * @LastEditTime: 2020-05-30 11:09:18
 --> 
 <template>
   <div class="search-page">
     <div class="title">
-      <van-search
-        v-model="keyWord"
-        shape="round"
-        clearable
-        show-action
-        autofocus
-        placeholder="请输入搜索关键词"
-        @search="searchWorld"
-        @cancel="cancel"
-        @input="handleFieldClick"
-        @focus="handleFieldClick"
-      >
-        <div class="c-img" slot="left-icon">
-          <img src="@/assets/images/lesson/search.png" alt />
-        </div>
-      </van-search>
+      <form action="javascript:return true">
+        <van-search
+          v-model="keyWord"
+          shape="round"
+          clearable
+          show-action
+          autofocus
+          placeholder="请输入搜索关键词"
+          @search="searchWorld"
+          @cancel="cancel"
+          @input="handleFieldClick"
+          @focus="handleFieldClick"
+        >
+          <div class="c-img" slot="left-icon">
+            <img src="@/assets/images/lesson/search.png" alt />
+          </div>
+        </van-search>
+      </form>
     </div>
 
     <van-pull-refresh v-model="refreshing" @refresh="onRefresh">

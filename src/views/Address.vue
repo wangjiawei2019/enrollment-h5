@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-28 17:27:45
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-29 20:27:32
+ * @LastEditTime: 2020-05-30 09:35:34
 --> 
 <template>
   <div class="address-page">
@@ -18,12 +18,14 @@
         label-width="6.8rem"
         placeholder="请填写"
         :rules="[{ required: true, message: '请填写收货人' }]"
-        @click="handleFieldClick"
+        @input="handleFieldClick"
+        @focus="handleFieldClick"
       />
       <van-field
         v-model="courseClassAddress.mobile"
         clearable
         name="mobile"
+        maxlength="11"
         :border="false"
         type="tel"
         label="手机号码*"
@@ -31,7 +33,8 @@
         label-width="6.8rem"
         placeholder="请填写"
         :rules="[{ required:true, pattern: /^1(3|4|5|6|7|8|9)\d{9}$/, message: '请填写正确的手机号码' }]"
-        @click="handleFieldClick"
+        @input="handleFieldClick"
+        @focus="handleFieldClick"
       />
       <van-field
         v-model="courseClassAddress.address"
@@ -47,7 +50,8 @@
         label-width="6.8rem"
         placeholder="请填写"
         :rules="[{ required: true, message: '请填写详细地址' }]"
-        @click="handleFieldClick"
+        @input="handleFieldClick"
+        @focus="handleFieldClick"
       />
       <div class="btn-box">
         <van-button round block type="info" native-type="submit">确认</van-button>
@@ -97,7 +101,9 @@ export default {
         const clear = document.getElementsByClassName('van-field__clear')[0] || null
         const img = document.createElement('img')
         img.src = require('@/assets/images/lesson/del.png')
-        clear && clear.appendChild(img)
+        if (clear) {
+          clear.childNodes.length < 2 && clear.appendChild(img) // 保证不重复添加 img 标签
+        }
       })
     }
   }
