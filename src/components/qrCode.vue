@@ -2,8 +2,8 @@
  * @Github: https://github.com/IdlerHub
  * @Author: zxk
  * @Date: 2020-05-27 19:19:40
- * @LastEditors: wjw
- * @LastEditTime: 2020-05-29 11:40:28
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-06-02 09:32:15
 --> 
 <template>
   <van-overlay class="qrCode-page" show>
@@ -15,8 +15,8 @@
         <div class="con-first">长按识别二维码进群</div>
         <div class="con-second">或点击下方按钮保存</div>
       </div>
-      <div class="code-save" @click="saveImg">保存图片</div>
-      <div class="code-img2">
+      <div class="code-save">保存图片</div>
+      <div class="code-img2" @click="saveImg">
         <img :src="qrCodeUrl" alt="班群二维码" />
       </div>
     </div>
@@ -110,7 +110,8 @@ export default {
       position: absolute;
       top: 0;
       right: 0;
-      bottom: 4.375rem /* 70/16 */;
+      // bottom: 4.375rem /* 70/16 */;
+      bottom: 0;
       left: 0;
       // z-index: 99;
       opacity: 0;
