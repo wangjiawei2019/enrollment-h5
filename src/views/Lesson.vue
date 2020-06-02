@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-29 17:54:48
+ * @LastEditTime: 2020-06-02 15:18:30
 --> 
 <template>
   <div class="lesson">
@@ -103,13 +103,9 @@ export default {
         confirmButtonText: text,
         confirmButtonColor: '#F2323A',
         cancelButtonColor: '#999999'
+      }).then(res => {
+        this.$router.push({ name, query })
       })
-        .then(res => {
-          this.$router.push({ name, query })
-        })
-        .catch(err => {
-          console.log('取消', err)
-        })
     },
     applyCourse(e, item) {
       //立即报名，item为对象
@@ -192,15 +188,10 @@ export default {
     },
     getMajorList() {
       //获取课程分类初始列表
-      http
-        .getMajorList()
-        .then(res => {
-          this.majorList = res.data.majorNodeDTOS
-          this.courseList = res.data.courseNodeDTOS
-        })
-        .catch(err => {
-          console.log(err)
-        })
+      http.getMajorList().then(res => {
+        this.majorList = res.data.majorNodeDTOS
+        this.courseList = res.data.courseNodeDTOS
+      })
     },
     getCourseList() {
       //获取课程分类
@@ -228,7 +219,6 @@ export default {
             this.classList = res.dataList
             this.totalPage = Math.ceil(res.total / res.pageSize)
           } else {
-            console.log('分页加载')
             this.classList = this.classList.concat(res.dataList)
           }
           this.page++
@@ -241,8 +231,6 @@ export default {
         })
         .catch(err => {
           this.finished = true
-          // this.$toast.fail(err)
-          console.log(err)
         })
     },
     init() {

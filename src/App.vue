@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-02 10:25:22
+ * @LastEditTime: 2020-06-02 15:17:35
 --> 
 <template>
   <div id="app">
@@ -52,7 +52,6 @@ export default {
         store.commit('setEnvironment', 'App-brower')
       } else if (userAgent.toLowerCase().indexOf('micromessenger') !== -1) {
         store.commit('setEnvironment', 'WEIXIN-brower')
-        console.log(store)
         this.getCode() // 获取 JSAPI 支付所需 code
       } else {
         store.commit('setEnvironment', 'other-brower')

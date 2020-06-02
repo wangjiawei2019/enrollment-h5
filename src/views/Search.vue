@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-20 09:22:14
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-30 11:09:18
+ * @LastEditTime: 2020-06-02 15:18:50
 --> 
 <template>
   <div class="search-page">
@@ -127,7 +127,6 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err)
           this.$toast(err)
         })
     },

@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 17:03:31
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-29 10:53:51
+ * @LastEditTime: 2020-06-02 15:48:18
  */
 import { get, post } from '@/utils/request'
 import store from '@/store'
@@ -31,7 +31,7 @@ function sendsms(params) {
 //get 验证码登录 params:{phone,code}
 //TODO: 发布前要改成登录的连接
 function login(params) {
-  return get('/auth/loginTest', params)
+  return get('/auth/login', params)
 }
 
 // post 获取课程分类初始列表
@@ -84,7 +84,6 @@ function cancelApplyCourse(param) {
  * @param {classIdList,tradeType}
  */
 function createOrder(url, param) {
-  console.log('createOrder -> url, param', url, param)
   return post(url, param)
 }
 

@@ -2,8 +2,8 @@
  * @Github: https://github.com/IdlerHub
  * @Author: zxk
  * @Date: 2020-05-22 11:41:33
- * @LastEditors: zxk
- * @LastEditTime: 2020-06-02 09:41:42
+ * @LastEditors: wjw
+ * @LastEditTime: 2020-06-02 15:18:42
 --> 
 <template>
   <div class="detail-page">
@@ -65,7 +65,7 @@ export default {
     this.id = this.$route.query.id
     this.getClassDetail(this.id)
   },
-  beforeDestroy(){
+  beforeDestroy() {
     Dialog.close()
   },
   methods: {
@@ -116,18 +116,14 @@ export default {
         confirmButtonText: text,
         confirmButtonColor: '#F2323A',
         cancelButtonColor: '#999999'
+      }).then(res => {
+        this.$router.push({ name, query })
       })
-        .then(res => {
-          this.$router.push({ name, query })
-        })
-        .catch(err => {
-          console.log('取消', err)
-        })
     },
     applyCourse(e, flag = false) {
-      if(!this.$store.state.token){
-        this.$router.push({name: 'Login'})
-        return 
+      if (!this.$store.state.token) {
+        this.$router.push({ name: 'Login' })
+        return
       }
       //flag==true: 立即报名
       let params = { id: this.detail.id }
@@ -259,7 +255,7 @@ export default {
     color: rgba(51, 51, 51, 1);
     // margin-bottom: 5.625rem /* 90/16 */;
     .text {
-      margin: .9375rem .9375rem 0.625rem /* 10/16 */ .9375rem;
+      margin: 0.9375rem 0.9375rem 0.625rem /* 10/16 */ 0.9375rem;
     }
     .detail-info {
       width: 100%;
@@ -268,7 +264,7 @@ export default {
       font-weight: 400;
       color: rgba(102, 102, 102, 1);
       line-height: 1.875rem /* 30/16 */;
-      img{
+      img {
         width: 100% !important;
       }
     }
@@ -306,5 +302,4 @@ export default {
     }
   }
 }
-
 </style>

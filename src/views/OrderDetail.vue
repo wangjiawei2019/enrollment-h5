@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-22 14:50:38
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-29 17:33:42
+ * @LastEditTime: 2020-06-02 16:09:33
 --> 
 <template>
   <div class="order-detail-page" v-if="detail">
@@ -15,18 +15,15 @@
     </header>
     <section>
       <div class="title-box">订单信息</div>
-      <div class="wrap" v-for="item in detail.classListDTOList" :key="item.classId">
+      <div
+        class="wrap"
+        v-for="item in detail.classListDTOList"
+        :key="item.classId"
+        @click="() =>{qrCodeUrl = item.status === 2 ? item.qrcode : ''}"
+      >
         <list-item :item="item">
-          <template v-slot:button>
-            <div
-              class="join-button-box"
-              v-if="item.status === 2"
-              @click="() =>{qrCodeUrl = item.qrcode}"
-            >
-              <img src="@/assets/images/order/class.png" alt class="join-icon" />
-              <span class="text">进入班群</span>
-              <van-icon name="arrow" color="#999999" size="1rem" />
-            </div>
+          <template v-slot:lesson v-if="item.status === 2">
+            <van-button type="danger" class="join-button-box">进入班群</van-button>
           </template>
         </list-item>
       </div>
@@ -348,23 +345,17 @@ export default {
       border-bottom: 0.03rem solid #e9e9e9;
       box-sizing: border-box;
       .join-button-box {
-        width: 100%;
-        height: 3rem;
-        margin-bottom: 0.94rem;
-        background: rgba(247, 247, 247, 1);
-        border-radius: 0.5rem;
-        box-sizing: border-box;
-        padding: 0 0.94rem;
-        @include flex(flex-start, center, row, nowrap);
-        .join-icon {
-          width: 1.38rem;
-          height: 1.25rem;
-        }
-        .text {
-          flex: 1;
-          margin-left: 0.63rem;
-          @include font(PingFang SC, 1.19rem, rgba(102, 102, 102, 1), 400);
-        }
+        position: absolute;
+        bottom: 0.84375rem /* 13.5/16 */;
+        right: 0;
+        width: 4.63rem !important;
+        height: 1.56rem !important;
+        border-radius: 0.31rem !important;
+        font-size: 0.94rem !important;
+        font-family: PingFangSC-Regular, PingFang SC !important;
+        font-weight: 400 !important;
+        color: rgba(255, 255, 255, 1) !important;
+        line-height: 1.56rem !important;
       }
     }
     .total-box {

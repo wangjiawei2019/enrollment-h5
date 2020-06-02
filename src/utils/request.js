@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-04-20 16:14:58
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-28 17:48:18
+ * @LastEditTime: 2020-06-02 15:18:00
  */
 import axios from 'axios'
 import { httpBaseUrl } from './BASE'
@@ -64,7 +64,6 @@ instance.interceptors.request.use(
 /** 添加响应拦截器  **/
 instance.interceptors.response.use(
   response => {
-    // console.log('response', response)
     loadingInstance.clear()
     if (response.status === 200) {
       // 响应结果里的status: ok是我与后台的约定，大家可以根据实际情况去做对应的判断
@@ -72,7 +71,6 @@ instance.interceptors.response.use(
         return Promise.resolve(response.data)
       } else {
         if (response.data.status === 401) {
-          console.log('token错误')
           store.commit('setToken', '') //清空token
           // Toast.fail(response.data.msg)
           router.replace({
