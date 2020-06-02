@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-22 09:52:58
  * @LastEditors: zxk
- * @LastEditTime: 2020-05-22 17:25:54
+ * @LastEditTime: 2020-06-02 16:06:38
 --> 
 <template>
     <div class="apply-rule">
@@ -17,7 +17,7 @@ import http from '@/api'
 export default {
     data(){
         return {
-            content: `<div>报名须知</div>`
+            content: ``
         }
     },
     methods:{
@@ -31,6 +31,7 @@ export default {
         }
     },
     mounted(){
+        http.getTimSign()
         http.getRecruitIntro().then(res=>{
             this.content = res.data
         })
