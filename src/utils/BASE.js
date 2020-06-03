@@ -2,13 +2,13 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-04-29 16:44:41
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-27 16:10:57
+ * @LastEditTime: 2020-06-02 17:09:48
  */
 
 const httpBase = {
-  development: 'https://gateway.jinlingkeji.cn',
-  production: 'https://jlkjapp.jinlingkeji.cn/',
-  test: 'https://gatewaytest.jinlingkeji.cn'
+  development: 'https://gateway.jinlingkeji.cn/v2',
+  production: 'https://jlkjapp.jinlingkeji.cn/v2',
+  test: 'https://gatewaytest.jinlingkeji.cn/v2'
 }
 const domainBase = {
   development: 'https://enrollmenth5dev.jinlingkeji.cn',

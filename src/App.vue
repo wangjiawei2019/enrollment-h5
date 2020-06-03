@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-02 15:17:35
+ * @LastEditTime: 2020-06-03 10:44:33
 --> 
 <template>
   <div id="app">
@@ -66,14 +66,17 @@ export default {
       }
     },
     getCode() {
-      const { code } = this.$route.query
-      if (!store.state.code && !code) {
-        location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${JSAPIAPPID}&redirect_uri=${encodeURIComponent(
-          domainBaseUrl
-        )}&response_type=code&scope=snsapi_base&state=123#wechat_redirect`
-      } else if (!store.state.code && code) {
-        store.commit('setCode', code)
-        this.getOpenID(code)
+      const searchParams = new URLSearchParams(window.location.search)
+      const urlCode = searchParams.get('code')
+      if (!store.state.code && !urlCode) {
+        const url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${JSAPIAPPID}&redirect_uri=${encodeURIComponent(
+          `${domainBaseUrl}/#/`
+        )}&response_type=code&scope=snsapi_base&connect_redirect=1#wechat_redirect`
+        window.location.replace(url)
+      } else if (!store.state.code && urlCode) {
+        store.commit('setCode', urlCode)
+        this.getOpenID(urlCode)
+        this.$router.replace('/')
       }
     },
     getOpenID(code) {

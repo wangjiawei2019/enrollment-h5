@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-30 10:55:45
+ * @LastEditTime: 2020-06-03 09:56:12
  */
 
 import Vue from 'vue'
@@ -111,7 +111,7 @@ const routes = [
 ]
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: 'hash',
   base: process.env.BASE_URL,
   routes,
   scrollBehavior(to, from, savedPosition) {
