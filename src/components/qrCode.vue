@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-27 19:19:40
  * @LastEditors: zxk
- * @LastEditTime: 2020-06-02 15:06:21
+ * @LastEditTime: 2020-06-03 09:09:16
 --> 
 <template>
   <van-overlay class="qrCode-page" show>
@@ -73,6 +73,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+*{
+  -webkit-touch-callout:none;
+	// -webkit-user-select:none;
+	// -khtml-user-select:none;
+	// -moz-user-select:none;
+	// -ms-user-select:none;
+	// user-select:none;
+}
 .qrCode-page {
   position: fixed;
   top: 0;
