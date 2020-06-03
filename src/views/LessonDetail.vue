@@ -2,8 +2,8 @@
  * @Github: https://github.com/IdlerHub
  * @Author: zxk
  * @Date: 2020-05-22 11:41:33
- * @LastEditors: wjw
- * @LastEditTime: 2020-06-02 15:18:42
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-06-03 10:18:40
 --> 
 <template>
   <div class="detail-page">
@@ -27,6 +27,7 @@
     </div>
 
     <div class="footer" v-if="detail.flag" @click="controlQr">报名完成，进入班群</div>
+    <div class="unjoin" v-else-if="detail.isFull">该班级已满员</div>
     <div class="footer" v-else>
       <div class="left" @click="applyCourse">加入选课单</div>
       <div class="right" @click="applyCourse($event,true)">立即报名</div>
@@ -269,6 +270,21 @@ export default {
       }
     }
   }
+  .unjoin{
+    height: 3.4375rem /* 55/16 */;
+    line-height: 3.4375rem /* 55/16 */;
+    position: fixed;
+    bottom: 2.1875rem /* 35/16 */;
+    left: 0.9375rem /* 15/16 */;
+    right: 0.9375rem /* 15/16 */;
+    text-align: center;
+    border-radius: 1.71875rem /* 27.5/16 */;
+    font-size: 1.3125rem /* 21/16 */;
+    font-family:PingFangSC-Regular,PingFang SC;
+    font-weight:400;
+    color:rgba(255,255,255,1);
+    background: #999990;
+  }
   .footer {
     height: 3.4375rem /* 55/16 */;
     position: fixed;
@@ -277,6 +293,8 @@ export default {
     right: 0.9375rem /* 15/16 */;
     display: flex;
     align-items: center;
+    text-align: center;
+    justify-content: center;
     border-radius: 1.71875rem /* 27.5/16 */;
     overflow: hidden;
     font-size: 21px;
@@ -284,8 +302,6 @@ export default {
     font-weight: 400;
     color: rgba(255, 255, 255, 1);
     background: #f2323a;
-    text-align: center;
-    justify-content: center;
     & > div {
       width: 50%;
       height: 3.4375rem;
