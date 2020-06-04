@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-27 19:19:40
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-04 18:54:02
+ * @LastEditTime: 2020-06-04 19:14:35
 --> 
 <template>
   <div class="pop-page">
@@ -30,7 +30,8 @@ export default {
     type: {
       type: String,
       default: 'qrCode'
-    }
+    },
+    orderId: null
   },
   components: {
     'van-popup': Popup,
@@ -58,7 +59,7 @@ export default {
       this.$toast('长按保存图片')
     },
     InviteTask() {
-      this.$router.push({ name: 'InviteTask', query: { userId: this.$store.state.userId } })
+      this.$router.push({ name: 'InviteTask', query: { shareId: this.$store.state.userId, orderId: this.orderId } })
     },
     close() {
       this.$emit('close', false)

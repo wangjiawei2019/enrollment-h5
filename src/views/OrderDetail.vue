@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-22 14:50:38
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-04 18:47:04
+ * @LastEditTime: 2020-06-04 19:16:26
 --> 
 <template>
   <div class="order-detail-page" v-if="detail">
@@ -75,7 +75,7 @@
         <template v-else>
           <van-button
             type="danger"
-            @click="() => {$router.push({ name: 'InviteTask', query: { userId: $store.state.userId } })}"
+            @click="() => {$router.push({ name: 'InviteTask', query: { shareId: $store.state.userId, orderId: detail.id } })}"
           >领取教材</van-button>
         </template>
       </template>

@@ -2,8 +2,8 @@
  * @Github: https://github.com/IdlerHub
  * @Author: zxk
  * @Date: 2020-06-04 09:27:49
- * @LastEditors: zxk
- * @LastEditTime: 2020-06-04 18:48:31
+ * @LastEditors: wjw
+ * @LastEditTime: 2020-06-04 19:20:29
 --> 
 <template>
   <div class="invite-page">
@@ -17,7 +17,8 @@
           </div>
         </div>
         <div class="rank-number" v-if="rank">
-          第<span>{{rank}}</span>名
+          第
+          <span>{{rank}}</span>名
         </div>
         <div class="rank-number" v-else>未上榜</div>
       </div>
@@ -104,36 +105,31 @@ export default {
       addressShow: '填写收货地址'
     }
   },
-  mounted(){
+  mounted() {
     this.userRankInfo()
   },
   methods: {
-    userRankInfo(){
-      let that = this
-      let params = {
-        orderId: '387'
-      }
-      http.userRankInfo(params)
-        .then(res=>{
-          that.sum = res.data.sum || 0
-          that.rank = res.data.rank
-          if(res.data.userGoodsAddress){
-            that.addressShow = '修改收货地址'
-            store.commit('setCourseClassAddress', res.data.userGoodsAddress)
-          }else{
-            that.addressShow = '填写收货地址'
-          }
-        })
+    userRankInfo() {
+      const temp = { orderId: this.orderId }
+      http.userRankInfo(temp).then(res => {
+        const { sum, rank, userGoodsAddress } = res.data
+        this.sum = sum || 0
+        this.rank = rank
+        this.addressShow = userGoodsAddress ? '修改收货地址' : '填写收货地址'
+        !userGoodsAddress.mobile && Object.assign(temp, { mobile: store.state.mobile })
+        store.commit('setCourseClassAddress', Object.assign(userGoodsAddress ? userGoodsAddress : {}, temp))
+      })
     },
     changeShow() {
       this.shadeShow = !this.shadeShow
     },
     showShade(showContent) {
-      if(showContent === 'share'){//分享的时候判断是否app环境下
-        var isApp = store.state.terminal  //APP端
+      if (showContent === 'share') {
+        //分享的时候判断是否app环境下
+        var isApp = store.state.terminal //APP端
         console.log(window.location.href)
-        if(isApp === 'App'){
-          console.log("app环境下，调用APP的分享方法")
+        if (isApp === 'App') {
+          console.log('app环境下，调用APP的分享方法')
           let str = {
             url: 'url=https://*****.com/#/sods',
             title: '标题',
@@ -144,21 +140,25 @@ export default {
           str = JSON.stringify(str)
           console.log(str)
           // window.ReactNativeWebView.postMessage(str)
-        }else{
+        } else {
           this.showContent = showContent
           this.changeShow()
         }
-      }else{
+      } else {
         this.showContent = showContent
         this.changeShow()
       }
-      
     },
-    toRank(){
-      console.log("查看排行榜")
+    toRank() {
+      this.$router.push({ name: 'Rank' })
     },
-    editAddress(){
-      this.$router.push({name: 'Address'})
+    editAddress() {
+      this.$router.push({ name: 'Address' })
+    }
+  },
+  computed: {
+    orderId() {
+      return this.$route.query.orderId
     }
   }
 }

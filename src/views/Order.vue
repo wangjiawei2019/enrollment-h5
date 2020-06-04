@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-04 16:30:44
+ * @LastEditTime: 2020-06-04 19:15:58
 --> 
 <template>
   <div class="order-page">
@@ -55,7 +55,7 @@
                     <van-button type="danger" @click="payOrder($event, bItem)">去支付</van-button>
                   </template>
                   <template v-else>
-                    <van-button type="danger" @click="navInviteTask($event)">领取教材</van-button>
+                    <van-button type="danger" @click="navInviteTask($event, bItem.id)">领取教材</van-button>
                   </template>
                 </template>
                 <van-button color="#333" plain v-else @click="deleteOrder($event, bItem.id)">删除订单</van-button>
@@ -246,10 +246,10 @@ export default {
           this.getOrderList()
         })
     },
-    navInviteTask(e) {
+    navInviteTask(e, orderId) {
       e.stopPropagation()
-      const userId = this.$store.state.userId
-      this.$router.push({ name: 'InviteTask', query: { userId } })
+      const shareId = this.$store.state.userId
+      this.$router.push({ name: 'InviteTask', query: { shareId, orderId } })
     }
   },
   computed: {
