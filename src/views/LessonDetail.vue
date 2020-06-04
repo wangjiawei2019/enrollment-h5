@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-22 11:41:33
  * @LastEditors: zxk
- * @LastEditTime: 2020-06-03 10:18:40
+ * @LastEditTime: 2020-06-04 17:19:21
 --> 
 <template>
   <div class="detail-page">
@@ -120,6 +120,9 @@ export default {
       }).then(res => {
         this.$router.push({ name, query })
       })
+      .catch(err=>{
+        console.log(err)
+      })
     },
     applyCourse(e, flag = false) {
       if (!this.$store.state.token) {
@@ -143,7 +146,8 @@ export default {
               this.$store.commit('setConfirmOrderList', info)
               this.$router.push({ name: 'ConfirmOrder' })
             } else {
-              this.$toast('成功添加到选课单')
+              // this.$toast('成功添加到选课单')
+              this.dialog('成功加入选课单', '继续选课', '去结算', 'List')
             }
           } else if (res.data.status === 1) {
             //课程已经在选课单内,去选课单--2
