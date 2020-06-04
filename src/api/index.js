@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 17:03:31
  * @LastEditors: zxk
- * @LastEditTime: 2020-06-04 15:29:43
+ * @LastEditTime: 2020-06-04 18:20:31
  */
 import { get, post } from '@/utils/request'
 import store from '@/store'
@@ -150,6 +150,11 @@ function applyCourse(params) {
   return post('/major/api/course/applyCourse', params)
 }
 
+//post 个人排行(邀请)信息 orderId: 订单ID
+function userRankInfo(params){
+  return post('/activity/api/course/userRankInfo', params)
+}
+
 export default {
   getUserInfo,
   getReadStatus,
@@ -173,5 +178,6 @@ export default {
   deleteOrder,
   getOrderDetail,
   setOrderAddress,
-  getOpenID
+  getOpenID,
+  userRankInfo
 }

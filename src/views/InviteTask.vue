@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-06-04 09:27:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-06-04 15:18:51
+ * @LastEditTime: 2020-06-04 18:48:31
 --> 
 <template>
   <div class="invite-page">
@@ -16,10 +16,10 @@
             <img src="@/assets/images/lesson/right.png" alt />
           </div>
         </div>
-        <div class="rank-number">
-          第
-          <span>199</span>名
+        <div class="rank-number" v-if="rank">
+          第<span>{{rank}}</span>名
         </div>
+        <div class="rank-number" v-else>未上榜</div>
       </div>
     </div>
     <div class="invite-user">
@@ -33,7 +33,7 @@
       <div class="invite-content">
         <div class="help-number">
           已成功帮助
-          <span>999</span>位好友
+          <span>{{sum}}</span>位好友
         </div>
         <div class="invite-share" @click="showShade('share')">点击邀请好友</div>
       </div>
@@ -43,7 +43,7 @@
       </div>
     </div>
     <div class="invite-footer" @click="editAddress">
-      <div class="change-address">修改收货地址</div>
+      <div class="change-address">{{addressShow}}</div>
     </div>
 
     <!-- 分享 -->
@@ -66,7 +66,7 @@
         </div>
       </div>
     </van-overlay>
-    <!-- 规则 -->
+    <!-- 领取规则 -->
     <van-overlay class="shade" v-else :show="shadeShow">
       <div class="shade-rule">
         <div class="rule-card">
@@ -89,6 +89,7 @@
 <script>
 import { Overlay } from 'vant'
 import store from '@/store'
+import http from '@/api'
 export default {
   name: 'InviteTask',
   components: {
@@ -98,18 +99,51 @@ export default {
     return {
       shadeShow: false, //遮罩层的展示
       showContent: 'rule', //展示的内容： 'share'--邀请好友 'rule'--领奖规则
+      rank: 199,
+      sum: 999,
+      addressShow: '填写收货地址'
     }
   },
+  mounted(){
+    this.userRankInfo()
+  },
   methods: {
+    userRankInfo(){
+      let that = this
+      let params = {
+        orderId: '387'
+      }
+      http.userRankInfo(params)
+        .then(res=>{
+          that.sum = res.data.sum || 0
+          that.rank = res.data.rank
+          if(res.data.userGoodsAddress){
+            that.addressShow = '修改收货地址'
+            store.commit('setCourseClassAddress', res.data.userGoodsAddress)
+          }else{
+            that.addressShow = '填写收货地址'
+          }
+        })
+    },
     changeShow() {
       this.shadeShow = !this.shadeShow
     },
     showShade(showContent) {
       if(showContent === 'share'){//分享的时候判断是否app环境下
         var isApp = store.state.terminal  //APP端
+        console.log(window.location.href)
         if(isApp === 'App'){
           console.log("app环境下，调用APP的分享方法")
-          // window.ReactNativeWebView.postMessage(JSON.stringify({route: 'enrollment'}))
+          let str = {
+            url: 'url=https://*****.com/#/sods',
+            title: '标题',
+            content: '简介',
+            coverUrl: '图片路径',
+            type: 'circle'
+          }
+          str = JSON.stringify(str)
+          console.log(str)
+          // window.ReactNativeWebView.postMessage(str)
         }else{
           this.showContent = showContent
           this.changeShow()
@@ -124,7 +158,7 @@ export default {
       console.log("查看排行榜")
     },
     editAddress(){
-      console.log("修改地址")
+      this.$router.push({name: 'Address'})
     }
   }
 }
@@ -300,7 +334,8 @@ export default {
   .invite-footer {
     padding: 0.9375rem;
     .change-address {
-      width: 21.5625rem /* 345/16 */;
+      // width: 21.5625rem /* 345/16 */;
+      width: 100%;
       height: 3.4375rem /* 55/16 */;
       line-height: 3.4375rem;
       text-align: center;
