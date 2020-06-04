@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-18 11:30:39
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-29 14:25:34
+ * @LastEditTime: 2020-06-04 09:21:49
  */
 
 import Vue from 'vue'
@@ -14,6 +14,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    productionLocationOrigin: '', // 生产环境域名
     mobile: null,
     token: localStorage.getItem('token') ? localStorage.getItem('token') : '',
     confirmOrder: { list: [], classIdList: [], totalMoney: 0 },
@@ -24,6 +25,9 @@ export default new Vuex.Store({
     userAgent: '' // 用户机型 'Android' 'IOS' 'brower'
   },
   mutations: {
+    setProductionLocationOrigin(state, location) {
+      state.productionLocationOrigin = location
+    },
     setMobile(state, mobile) {
       state.mobile = mobile
     },

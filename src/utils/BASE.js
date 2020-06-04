@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-04-29 16:44:41
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-02 17:09:48
+ * @LastEditTime: 2020-06-04 09:40:44
  */
 
 const httpBase = {
@@ -12,7 +12,7 @@ const httpBase = {
 }
 const domainBase = {
   development: 'https://enrollmenth5dev.jinlingkeji.cn',
-  production: 'https://enrollmenth5pro.jinlingkeji.cn',
+  production: '', // 生产环境从 window.location.origin 截取
   test: 'https://enrollmenth5test.jinlingkeji.cn'
 }
 const APPID = {

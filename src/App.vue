@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-03 10:44:33
+ * @LastEditTime: 2020-06-04 09:40:37
 --> 
 <template>
   <div id="app">
@@ -20,6 +20,10 @@ import store from '@/store'
 
 export default {
   mounted() {
+    if (process.env.NODE_ENV === 'production' && !store.state.productionLocationOrigin) {
+      // 生产环境截取 location
+      store.commit('setProductionLocationOrigin', window.location.origin)
+    }
     this.getAgent()
     //android禁止微信浏览器调整字体大小
     //TODO: 可能会在刚刚进去的时候大字体，1秒之后变回来
@@ -70,7 +74,7 @@ export default {
       const urlCode = searchParams.get('code')
       if (!store.state.code && !urlCode) {
         const url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${JSAPIAPPID}&redirect_uri=${encodeURIComponent(
-          `${domainBaseUrl}/#/`
+          `${domainBaseUrl || store.state.productionLocationOrigin}/#/`
         )}&response_type=code&scope=snsapi_base&connect_redirect=1#wechat_redirect`
         window.location.replace(url)
       } else if (!store.state.code && urlCode) {

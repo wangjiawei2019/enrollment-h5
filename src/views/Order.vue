@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-30 10:42:54
+ * @LastEditTime: 2020-06-04 09:25:19
 --> 
 <template>
   <div class="order-page">
@@ -216,7 +216,7 @@ export default {
           }
         )
       } else {
-        const redirect_url = `${domainBaseUrl}/#/order-detail?id=${this.actionSheetObj.id}`
+        const redirect_url = `${domainBaseUrl || this.$store.state.productionLocationOrigin}/#/order-detail?id=${this.actionSheetObj.id}`
         location.href = `${this.actionSheetObj.url}&redirect_url=${encodeURIComponent(redirect_url)}`
       }
     },
