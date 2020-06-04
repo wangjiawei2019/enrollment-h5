@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-04 09:25:19
+ * @LastEditTime: 2020-06-04 16:30:44
 --> 
 <template>
   <div class="order-page">
@@ -48,10 +48,15 @@
                   <span>{{ bItem.sum }}</span>
                 </div>
               </div>
-              <div class="btn-box" v-if="bItem.status !== 2">
-                <template v-if="bItem.status === 1">
-                  <van-button color="#333" plain @click="cancelOrder($event, bItem.id)">取消订单</van-button>
-                  <van-button type="danger" @click="payOrder($event, bItem)">去支付</van-button>
+              <div class="btn-box">
+                <template v-if="bItem.status === 1 || bItem.status === 2">
+                  <template v-if="bItem.status === 1">
+                    <van-button color="#333" plain @click="cancelOrder($event, bItem.id)">取消订单</van-button>
+                    <van-button type="danger" @click="payOrder($event, bItem)">去支付</van-button>
+                  </template>
+                  <template v-else>
+                    <van-button type="danger" @click="navInviteTask($event)">领取教材</van-button>
+                  </template>
                 </template>
                 <van-button color="#333" plain v-else @click="deleteOrder($event, bItem.id)">删除订单</van-button>
               </div>
@@ -209,7 +214,7 @@ export default {
           res => {
             if (res.err_msg == 'get_brand_wcpay_request:ok') {
               this.$toast('支付成功')
-              this.$router.replace({ name: 'OrderDetail', query: { id: this.actionSheetObj.id } })
+              this.$router.replace({ name: 'OrderDetail', query: { id: this.actionSheetObj.id, showInviteTaskToast: true } })
             } else {
               this.$toast('支付失败，请重试')
             }
@@ -240,6 +245,11 @@ export default {
         http[this.dialogObj.type]({ id: this.dialogObj.id }).then(res => {
           this.getOrderList()
         })
+    },
+    navInviteTask(e) {
+      e.stopPropagation()
+      const userId = this.$store.state.userId
+      this.$router.push({ name: 'InviteTask', query: { userId } })
     }
   },
   computed: {

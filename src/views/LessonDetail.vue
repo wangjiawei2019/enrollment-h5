@@ -2,8 +2,8 @@
  * @Github: https://github.com/IdlerHub
  * @Author: zxk
  * @Date: 2020-05-22 11:41:33
- * @LastEditors: zxk
- * @LastEditTime: 2020-06-03 10:18:40
+ * @LastEditors: wjw
+ * @LastEditTime: 2020-06-04 18:53:29
 --> 
 <template>
   <div class="detail-page">
@@ -34,7 +34,14 @@
     </div>
 
     <!-- 二维码 -->
-    <qr-code v-if="joinClass" @closeQr="closeQr" :qrCodeUrl="detail.qrcode"></qr-code>
+    <pop @close="closeQr" :showPop="joinClass">
+      <div class="qrcode-img-box" slot="img">
+        <img class="small" alt="二维码" style="webkitTouchCallout: none;" :src="detail.qrcode" />
+        <img class="big" alt="二维码" style="webkitTouchCallout: none;" :src="detail.qrcode" />
+      </div>
+      <div class="title-slot" slot="title">长按识别二维码进群</div>
+      <div class="subtitle-slot" slot="subtitle">或点击下方按钮保存</div>
+    </pop>
     <!-- 提示内容 -->
     <currTip :repeat-show="repeatShow" :class-name="className" @changeShow="changeShow"></currTip>
   </div>
@@ -44,7 +51,7 @@
 import http from '@/api'
 import store from '@/store'
 import currTip from '@/components/currTip'
-import QrCode from '@/components/qrCode'
+import pop from '@/components/pop'
 import { Dialog } from 'vant'
 export default {
   name: 'LessonDetail',
@@ -60,7 +67,7 @@ export default {
   },
   components: {
     currTip,
-    'qr-code': QrCode
+    pop
   },
   mounted() {
     this.id = this.$route.query.id
@@ -189,6 +196,14 @@ export default {
 </script>
 
 <style lang="scss">
+* {
+  -webkit-touch-callout: none;
+  // -webkit-user-select:none;
+  // -khtml-user-select:none;
+  // -moz-user-select:none;
+  // -ms-user-select:none;
+  // user-select:none;
+}
 .detail-page {
   .header-detail {
     .detail-img {
@@ -270,7 +285,7 @@ export default {
       }
     }
   }
-  .unjoin{
+  .unjoin {
     height: 3.4375rem /* 55/16 */;
     line-height: 3.4375rem /* 55/16 */;
     position: fixed;
@@ -280,9 +295,9 @@ export default {
     text-align: center;
     border-radius: 1.71875rem /* 27.5/16 */;
     font-size: 1.3125rem /* 21/16 */;
-    font-family:PingFangSC-Regular,PingFang SC;
-    font-weight:400;
-    color:rgba(255,255,255,1);
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 1);
     background: #999990;
   }
   .footer {
@@ -316,6 +331,35 @@ export default {
       background: #f2323a;
       border-radius: 0 1.71875rem 1.71875rem 0;
     }
+  }
+  .qrcode-img-box {
+    position: relative;
+    width: 100%;
+    height: 11.88rem;
+    @include flex(flex-start, center, column, nowrap);
+    .small {
+      margin-top: 1.56rem;
+      width: 9.38rem;
+      height: 9.38rem;
+    }
+    .big {
+      position: absolute;
+      opacity: 0;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 17rem;
+    }
+  }
+  .title-slot,
+  .subtitle-slot {
+    width: 100%;
+    text-align: center;
+    line-height: 2rem;
+    @include font(PingFang SC, 1.31rem, #666, 400);
+  }
+  .subtitle-slot {
+    margin-bottom: 1.56rem;
   }
 }
 </style>

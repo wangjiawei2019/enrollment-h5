@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-22 14:50:38
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-04 09:25:12
+ * @LastEditTime: 2020-06-04 18:47:04
 --> 
 <template>
   <div class="order-detail-page" v-if="detail">
@@ -66,16 +66,24 @@
         </div>
       </div>
     </div>
-    <footer v-if="detail.status !== 2">
-      <template v-if="detail.status === 1">
-        <van-button color="#666" plain @click="cancelOrder(detail.id)">取消订单</van-button>
-        <van-button type="danger" @click="payOrder(detail)">去支付</van-button>
+    <footer>
+      <template v-if="detail.status === 1 || detail.status === 2">
+        <template v-if="detail.status === 1">
+          <van-button color="#666" plain @click="cancelOrder(detail.id)">取消订单</van-button>
+          <van-button type="danger" @click="payOrder(detail)">去支付</van-button>
+        </template>
+        <template v-else>
+          <van-button
+            type="danger"
+            @click="() => {$router.push({ name: 'InviteTask', query: { userId: $store.state.userId } })}"
+          >领取教材</van-button>
+        </template>
       </template>
       <van-button color="#666" plain v-else @click="deleteOrder(detail.id)">删除订单</van-button>
     </footer>
-    <footer v-else>
+    <!-- <footer v-else>
       <van-button type="danger" @click="editAddress">{{ courseClassAddress ? '修改地址' : '填写地址' }}</van-button>
-    </footer>
+    </footer>-->
     <pay-action-sheet
       :showPay="actionSheetObj.showPay"
       :totalMoney="actionSheetObj.totalMoney"
@@ -96,7 +104,23 @@
       @cancel="dialogCancel"
       @confirm="dialogConfirm"
     ></van-dialog>
-    <qr-code v-if="qrCodeUrl" @closeQr="() => { qrCodeUrl = '' }" :qrCodeUrl="qrCodeUrl"></qr-code>
+    <pop :showPop="!!qrCodeUrl" @close="() => { qrCodeUrl = '' }">
+      <div class="qrcode-img-box" slot="img">
+        <img class="small" alt="二维码" :src="qrCodeUrl" />
+        <img class="big" alt="二维码" :src="qrCodeUrl" />
+      </div>
+      <div class="title-slot" slot="title">长按识别二维码进群</div>
+      <div class="subtitle-slot" slot="subtitle">或点击下方按钮保存</div>
+    </pop>
+    <pop
+      :showPop="showInviteTaskToast"
+      type="InviteTask"
+      @close="() => { showInviteTaskToast = false }"
+    >
+      <img class="task" src="@/assets/images/order/task.png" alt="领取教材" slot="img" />
+      <div class="title-slot-b" slot="title">恭喜您获得「教材奖励」</div>
+      <div class="subtitle-slot-b" slot="subtitle">点击按钮领取官方指定教材</div>
+    </pop>
   </div>
 </template>
 
@@ -104,7 +128,7 @@
 import { Icon, Dialog, Button } from 'vant'
 import PayActionSheet from '@/components/pay-action-sheet'
 import ListItem from '@/components/listItem'
-import QrCode from '@/components/qrCode'
+import pop from '@/components/pop'
 import http from '@/api'
 import { domainBaseUrl } from '@/utils/BASE'
 import { toYMDHMS } from '@/utils/filters'
@@ -115,8 +139,8 @@ export default {
     'van-icon': Icon,
     'van-button': Button,
     'list-item': ListItem,
-    'qr-code': QrCode,
     'pay-action-sheet': PayActionSheet,
+    pop,
     [Dialog.Component.name]: Dialog.Component // 必须这样局部注册，否则会调用全局方法
   },
   data() {
@@ -135,7 +159,8 @@ export default {
         title: '',
         message: ''
       },
-      qrCodeUrl: ''
+      qrCodeUrl: '',
+      showInviteTaskToast: this.$route.query.showInviteTaskToast // 支付成功后跳转此页面显示领取教材弹窗
     }
   },
   mounted() {
@@ -217,6 +242,7 @@ export default {
               this.$toast('支付成功')
               this.dialogCancel()
               this.getOrderDetail()
+              this.showInviteTaskToast = true
             } else {
               this.$toast('支付失败，请重试')
             }
@@ -455,6 +481,57 @@ export default {
       height: 2.5rem !important;
       border-radius: 0.31rem !important;
     }
+  }
+  .qrcode-img-box {
+    position: relative;
+    width: 100%;
+    height: 11.88rem;
+    @include flex(flex-start, center, column, nowrap);
+    .small {
+      margin-top: 1.56rem;
+      width: 9.38rem;
+      height: 9.38rem;
+    }
+    .big {
+      position: absolute;
+      opacity: 0;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 17rem;
+    }
+  }
+  .title-slot,
+  .subtitle-slot {
+    width: 100%;
+    text-align: center;
+    line-height: 2rem;
+    @include font(PingFang SC, 1.31rem, #666, 400);
+  }
+  .subtitle-slot {
+    margin-bottom: 1.56rem;
+  }
+  .task {
+    margin-top: 2.19rem;
+    margin-bottom: 2.06rem;
+    width: 8.44rem;
+    height: 8.13rem;
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
+  .title-slot-b {
+    width: 100%;
+    text-align: center;
+    line-height: 1.75rem;
+    @include font(PingFang SC, 1.44rem, #333, 600);
+  }
+  .subtitle-slot-b {
+    width: 100%;
+    margin-top: 0.63rem;
+    margin-bottom: 1.56rem;
+    text-align: center;
+    line-height: 2rem;
+    @include font(PingFang SC, 1.31rem, #666, 400);
   }
 }
 </style>

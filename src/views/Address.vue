@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-28 17:27:45
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-30 09:35:34
+ * @LastEditTime: 2020-06-04 16:07:56
 --> 
 <template>
   <div class="address-page">
@@ -37,6 +37,32 @@
         @focus="handleFieldClick"
       />
       <van-field
+        name="area"
+        type="textarea"
+        rows="1"
+        autosize
+        :value="areaInput"
+        readonly
+        :border="false"
+        label="所在地区*"
+        label-class="desc"
+        label-width="6.8rem"
+        placeholder="请选择"
+        right-icon="arrow"
+        :rules="[{ required:true, message: '请选择所在地区' }]"
+        @click="() => {showArea = true}"
+      />
+      <van-popup v-model="showArea" round position="bottom">
+        <van-area
+          :area-list="areaList"
+          item-height="49.5"
+          columns-num="2"
+          :value="areaPicker"
+          @confirm="confirmArea"
+          @cancel="() => {showArea = false}"
+        />
+      </van-popup>
+      <van-field
         v-model="courseClassAddress.address"
         clearable
         name="address"
@@ -61,19 +87,25 @@
 </template>
 
 <script>
-import { Form, Field, Button, Icon } from 'vant'
+import { Form, Field, Popup, Area, Button, Icon } from 'vant'
 import http from '@/api'
+import areaList from '@/utils/area.js'
 
 export default {
   components: {
     'van-form': Form,
     'van-field': Field,
+    'van-popup': Popup,
+    'van-area': Area,
     'van-button': Button,
     'van-icon': Icon
   },
   data() {
     return {
-      courseClassAddress: Object.assign({}, this.$store.state.courseClassAddress)
+      courseClassAddress: Object.assign({}, this.$store.state.courseClassAddress),
+      showArea: false,
+      area: null, //
+      areaList: areaList
     }
   },
   methods: {
@@ -95,6 +127,11 @@ export default {
       const { errors, values } = errorInfo
       this.$toast(`${errors[0].message}`)
     },
+    confirmArea(e) {
+      console.log('confirmArea -> e', e)
+      this.area = e
+      this.showArea = false
+    },
     handleFieldClick() {
       this.$nextTick(() => {
         // 手动更改 icon 样式
@@ -105,6 +142,16 @@ export default {
           clear.childNodes.length < 2 && clear.appendChild(img) // 保证不重复添加 img 标签
         }
       })
+    }
+  },
+  computed: {
+    areaInput() {
+      if (!this.area) return ''
+      return `${this.area[0].name} ${this.area[1].name}`
+    },
+    areaPicker() {
+      if (!this.area) return '110100'
+      return this.area[1].code
     }
   }
 }

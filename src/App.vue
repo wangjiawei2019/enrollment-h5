@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-04 09:40:37
+ * @LastEditTime: 2020-06-04 16:09:28
 --> 
 <template>
   <div id="app">
@@ -313,5 +313,34 @@ export default {
 .van-pull-refresh {
   min-height: calc(100vh - 6.57rem) !important;
   height: 100%;
+}
+
+// van-area
+.van-area {
+  // height: 16.25rem !important;
+  border-radius: 0.94rem !important;
+  .van-picker__toolbar {
+    height: 3.72rem !important;
+    border-bottom: 0.03rem solid #e9e9e9;
+    .van-picker__cancel,
+    .van-picker__confirm {
+      padding: 0 1.25rem !important;
+      font-size: 1.31rem !important;
+      font-family: PingFang SC !important;
+      font-weight: 400 !important;
+      color: rgba(51, 51, 51, 1) !important;
+      line-height: 1.84rem !important;
+    }
+    .van-picker__confirm {
+      color: #f2323a !important;
+    }
+  }
+  .van-picker-column__item {
+    font-size: 1.31rem;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: rgba(51, 51, 51, 1);
+    line-height: 1.84rem;
+  }
 }
 </style>

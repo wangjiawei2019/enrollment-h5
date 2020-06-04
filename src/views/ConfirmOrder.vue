@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-21 10:12:23
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-04 09:25:29
+ * @LastEditTime: 2020-06-04 16:30:36
 --> 
 <template>
   <div class="confirm-order-page">
@@ -120,7 +120,7 @@ export default {
           res => {
             if (res.err_msg == 'get_brand_wcpay_request:ok') {
               this.$toast('支付成功')
-              this.$router.replace({ name: 'OrderDetail', query: { id: this.id } })
+              this.$router.replace({ name: 'OrderDetail', query: { id: this.id, showInviteTaskToast: true } })
             } else {
               this.$toast('支付失败，请重试')
             }

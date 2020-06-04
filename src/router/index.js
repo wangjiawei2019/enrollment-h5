@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-03 09:56:12
+ * @LastEditTime: 2020-06-04 10:37:51
  */
 
 import Vue from 'vue'
@@ -22,6 +22,7 @@ import Search from '@/views/Search'
 import ApplyRule from '@/views/ApplyRule'
 import Address from '@/views/Address'
 import LessonDetail from '@/views/LessonDetail'
+import Rank from '@/views/Rank'
 
 Vue.use(VueRouter)
 
@@ -106,6 +107,14 @@ const routes = [
     component: Address,
     meta: {
       title: '收货地址'
+    }
+  },
+  {
+    path: '/rank',
+    name: 'Rank',
+    component: Rank,
+    meta: {
+      title: '排行榜'
     }
   }
 ]
