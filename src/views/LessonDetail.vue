@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-22 11:41:33
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-04 18:53:29
+ * @LastEditTime: 2020-06-04 18:56:47
 --> 
 <template>
   <div class="detail-page">
@@ -124,9 +124,13 @@ export default {
         confirmButtonText: text,
         confirmButtonColor: '#F2323A',
         cancelButtonColor: '#999999'
-      }).then(res => {
-        this.$router.push({ name, query })
       })
+        .then(res => {
+          this.$router.push({ name, query })
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
     applyCourse(e, flag = false) {
       if (!this.$store.state.token) {
@@ -150,7 +154,8 @@ export default {
               this.$store.commit('setConfirmOrderList', info)
               this.$router.push({ name: 'ConfirmOrder' })
             } else {
-              this.$toast('成功添加到选课单')
+              // this.$toast('成功添加到选课单')
+              this.dialog('成功加入选课单', '继续选课', '去结算', 'List')
             }
           } else if (res.data.status === 1) {
             //课程已经在选课单内,去选课单--2
