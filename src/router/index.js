@@ -1,8 +1,8 @@
 /*
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
- * @LastEditors: wjw
- * @LastEditTime: 2020-06-03 09:56:12
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-06-04 16:18:21
  */
 
 import Vue from 'vue'
@@ -22,6 +22,7 @@ import Search from '@/views/Search'
 import ApplyRule from '@/views/ApplyRule'
 import Address from '@/views/Address'
 import LessonDetail from '@/views/LessonDetail'
+import InviteTask from '@/views/InviteTask'
 
 Vue.use(VueRouter)
 
@@ -107,6 +108,14 @@ const routes = [
     meta: {
       title: '收货地址'
     }
+  },
+  {
+    path: '/invite-task',
+    name: 'InviteTask',
+    component: InviteTask,
+    meta:{
+      title: '领取教材'
+    }
   }
 ]
 
@@ -136,21 +145,25 @@ router.beforeEach((to, from, next) => {
     document.title = '网上老年大学招生'
   }
   if (to.name === 'Login') {
-    const query = qs.parse(to.hash.split('?')[1])
+    console.log(to)
+    // const query = qs.parse(to.hash.split('?')[1])
+    const query = to.query
     if (query.token) {
       //更新token,直接登录
       store.commit('setToken', query.token)
       //是否需要去报名须知
-      http
-        .getReadStatus()
-        .then(res => {
-          if (res.data) {
+      Promise.all([http.getReadStatus(),http.getUserInfo()])
+        .then(res=>{
+          //存入用户Id
+          store.commit('setUserId', res[1].data.id)
+          console.log("信息", res)
+          if (res[0].data) {
             next({ path: '/index', replace: true })
           } else {
             next({ path: '/apply-rule' })
           }
         })
-        .catch(err => {
+        .catch(err=>{
           console.log(err)
         })
     } else {
@@ -162,7 +175,16 @@ router.beforeEach((to, from, next) => {
       }
     }
   } else {
+    //TODO: 判断是否本人进入分享页面，不是本人，则去lesson页面
+    if (to.name === 'InviteTask' && to.query.shareId != store.state.userId){
+      console.log(1111, to)
+      //用户id和分享id不同
+      store.commit('setShareId', to.query.shareId)
+      next({ path: '/index/lesson' })
+      return 
+    }
     if (!store.state.token && visitorPages.indexOf(to.name) === -1) {
+      console.log(222, to.name)
       //非游客页面 需要登录
       next({ path: '/login' })
     } else {

@@ -1,8 +1,8 @@
 <!--
  * @Author: zxk
  * @Date: 2020-05-18 14:01:20
- * @LastEditors: wjw
- * @LastEditTime: 2020-05-29 17:36:34
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-06-04 16:02:47
 --> 
 <template>
   <div id="login">
@@ -84,14 +84,18 @@ export default {
           this.$toast.fail(err)
         })
     },
-    getReadStatus() {
-      http.getReadStatus().then(res => {
-        if (res.data) {
-          this.$router.push({ path: '/index/lesson' })
-        } else {
-          this.$router.push({ path: '/apply-rule' })
-        }
-      })
+    getUserStatus(){
+      //是否需要查看招生简章&获取用户信息
+      Promise.all([http.getReadStatus(), http.getUserInfo()])
+        .then(res => {
+          //存入用户Id
+          store.commit('setUserId', res[1].data.id)
+          if (res[0].data) {
+            this.$router.push({ path: '/index/lesson' })
+          } else {
+            this.$router.push({ path: '/apply-rule' })
+          }
+        })
     },
     login() {
       let params = {
@@ -101,10 +105,10 @@ export default {
       http
         .login(params)
         .then(res => {
-          //存一下token，看是否要去报名须知
+          //存token，看是否要去报名须知&存储用户信息
           store.commit('setToken', res.data)
           store.commit('setMobile', this.phone)
-          this.getReadStatus()
+          this.getUserStatus()
         })
         .catch(err => {
           this.$toast(err)

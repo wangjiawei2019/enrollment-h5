@@ -1,12 +1,17 @@
 /*
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 17:03:31
- * @LastEditors: wjw
- * @LastEditTime: 2020-06-02 16:12:18
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-06-04 15:29:43
  */
 import { get, post } from '@/utils/request'
 import store from '@/store'
 const environment = store.state.environment
+
+//post 获取用户信息
+function getUserInfo(){
+  return post('/major/api/user/getUser')
+}
 
 //post 是否需要阅读招生简章
 function getReadStatus() {
@@ -146,6 +151,7 @@ function applyCourse(params) {
 }
 
 export default {
+  getUserInfo,
   getReadStatus,
   getTimSign,
   getRecruitIntro,
