@@ -2,8 +2,8 @@
  * @Github: https://github.com/IdlerHub
  * @Author: zxk
  * @Date: 2020-05-22 11:41:33
- * @LastEditors: wjw
- * @LastEditTime: 2020-06-05 11:52:43
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-06-05 17:10:09
 --> 
 <template>
   <div class="detail-page">
@@ -17,7 +17,10 @@
             <span>￥</span>
             <span>{{detail.money}}</span>
           </div>
-          <div class="count">{{detail.num}}人已报名</div>
+          <div class="count">
+            <span>剩余名额</span>
+            <span>{{detail.num}}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -261,10 +264,19 @@ export default {
           }
         }
         .count {
-          font-size: 0.9375rem /* 15/16 */;
-          font-family: PingFangSC-Regular, PingFang SC;
-          font-weight: 400;
-          color: #666;
+          font-size:.9375rem /* 15/16 */;
+          font-family:PingFangSC-Regular,PingFang SC;
+          font-weight:400;
+          color:#666666;
+          span:first-child{
+            margin-right: .625rem /* 10/16 */;
+          }
+          span:last-child{
+              font-size:1.3125rem /* 21/16 */;
+              font-family:PingFangSC-Medium,PingFang SC;
+              font-weight:500;
+              color:#F2323A;
+          }
         }
       }
     }
