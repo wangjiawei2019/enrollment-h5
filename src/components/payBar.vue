@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-20 09:35:54
  * @LastEditors: wjw
- * @LastEditTime: 2020-05-29 11:53:59
+ * @LastEditTime: 2020-06-05 11:43:24
 --> 
 <template>
   <div class="pay-bar" :class="{'safe-area':safeArea}">
@@ -80,6 +80,7 @@ export default {
 
 <style lang="scss" scoped>
 .pay-bar {
+  z-index: 2;
   position: fixed;
   width: 100%;
   height: 3.89rem;

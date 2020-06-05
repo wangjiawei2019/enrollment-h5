@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-19 16:44:12
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-02 15:59:09
+ * @LastEditTime: 2020-06-05 11:16:12
 --> 
 <template>
   <div class="list-item" @click="toDetail">
@@ -14,11 +14,12 @@
       <div class="title van-ellipsis" v-html="item.name"></div>
       <div class="subtitle van-ellipsis" v-html="item.subtitle"></div>
       <div class="desc-footer">
-        <div class="price" :class="{red: checked || lesson}">
+        <div class="price" v-if="!full" :class="{red: checked || lesson}">
           <span>￥</span>
           <span>{{ item.money }}</span>
         </div>
         <slot name="lesson"></slot>
+        <slot name="delete"></slot>
       </div>
     </div>
   </div>
@@ -26,9 +27,10 @@
 
 <script>
 export default {
-  props: ['checked', 'lesson', 'item'],
+  props: ['checked', 'full', 'lesson', 'item'],
   computed: {
     status() {
+      if (this.full) return 'full'
       if (this.item.status === 3 || this.item.status === 4) {
         return 'refund'
       } else if (this.item.status === 5 || this.item.status === 6) {
@@ -72,7 +74,8 @@ export default {
     height: 100%;
   }
   .refund,
-  .cancel {
+  .cancel,
+  .full {
     position: absolute;
     top: 0;
     left: 0;
@@ -88,6 +91,9 @@ export default {
   }
   .cancel {
     background-image: url('~@/assets/images/order/yiquxiao.png');
+  }
+  .full {
+    background-image: url('~@/assets/images/order/yimanyuan.png');
   }
 }
 .desc-box {

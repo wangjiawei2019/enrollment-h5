@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-22 11:41:33
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-04 18:56:47
+ * @LastEditTime: 2020-06-05 11:52:43
 --> 
 <template>
   <div class="detail-page">
@@ -117,11 +117,12 @@ export default {
         document.title = res.data.name
       })
     },
-    dialog(title, message, text, name, query = {}) {
+    dialog(title, message, text, name, query = {}, cancelText = '取消') {
       Dialog.confirm({
         title,
         message,
         confirmButtonText: text,
+        cancelButtonText: cancelText,
         confirmButtonColor: '#F2323A',
         cancelButtonColor: '#999999'
       })
@@ -155,7 +156,7 @@ export default {
               this.$router.push({ name: 'ConfirmOrder' })
             } else {
               // this.$toast('成功添加到选课单')
-              this.dialog('成功加入选课单', '继续选课', '去结算', 'List')
+              this.dialog('成功加入选课单', '', '去结算', 'List', {}, '继续选课')
             }
           } else if (res.data.status === 1) {
             //课程已经在选课单内,去选课单--2

@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-04 16:09:28
+ * @LastEditTime: 2020-06-05 11:41:44
 --> 
 <template>
   <div id="app">
@@ -256,13 +256,14 @@ export default {
     color: rgba(51, 51, 51, 1) !important;
     line-height: 1.75rem !important;
   }
+  .van-dialog__header--isolated {
+    margin-bottom: 1.56rem !important;
+  }
   .van-dialog__content {
-    // height: 6.5rem !important;
     display: flex;
     justify-content: center;
     .van-dialog__message--has-title {
       padding-top: 0.94rem !important;
-      // width: 15rem !important;
       font-size: 1.31rem !important;
       font-family: PingFang SC !important;
       font-weight: 400 !important;
