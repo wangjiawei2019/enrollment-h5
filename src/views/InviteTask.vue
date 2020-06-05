@@ -2,11 +2,11 @@
  * @Github: https://github.com/IdlerHub
  * @Author: zxk
  * @Date: 2020-06-04 09:27:49
- * @LastEditors: wjw
- * @LastEditTime: 2020-06-04 19:20:29
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-06-05 11:24:50
 --> 
 <template>
-  <div class="invite-page">
+  <div :class=" ['invite-page', {'invite-touch':showContent=='rule'}]">
     <div class="header">
       <div class="help-rank">
         <div class="rank-title">
@@ -48,7 +48,7 @@
     </div>
 
     <!-- 分享 -->
-    <van-overlay class="shade" v-if="showContent=='share'" @click="changeShow" :show="shadeShow">
+    <van-overlay class="shade" @click="changeShow" :show="showContent=='share'">
       <div class="shade-share">
         <div class="arrows">
           <img src="@/assets/images/lesson/arrows.png" alt />
@@ -68,8 +68,8 @@
       </div>
     </van-overlay>
     <!-- 领取规则 -->
-    <van-overlay class="shade" v-else :show="shadeShow">
-      <div class="shade-rule">
+    <van-overlay class="shade" :show="showContent=='rule'" :lock-scroll="false" @touchmove.stop>
+      <div class="shade-rule" @click.stop>
         <div class="rule-card">
           <div class="rule-title">教材领取规则</div>
           <div class="rule-content">
@@ -99,7 +99,7 @@ export default {
   data() {
     return {
       shadeShow: false, //遮罩层的展示
-      showContent: 'rule', //展示的内容： 'share'--邀请好友 'rule'--领奖规则
+      showContent: '', //展示的内容： 'share'--邀请好友 'rule'--领奖规则
       rank: 199,
       sum: 999,
       addressShow: '填写收货地址'
@@ -121,32 +121,25 @@ export default {
       })
     },
     changeShow() {
-      this.shadeShow = !this.shadeShow
+      this.showContent = ''
     },
     showShade(showContent) {
-      if (showContent === 'share') {
-        //分享的时候判断是否app环境下
-        var isApp = store.state.terminal //APP端
-        console.log(window.location.href)
-        if (isApp === 'App') {
-          console.log('app环境下，调用APP的分享方法')
-          let str = {
-            url: 'url=https://*****.com/#/sods',
-            title: '标题',
-            content: '简介',
-            coverUrl: '图片路径',
-            type: 'circle'
-          }
-          str = JSON.stringify(str)
-          console.log(str)
-          // window.ReactNativeWebView.postMessage(str)
-        } else {
-          this.showContent = showContent
-          this.changeShow()
+      //分享的时候判断是否app环境下
+      var isApp = store.state.terminal //APP端
+      if (showContent === 'share' && isApp === 'App') {
+        console.log('app环境下，调用APP的分享方法')
+        let str = {
+          url: 'url=https://*****.com/#/sods',
+          title: '标题',
+          content: '简介',
+          coverUrl: '图片路径',
+          type: 'circle'
         }
+        str = JSON.stringify(str)
+        console.log(str)
+        // window.ReactNativeWebView.postMessage(str)
       } else {
         this.showContent = showContent
-        this.changeShow()
       }
     },
     toRank() {
@@ -167,7 +160,8 @@ export default {
 <style lang="scss">
 .invite-page {
   width: 100%;
-  height: 100%;
+  // height: 100%;
+  overflow: hidden;
   background: #f7f7f7;
   .header {
     // height: 21.875rem /* 350/16 */;
@@ -352,6 +346,8 @@ export default {
     position: fixed;
     top: 0;
     left: 0;
+    bottom: 0;
+    right: 0;
     display: flex;
     justify-content: center;
     background: rgba(0, 0, 0, 0.6);
@@ -438,5 +434,13 @@ export default {
       }
     }
   }
+}
+.invite-touch {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
 }
 </style>
