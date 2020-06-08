@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-22 11:41:33
  * @LastEditors: zxk
- * @LastEditTime: 2020-06-05 17:10:09
+ * @LastEditTime: 2020-06-08 14:54:37
 --> 
 <template>
   <div class="detail-page">
@@ -75,11 +75,34 @@ export default {
   mounted() {
     this.id = this.$route.query.id
     this.getClassDetail(this.id)
+    // this.wxShare()
   },
   beforeDestroy() {
     Dialog.close()
   },
   methods: {
+    wxShare(){
+      let that = this;
+      //TODO: logo图片和总计报名人数未导入
+      let title = `${that.detail.name}【仅剩${that.detail.num}个名额】邀请您来报名`
+      that.$wx.ready(() => {
+        that.$wx.updateAppMessageShareData({
+          title, // 分享标题
+          desc: "用学习犒劳自己，已有999人参与网上老年大学学习", // 分享描述
+          link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          imgUrl: 'src/assets/logo.jpg', // 分享图标
+          success: function() {
+            // 设置成功
+            console.log("success");
+          }
+        });
+        that.$wx.updateTimelineShareData({
+          title,
+          link: window.location.href,
+          imgUrl: 'src/assets/logo.jpg'
+        })
+      });
+    },
     controlQr() {
       this.joinClass = true
     },
@@ -115,8 +138,10 @@ export default {
       this.repeatShow = flag
     },
     getClassDetail(id) {
-      http[this.token ? 'getClassDetailInner' : 'getClassDetail']({ id }).then(res => {
+      http[this.token ? 'getClassDetailInner' : 'getClassDetail']({ id })
+      .then(res => {
         this.detail = res.data
+        this.wxShare()
         document.title = res.data.name
       })
     },
