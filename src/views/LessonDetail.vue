@@ -2,8 +2,8 @@
  * @Github: https://github.com/IdlerHub
  * @Author: zxk
  * @Date: 2020-05-22 11:41:33
- * @LastEditors: wjw
- * @LastEditTime: 2020-06-05 11:52:43
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-06-09 11:05:44
 --> 
 <template>
   <div class="detail-page">
@@ -17,7 +17,10 @@
             <span>￥</span>
             <span>{{detail.money}}</span>
           </div>
-          <div class="count">{{detail.num}}人已报名</div>
+          <div class="count">
+            <span>剩余名额</span>
+            <span>{{detail.num}}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -62,7 +65,8 @@ export default {
       repeatShow: false, //重复报名提示
       className: '啥啥班级',
       joinClass: false, //加入班群二维码显示
-      qrCodeUrl: ''
+      qrCodeUrl: '',
+      paidSum: 10,  //分享用，总人数
     }
   },
   components: {
@@ -72,11 +76,35 @@ export default {
   mounted() {
     this.id = this.$route.query.id
     this.getClassDetail(this.id)
+    // this.wxShare()
   },
   beforeDestroy() {
     Dialog.close()
   },
   methods: {
+    wxShare(){
+      let that = this;
+      //TODO: logo图片和总计报名人数未导入
+      let title = `${that.detail.name}【仅剩${that.detail.num}个名额】邀请您来报名`
+      let shareImg = 'https://lndxappcdn.jinlingkeji.cn/h5_activity/logo.jpg'
+      that.$wx.ready(() => {
+        that.$wx.updateAppMessageShareData({
+          title, // 分享标题
+          desc: '用学习犒劳自己，已有'+that.paidSum+'人参与网上老年大学学习', // 分享描述
+          link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          imgUrl: shareImg, // 分享图标
+          success: function() {
+            // 设置成功
+            console.log("success");
+          }
+        });
+        that.$wx.updateTimelineShareData({
+          title,
+          link: window.location.href,
+          imgUrl: shareImg
+        })
+      });
+    },
     controlQr() {
       this.joinClass = true
     },
@@ -112,8 +140,11 @@ export default {
       this.repeatShow = flag
     },
     getClassDetail(id) {
-      http[this.token ? 'getClassDetailInner' : 'getClassDetail']({ id }).then(res => {
+      http[this.token ? 'getClassDetailInner' : 'getClassDetail']({ id })
+      .then(res => {
         this.detail = res.data
+        // this.paidSum = res.data.paidSum
+        this.wxShare()
         document.title = res.data.name
       })
     },
@@ -261,10 +292,19 @@ export default {
           }
         }
         .count {
-          font-size: 0.9375rem /* 15/16 */;
-          font-family: PingFangSC-Regular, PingFang SC;
-          font-weight: 400;
-          color: #666;
+          font-size:.9375rem /* 15/16 */;
+          font-family:PingFangSC-Regular,PingFang SC;
+          font-weight:400;
+          color:#666666;
+          span:first-child{
+            margin-right: .625rem /* 10/16 */;
+          }
+          span:last-child{
+              font-size:1.3125rem /* 21/16 */;
+              font-family:PingFangSC-Medium,PingFang SC;
+              font-weight:500;
+              color:#F2323A;
+          }
         }
       }
     }

@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-09 11:51:26
+ * @LastEditTime: 2020-06-09 11:52:20
 --> 
 <template>
   <div id="app">
@@ -19,6 +19,10 @@ import http from '@/api'
 import store from '@/store'
 
 export default {
+  created() {
+    // let url = encodeURIComponent(window.location.href.split("#")[0]);
+    this.getJsConfig(window.location.href.split('#')[0])
+  },
   mounted() {
     if (process.env.NODE_ENV === 'production' && !store.state.productionLocationOrigin) {
       // 生产环境截取 location
@@ -39,6 +43,27 @@ export default {
     }
   },
   methods: {
+    getJsConfig(url) {
+      let params = { url }
+      http
+        .getJsapiTicket(params)
+        .then(res => {
+          this.$wx.config({
+            debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            appId: res.data.appId, // 必填，公众号的唯一标识
+            timestamp: res.data.timestamp, // 必填，生成签名的时间戳
+            nonceStr: res.data.nonceStr, // 必填，生成签名的随机串
+            signature: res.data.signature, // 必填，签名
+            jsApiList: [
+              'updateAppMessageShareData', //分享给朋友
+              'updateTimelineShareData' //分享给朋友圈
+            ] // 必填，需要使用的JS接口列表
+          })
+        })
+        .catch(err => {
+          console.log('授权错误', err)
+        })
+    },
     handleFontSize() {
       // 设置网页字体为默认大小
       WeixinJSBridge.invoke('setFontSizeCallback', { fontSize: 0 })

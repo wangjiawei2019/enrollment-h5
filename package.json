@@ -11,6 +11,7 @@
   "dependencies": {
     "axios": "^0.19.2",
     "core-js": "^3.6.4",
+    "jweixin-module": "^1.6.0",
     "less-loader": "^6.1.0",
     "qs": "^6.8.0",
     "register-service-worker": "^1.7.1",

@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-06-04 09:27:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-09 10:19:11
+ * @LastEditTime: 2020-06-09 11:53:39
 --> 
 <template>
   <div :class=" ['invite-page', {'invite-touch':showContent=='rule'}]">
@@ -100,8 +100,9 @@ export default {
     return {
       shadeShow: false, //遮罩层的展示
       showContent: '', //展示的内容： 'share'--邀请好友 'rule'--领奖规则
-      rank: 199,
-      sum: 999,
+      rank: 0,
+      sum: 0,
+      paidSum: 10,
       addressShow: '填写收货地址'
     }
   },
@@ -110,10 +111,13 @@ export default {
   },
   methods: {
     userRankInfo() {
-      http.userRankInfo({ orderId: this.orderId }).then(res => {
-        const { sum, rank, userGoodsAddress } = res.data
+      const temp = { orderId: this.orderId }
+      http.userRankInfo(temp).then(res => {
+        const { sum, rank, userGoodsAddress, paidSum } = res.data
         this.sum = sum || 0
         this.rank = rank
+        this.paidSum = paidSum
+        this.wxShare()
         this.addressShow = userGoodsAddress ? '修改收货地址' : '填写收货地址'
         userGoodsAddress ? store.commit('setUserGoodsAddress', userGoodsAddress) : ''
       })
@@ -123,22 +127,50 @@ export default {
     },
     showShade(showContent) {
       //分享的时候判断是否app环境下
-      var isApp = store.state.terminal //APP端
-      if (showContent === 'share' && isApp === 'App') {
+      var environment = store.state.environment //APP端
+      if (showContent === 'share' && environment === 'App-brower') {
         console.log('app环境下，调用APP的分享方法')
         let str = {
-          url: 'url=https://*****.com/#/sods',
-          title: '标题',
-          content: '简介',
-          coverUrl: '图片路径',
+          url: 'url=' + window.location.href,
+          title: '我已入学【网上老年大学】,你也快来一起学习吧',
+          content: '用学习犒劳自己，已有' + that.paidSum + '人参与网上老年大学学习',
+          coverUrl: 'https://lndxappcdn.jinlingkeji.cn/h5_activity/logo.jpg',
           type: 'circle'
         }
         str = JSON.stringify(str)
         console.log(str)
         // window.ReactNativeWebView.postMessage(str)
       } else {
+        //提示用户通过浏览器分享
         this.showContent = showContent
       }
+    },
+    wxShare() {
+      console.log(1111, '分享')
+      let title = '我已入学【网上老年大学】,你也快来一起学习吧'
+      let shareImg = 'https://lndxappcdn.jinlingkeji.cn/h5_activity/logo.jpg'
+      //TODO: logo图片和总计报名人数未导入
+      let that = this
+      that.$wx.ready(() => {
+        console.log('ready')
+        that.$wx.updateAppMessageShareData({
+          //微信朋友分享
+          title, // 分享标题
+          desc: '用学习犒劳自己，已有' + that.paidSum + '人参与网上老年大学学习', // 分享描述
+          link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          imgUrl: shareImg, // 分享图标
+          success: function() {
+            // 设置成功
+            console.log('success')
+          }
+        })
+        that.$wx.updateTimelineShareData({
+          //微信朋友圈分享
+          title,
+          link: window.location.href,
+          imgUrl: shareImg
+        })
+      })
     },
     toRank() {
       this.$router.push({ name: 'Rank' })
