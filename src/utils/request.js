@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-04-20 16:14:58
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-03 09:26:08
+ * @LastEditTime: 2020-06-09 11:14:54
  */
 import axios from 'axios'
 import { httpBaseUrl } from './BASE'
@@ -45,7 +45,7 @@ instance.interceptors.request.use(
     if (config.method === 'post') {
       config.data = JSON.stringify(config.data)
     }
-    if (config.url.indexOf('weixin-mp') > -1 || process.env.NODE_ENV === 'development') {
+    if (config.url.indexOf('weixin-mp') > -1 || process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'production') {
       config.baseURL = httpBaseUrl.substr(0, httpBaseUrl.indexOf(httpBaseUrl.split('/')[httpBaseUrl.split('/').length - 1]) - 1)
     }
     // 在这里：可以根据业务需求可以在发送请求之前做些什么:例如我这个是导出文件的接口，因为返回的是二进制流，所以需要设置请求响应类型为blob，就可以在此处设置。

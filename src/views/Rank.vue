@@ -2,61 +2,80 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-06-04 10:36:57
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-04 16:19:48
+ * @LastEditTime: 2020-06-08 17:25:02
 --> 
 <template>
-  <div class="rank-page">
-    <van-sticky>
-      <header>
-        <span>排名</span>
-        <span class="student">学员</span>
-        <span>帮助值</span>
-      </header>
-    </van-sticky>
-    <ul class="list">
-      <li class="list-item">
-        <div class="rank rank1"></div>
-        <div class="info">
-          <img src="../assets/images/rank/default.png" alt="头像" />
-          <div class="name van-ellipsis">啦啦啦啦啦啦啦啦绿绿</div>
-        </div>
-        <div class="number">999+</div>
-      </li>
-      <li class="list-item">
-        <div class="rank rank2"></div>
-        <div class="info">
-          <img src="../assets/images/rank/default.png" alt="头像" />
-          <div class="name van-ellipsis">啦啦啦啦啦啦啦啦绿绿</div>
-        </div>
-        <div class="number">999+</div>
-      </li>
-      <li class="list-item">
-        <div class="rank rank3"></div>
-        <div class="info">
-          <img src="../assets/images/rank/default.png" alt="头像" />
-          <div class="name van-ellipsis">啦啦啦啦啦啦啦啦绿绿</div>
-        </div>
-        <div class="number">999+</div>
-      </li>
-      <li class="list-item">
-        <div class="rank">4</div>
-        <div class="info">
-          <img src="../assets/images/rank/default.png" alt="头像" />
-          <div class="name van-ellipsis">啦啦啦啦啦啦啦啦绿绿</div>
-        </div>
-        <div class="number">999+</div>
-      </li>
-    </ul>
-  </div>
+  <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+    <div class="rank-page">
+      <van-sticky>
+        <header>
+          <span>排名</span>
+          <span class="student">学员</span>
+          <span>帮助值</span>
+        </header>
+      </van-sticky>
+      <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadList">
+        <ul class="list" v-for="(item, index) in rankList" :key="index">
+          <li class="list-item">
+            <div class="rank" :class="'rank' + (index + 1)"></div>
+            <div class="info">
+              <img :src=" item.avatar || '@/assets/images/rank/default.png'" alt="头像" />
+              <div class="name van-ellipsis">{{ item.username }}</div>
+            </div>
+            <div class="number">{{ item.sum }}</div>
+          </li>
+        </ul>
+      </van-list>
+    </div>
+  </van-pull-refresh>
 </template>
 
 <script>
-import { Sticky } from 'vant'
+import { PullRefresh, List, Sticky } from 'vant'
+import http from '@/api'
 
 export default {
   name: 'Rank',
   components: {
+    'van-pull-refresh': PullRefresh,
+    'van-list': List,
     'van-sticky': Sticky
+  },
+  data() {
+    return {
+      rankList: [],
+      loading: false,
+      finished: false,
+      refreshing: false,
+      pageNum: 0
+    }
+  },
+  methods: {
+    loadList() {
+      this.pageNum++
+      const param = {
+        pageNum: this.pageNum,
+        pageSize: 10
+      }
+      if (this.refreshing) {
+        // 如果属于下拉刷新的话，清空掉列表数据
+        this.rankList = []
+        this.refreshing = false
+      }
+      http.getShareRank(param).then(res => {
+        const { dataList, total } = res
+        this.loading = false
+        this.finished = total <= 10 ? true : false
+        this.rankList = this.pageNum === 1 ? dataList : [...this.rankList, ...dataList]
+      })
+    },
+    onRefresh() {
+      this.finished = false
+      this.rankList = []
+      this.loading = true
+      this.pageNum = 0
+      this.loadList()
+    }
   }
 }
 </script>
@@ -64,14 +83,17 @@ export default {
 <style lang="scss" scoped>
 .rank-page {
   width: 100%;
-  border-top: 0.63rem solid #f7f7f7;
-  box-sizing: border-box;
+  .van-pull-refresh {
+    min-height: 100vh;
+  }
   header {
     width: 100%;
-    height: 3.5rem;
+    height: 4.13rem;
     padding: 0 0.94rem;
     box-sizing: border-box;
+    border-top: 0.63rem solid #f7f7f7;
     border-bottom: 0.03rem solid #e9e9e9;
+    background-color: #fff;
     @include flex(flex-start, center, row, nowrap);
     @include font(PingFang SC, 1.25rem, #666, 400);
     .student {

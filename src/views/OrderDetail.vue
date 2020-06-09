@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-22 14:50:38
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-04 19:16:26
+ * @LastEditTime: 2020-06-09 11:12:37
 --> 
 <template>
   <div class="order-detail-page" v-if="detail">
@@ -35,21 +35,6 @@
         </div>
       </div>
     </section>
-    <div class="address-box" v-if="courseClassAddress">
-      <div class="title-box">收货地址</div>
-      <div class="desc-box desc-box1">
-        <span class="left">收货人</span>
-        <span class="right">{{ courseClassAddress.username }}</span>
-      </div>
-      <div class="desc-box">
-        <span class="left">手机号码</span>
-        <span class="right">{{ courseClassAddress.mobile }}</span>
-      </div>
-      <div class="desc-box desc-box3">
-        <span class="left">详细地址</span>
-        <span class="right">{{ courseClassAddress.address }}</span>
-      </div>
-    </div>
     <div class="time-box">
       <div class="title-box">订单时间</div>
       <div class="time-wrap">
@@ -81,9 +66,6 @@
       </template>
       <van-button color="#666" plain v-else @click="deleteOrder(detail.id)">删除订单</van-button>
     </footer>
-    <!-- <footer v-else>
-      <van-button type="danger" @click="editAddress">{{ courseClassAddress ? '修改地址' : '填写地址' }}</van-button>
-    </footer>-->
     <pay-action-sheet
       :showPay="actionSheetObj.showPay"
       :totalMoney="actionSheetObj.totalMoney"
@@ -169,13 +151,9 @@ export default {
   methods: {
     getOrderDetail() {
       http.getOrderDetail({ id: this.id }).then(res => {
-        const { orderListDTO, courseClassAddress, brandWCPayRequestDO } = res.data
-        const temp = { orderId: orderListDTO.id }
-        !courseClassAddress.mobile && Object.assign(temp, { mobile: this.$store.state.mobile })
+        const { orderListDTO, brandWCPayRequestDO } = res.data
         this.detail = orderListDTO
-        this.courseClassAddress = courseClassAddress
         this.brandWCPayRequestDO = brandWCPayRequestDO
-        this.$store.commit('setCourseClassAddress', Object.assign(courseClassAddress ? courseClassAddress : {}, temp))
         if (this.detail.status === 1) {
           // 待支付需要计算倒计时
           setInterval(() => {
@@ -273,9 +251,6 @@ export default {
         http[this.dialogObj.type]({ id: this.dialogObj.id }).then(res => {
           this.$router.replace({ name: 'Order', query: { index: 2 } })
         })
-    },
-    editAddress() {
-      this.$router.push({ name: 'Address' })
     }
   },
   computed: {
@@ -431,34 +406,6 @@ export default {
       .time2 {
         margin-top: 0.31rem;
       }
-    }
-  }
-  & > .address-box {
-    width: 100%;
-    padding: 0 0.94rem;
-    background-color: #fff;
-    border-bottom: 0.63rem solid #f7f7f7;
-    box-sizing: border-box;
-    @include flex(flex-start, flex-start, column, nowrap);
-    .desc-box {
-      width: 100%;
-      margin-top: 0.63rem;
-      @include flex(flex-start, flex-start, row, nowrap);
-      .left {
-        flex: 0 0 6rem;
-        line-height: 1.66rem;
-        @include font(PingFang SC, 1.19rem, #999, 400);
-      }
-      .right {
-        line-height: 1.66rem;
-        @include font(PingFang SC, 1.19rem, #333, 400);
-      }
-    }
-    .desc-box1 {
-      margin-top: 0.94rem;
-    }
-    .desc-box3 {
-      margin-bottom: 0.94rem;
     }
   }
   & > footer {

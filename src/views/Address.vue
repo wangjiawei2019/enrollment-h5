@@ -2,13 +2,13 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-28 17:27:45
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-04 16:07:56
+ * @LastEditTime: 2020-06-09 11:46:03
 --> 
 <template>
   <div class="address-page">
     <van-form @submit="onSubmit" @failed="failed" :show-error-message="false">
       <van-field
-        v-model="courseClassAddress.username"
+        v-model="userGoodsAddress.username"
         clearable
         name="username"
         maxlength="8"
@@ -22,7 +22,7 @@
         @focus="handleFieldClick"
       />
       <van-field
-        v-model="courseClassAddress.mobile"
+        v-model="userGoodsAddress.mobile"
         clearable
         name="mobile"
         maxlength="11"
@@ -56,14 +56,13 @@
         <van-area
           :area-list="areaList"
           item-height="49.5"
-          columns-num="2"
           :value="areaPicker"
           @confirm="confirmArea"
           @cancel="() => {showArea = false}"
         />
       </van-popup>
       <van-field
-        v-model="courseClassAddress.address"
+        v-model="userGoodsAddress.address"
         clearable
         name="address"
         maxlength="36"
@@ -102,21 +101,40 @@ export default {
   },
   data() {
     return {
-      courseClassAddress: Object.assign({}, this.$store.state.courseClassAddress),
+      userGoodsAddress: null,
       showArea: false,
       area: null, //
       areaList: areaList
     }
   },
+  created() {
+    if (this.$store.state.userGoodsAddress) {
+      const userGoodsAddress = Object.assign({}, this.$store.state.userGoodsAddress)
+      const { provinceId, cityId, areaId } = userGoodsAddress
+      const tempProvince = { code: userGoodsAddress.provinceId, name: areaList.province_list[userGoodsAddress.provinceId] }
+      const tempCity = { code: userGoodsAddress.cityId, name: areaList.city_list[userGoodsAddress.cityId] }
+      const tempArea = { code: userGoodsAddress.areaId, name: areaList.county_list[userGoodsAddress.areaId] }
+      this.userGoodsAddress = userGoodsAddress
+      this.area = [tempProvince, tempCity, tempArea]
+    } else {
+      this.userGoodsAddress = { mobile: this.$store.state.mobile }
+    }
+    this.userGoodsAddress = this.$store.state.userGoodsAddress ? this.$store.state.userGoodsAddress : { mobile: this.$store.state.mobile }
+  },
   methods: {
     onSubmit(e) {
       const params = {
-        orderId: this.courseClassAddress.orderId,
+        id: this.userGoodsAddress.id,
         username: e.username,
         mobile: e.mobile,
-        address: e.address
+        provinceId: this.area[0].code,
+        cityId: this.area[1].code,
+        areaId: this.area[2].code,
+        address: e.address,
+        status: 1
       }
-      http.setOrderAddress(params).then(res => {
+      const method = this.$store.state.userGoodsAddress ? 'updateGoodsAddress' : 'setGoodsAddress'
+      http[method](params).then(res => {
         this.$toast('提交成功')
         setTimeout(() => {
           this.$router.back()
@@ -128,7 +146,6 @@ export default {
       this.$toast(`${errors[0].message}`)
     },
     confirmArea(e) {
-      console.log('confirmArea -> e', e)
       this.area = e
       this.showArea = false
     },
@@ -147,11 +164,11 @@ export default {
   computed: {
     areaInput() {
       if (!this.area) return ''
-      return `${this.area[0].name} ${this.area[1].name}`
+      return `${this.area[0].name} ${this.area[1].name} ${this.area[2].name}`
     },
     areaPicker() {
-      if (!this.area) return '110100'
-      return this.area[1].code
+      if (!this.area) return '110101'
+      return this.area[2].code
     }
   }
 }

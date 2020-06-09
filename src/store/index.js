@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-18 11:30:39
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-04 18:56:39
+ * @LastEditTime: 2020-06-09 10:10:17
  */
 
 import Vue from 'vue'
@@ -18,7 +18,7 @@ export default new Vuex.Store({
     mobile: null,
     token: '',
     confirmOrder: { list: [], classIdList: [], totalMoney: 0 },
-    courseClassAddress: null, // 收货地址
+    userGoodsAddress: null, // 收货地址
     code: '', // JSAPI 支付的 code
     openId: '', // JSAPI 支付的 openID
     environment: '', // 用户环境 'WEIXIN-brower' 'App-brower' 'other-brower' 微信浏览器或者App或其他浏览器
@@ -51,8 +51,8 @@ export default new Vuex.Store({
     setUserAgent(state, userAgent) {
       state.userAgent = userAgent
     },
-    setCourseClassAddress(state, info) {
-      state.courseClassAddress = info
+    setUserGoodsAddress(state, info) {
+      state.userGoodsAddress = info
     },
     setShareId(state, shareId) {
       state.shareId = shareId

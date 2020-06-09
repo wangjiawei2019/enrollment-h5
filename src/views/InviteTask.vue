@@ -2,8 +2,8 @@
  * @Github: https://github.com/IdlerHub
  * @Author: zxk
  * @Date: 2020-06-04 09:27:49
- * @LastEditors: zxk
- * @LastEditTime: 2020-06-05 11:24:50
+ * @LastEditors: wjw
+ * @LastEditTime: 2020-06-09 10:19:11
 --> 
 <template>
   <div :class=" ['invite-page', {'invite-touch':showContent=='rule'}]">
@@ -110,14 +110,12 @@ export default {
   },
   methods: {
     userRankInfo() {
-      const temp = { orderId: this.orderId }
-      http.userRankInfo(temp).then(res => {
+      http.userRankInfo({ orderId: this.orderId }).then(res => {
         const { sum, rank, userGoodsAddress } = res.data
         this.sum = sum || 0
         this.rank = rank
         this.addressShow = userGoodsAddress ? '修改收货地址' : '填写收货地址'
-        !userGoodsAddress.mobile && Object.assign(temp, { mobile: store.state.mobile })
-        store.commit('setCourseClassAddress', Object.assign(userGoodsAddress ? userGoodsAddress : {}, temp))
+        userGoodsAddress ? store.commit('setUserGoodsAddress', userGoodsAddress) : ''
       })
     },
     changeShow() {

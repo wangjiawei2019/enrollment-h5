@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-04-29 16:44:41
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-04 09:40:44
+ * @LastEditTime: 2020-06-09 09:50:39
  */
 
 const httpBase = {
@@ -16,9 +16,9 @@ const domainBase = {
   test: 'https://enrollmenth5test.jinlingkeji.cn'
 }
 const APPID = {
-  development: 'wx82110e9ea8978e79',
-  production: 'wx82110e9ea8978e79',
-  test: 'wx82110e9ea8978e79'
+  development: 'wx82110e9ea8978e79', // 胖老头
+  production: 'wxc40baa08f6321a5a', // 中老年云
+  test: 'wx82110e9ea8978e79' // 胖老头
 }
 
 const httpBaseUrl = httpBase[process.env.NODE_ENV]
