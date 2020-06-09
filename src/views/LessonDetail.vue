@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-22 11:41:33
  * @LastEditors: zxk
- * @LastEditTime: 2020-06-08 14:54:37
+ * @LastEditTime: 2020-06-09 11:05:44
 --> 
 <template>
   <div class="detail-page">
@@ -65,7 +65,8 @@ export default {
       repeatShow: false, //重复报名提示
       className: '啥啥班级',
       joinClass: false, //加入班群二维码显示
-      qrCodeUrl: ''
+      qrCodeUrl: '',
+      paidSum: 10,  //分享用，总人数
     }
   },
   components: {
@@ -85,12 +86,13 @@ export default {
       let that = this;
       //TODO: logo图片和总计报名人数未导入
       let title = `${that.detail.name}【仅剩${that.detail.num}个名额】邀请您来报名`
+      let shareImg = 'https://lndxappcdn.jinlingkeji.cn/h5_activity/logo.jpg'
       that.$wx.ready(() => {
         that.$wx.updateAppMessageShareData({
           title, // 分享标题
-          desc: "用学习犒劳自己，已有999人参与网上老年大学学习", // 分享描述
+          desc: '用学习犒劳自己，已有'+that.paidSum+'人参与网上老年大学学习', // 分享描述
           link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-          imgUrl: 'src/assets/logo.jpg', // 分享图标
+          imgUrl: shareImg, // 分享图标
           success: function() {
             // 设置成功
             console.log("success");
@@ -99,7 +101,7 @@ export default {
         that.$wx.updateTimelineShareData({
           title,
           link: window.location.href,
-          imgUrl: 'src/assets/logo.jpg'
+          imgUrl: shareImg
         })
       });
     },
@@ -141,6 +143,7 @@ export default {
       http[this.token ? 'getClassDetailInner' : 'getClassDetail']({ id })
       .then(res => {
         this.detail = res.data
+        // this.paidSum = res.data.paidSum
         this.wxShare()
         document.title = res.data.name
       })

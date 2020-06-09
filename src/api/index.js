@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 17:03:31
  * @LastEditors: zxk
- * @LastEditTime: 2020-06-08 14:30:27
+ * @LastEditTime: 2020-06-09 11:50:24
  */
 import { get, post } from '@/utils/request'
 import store from '@/store'
@@ -15,7 +15,7 @@ function getUserInfo(){
 
 //post 是否需要阅读招生简章
 function getReadStatus() {
-  return post('/major/api/course/getReadStatus')
+  return post('/activity/api/course/getReadStatus')
 }
 
 //getTimSign
@@ -25,12 +25,12 @@ function getTimSign() {
 
 //post 获取招生简章内容
 function getRecruitIntro() {
-  return post('/major/api/course/getRecruitIntro')
+  return post('/activity/api/course/getRecruitIntro')
 }
 
 //post 设置阅读招生简章
 function setReadNote() {
-  return post('/major/api/course/setReadNote')
+  return post('/activity/api/course/setReadNote')
 }
 
 //get 发送短信验证码 { phone }
@@ -46,27 +46,27 @@ function login(params) {
 
 // post 获取课程分类初始列表
 function getMajorList() {
-  return post('/major/api/course/getMajorList')
+  return post('/activity/api/course/getMajorList')
 }
 
 // post 根据专业id获取课程分类(右侧)
 function getCourseList(params) {
-  return post('/major/api/course/getCourseList', params)
+  return post('/activity/api/course/getCourseList', params)
 }
 
 //post 获取班级列表
 function getClassList(params) {
-  return post('/major/api/course/getClassList', params)
+  return post('/activity/api/course/getClassList', params)
 }
 
 //post 获取班级详情 (未登录)
 function getClassDetail(params) {
-  return post('/major/api/course/getClassDetail', params)
+  return post('/activity/api/course/getClassDetail', params)
 }
 
 //post 获取班级详情 (已登录)
 function getClassDetailInner(params) {
-  return post('/major/api/course/getClassDetailInner', params)
+  return post('/activity/api/course/getClassDetailInner', params)
 }
 
 //post 搜索班级 {keyword:关键字,pageSize,pageNum},此处的页码从0开始,三个参数都必须要
@@ -78,7 +78,7 @@ function searchCourseClass(params) {
  * @description: 获取购物车列表
  */
 function getCartList() {
-  return post('/major/api/course/getCartList')
+  return post('/activity/api/course/getCartList')
 }
 
 /**
@@ -86,7 +86,7 @@ function getCartList() {
  * @param {cartId}
  */
 function cancelApplyCourse(param) {
-  return post('/major/api/course/cancelApplyCourse', param)
+  return post('/activity/api/course/cancelApplyCourse', param)
 }
 
 /**
@@ -102,7 +102,7 @@ function createOrder(url, param) {
  * @param {status}
  */
 function getOrderList(param) {
-  return post('/major/api/course/getOrderList', param)
+  return post('/activity/api/course/getOrderList', param)
 }
 
 /**
@@ -110,7 +110,7 @@ function getOrderList(param) {
  * @param {id}
  */
 function cancelOrder(param) {
-  return post('/major/api/course/cancelOrder', param)
+  return post('/activity/api/course/cancelOrder', param)
 }
 
 /**
@@ -118,7 +118,7 @@ function cancelOrder(param) {
  * @param {id}
  */
 function deleteOrder(param) {
-  return post('/major/api/course/deleteOrder', param)
+  return post('/activity/api/course/deleteOrder', param)
 }
 
 /**
@@ -126,8 +126,9 @@ function deleteOrder(param) {
  * @param {id}
  */
 function getOrderDetail(param) {
-  return post('/major/api/course/getOrderDetail', param)
+  return post('/activity/api/course/getOrderDetail', param)
 }
+
 
 /**
  * @description: 提交收货地址
@@ -152,7 +153,7 @@ function getJsapiTicket(param) {
 
 //post 立即报名，添加购物车
 function applyCourse(params) {
-  return post('/major/api/course/applyCourse', params)
+  return post('/activity/api/course/applyCourse', params)
 }
 
 //post 个人排行(邀请)信息 orderId: 订单ID
