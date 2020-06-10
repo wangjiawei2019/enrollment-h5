@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-28 17:27:45
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-09 11:46:03
+ * @LastEditTime: 2020-06-09 17:46:19
 --> 
 <template>
   <div class="address-page">
@@ -36,7 +36,7 @@
         @input="handleFieldClick"
         @focus="handleFieldClick"
       />
-      <van-field
+      <!-- <van-field
         name="area"
         type="textarea"
         rows="1"
@@ -60,7 +60,7 @@
           @confirm="confirmArea"
           @cancel="() => {showArea = false}"
         />
-      </van-popup>
+      </van-popup>-->
       <van-field
         v-model="userGoodsAddress.address"
         clearable
@@ -86,39 +86,28 @@
 </template>
 
 <script>
-import { Form, Field, Popup, Area, Button, Icon } from 'vant'
+import { Form, Field, Button } from 'vant'
 import http from '@/api'
-import areaList from '@/utils/area.js'
+// import areaList from '@/utils/area.js'
 
 export default {
   components: {
     'van-form': Form,
     'van-field': Field,
-    'van-popup': Popup,
-    'van-area': Area,
-    'van-button': Button,
-    'van-icon': Icon
+    // 'van-popup': Popup,
+    // 'van-area': Area,
+    'van-button': Button
+    // 'van-icon': Icon
   },
   data() {
     return {
-      userGoodsAddress: null,
-      showArea: false,
-      area: null, //
-      areaList: areaList
+      userGoodsAddress: null
+      // showArea: false,
+      // area: null,
+      // areaList: areaList
     }
   },
   created() {
-    if (this.$store.state.userGoodsAddress) {
-      const userGoodsAddress = Object.assign({}, this.$store.state.userGoodsAddress)
-      const { provinceId, cityId, areaId } = userGoodsAddress
-      const tempProvince = { code: userGoodsAddress.provinceId, name: areaList.province_list[userGoodsAddress.provinceId] }
-      const tempCity = { code: userGoodsAddress.cityId, name: areaList.city_list[userGoodsAddress.cityId] }
-      const tempArea = { code: userGoodsAddress.areaId, name: areaList.county_list[userGoodsAddress.areaId] }
-      this.userGoodsAddress = userGoodsAddress
-      this.area = [tempProvince, tempCity, tempArea]
-    } else {
-      this.userGoodsAddress = { mobile: this.$store.state.mobile }
-    }
     this.userGoodsAddress = this.$store.state.userGoodsAddress ? this.$store.state.userGoodsAddress : { mobile: this.$store.state.mobile }
   },
   methods: {
@@ -127,11 +116,7 @@ export default {
         id: this.userGoodsAddress.id,
         username: e.username,
         mobile: e.mobile,
-        provinceId: this.area[0].code,
-        cityId: this.area[1].code,
-        areaId: this.area[2].code,
-        address: e.address,
-        status: 1
+        address: e.address
       }
       const method = this.$store.state.userGoodsAddress ? 'updateGoodsAddress' : 'setGoodsAddress'
       http[method](params).then(res => {
@@ -160,17 +145,17 @@ export default {
         }
       })
     }
-  },
-  computed: {
-    areaInput() {
-      if (!this.area) return ''
-      return `${this.area[0].name} ${this.area[1].name} ${this.area[2].name}`
-    },
-    areaPicker() {
-      if (!this.area) return '110101'
-      return this.area[2].code
-    }
   }
+  // computed: {
+  //   areaInput() {
+  //     if (!this.area) return ''
+  //     return `${this.area[0].name} ${this.area[1].name} ${this.area[2].name}`
+  //   },
+  //   areaPicker() {
+  //     if (!this.area) return '110101'
+  //     return this.area[2].code
+  //   }
+  // }
 }
 </script>
 
