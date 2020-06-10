@@ -1,8 +1,8 @@
 <!--
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
- * @LastEditors: zxk
- * @LastEditTime: 2020-06-09 14:58:57
+ * @LastEditors: wjw
+ * @LastEditTime: 2020-06-10 11:43:47
 --> 
 <template>
   <div id="app">
@@ -24,11 +24,14 @@ export default {
     this.getJsConfig(window.location.href.split('#')[0])
   },
   mounted() {
+    console.log('1')
     if (process.env.NODE_ENV === 'production' && !store.state.productionLocationOrigin) {
       // 生产环境截取 location
       store.commit('setProductionLocationOrigin', window.location.origin)
     }
-    this.getAgent()
+
+    store.state.environment === 'WEIXIN-brower' && this.getCode() // 获取 JSAPI 支付所需 code
+
     //android禁止微信浏览器调整字体大小
     //TODO: 可能会在刚刚进去的时候大字体，1秒之后变回来
     if (typeof WeixinJSBridge == 'object' && typeof WeixinJSBridge.invoke == 'function') {
@@ -60,9 +63,7 @@ export default {
             ] // 必填，需要使用的JS接口列表
           })
         })
-        .catch(err => {
-          console.log('授权错误', err)
-        })
+        .catch(err => {})
     },
     handleFontSize() {
       // 设置网页字体为默认大小
@@ -71,28 +72,6 @@ export default {
       WeixinJSBridge.on('menu:setfont', function() {
         WeixinJSBridge.invoke('setFontSizeCallback', { fontSize: 0 })
       })
-    },
-    getAgent() {
-      //获取用户环境
-      const { terminal } = this.$route.query
-      const userAgent = navigator.userAgent
-      // 存储用户环境
-      if (terminal === 'App') {
-        store.commit('setEnvironment', 'App-brower')
-      } else if (userAgent.toLowerCase().indexOf('micromessenger') !== -1) {
-        store.commit('setEnvironment', 'WEIXIN-brower')
-        this.getCode() // 获取 JSAPI 支付所需 code
-      } else {
-        store.commit('setEnvironment', 'other-brower')
-      }
-      // 存储用户终端
-      if (userAgent.indexOf('Android') > -1 || userAgent.indexOf('Linux') > -1) {
-        store.commit('setUserAgent', 'Android')
-      } else if (!!userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)) {
-        store.commit('setUserAgent', 'IOS')
-      } else {
-        store.commit('setUserAgent', 'brower')
-      }
     },
     getCode() {
       const searchParams = new URLSearchParams(window.location.search)

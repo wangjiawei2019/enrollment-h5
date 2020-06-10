@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-19 11:08:32
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-10 09:42:07
+ * @LastEditTime: 2020-06-10 10:13:14
  */
 
 const IS_PROD = ['production', 'prod'].includes(process.env.NODE_ENV)
@@ -48,6 +48,6 @@ module.exports = {
       // config['plugins'].push(new BundleAnalyzerPlugin())
     }
   },
-  publicPath: IS_PROD ? process.env.VUE_APP_PUBLIC_PATH : './', // 默认'/'，部署应用包时的基本 URL
+  publicPath: IS_PROD ? 'https://lndxappcdn.jinlingkeji.cn/h5_activity/fronted/' : './', // 默认'/'，部署应用包时的基本 URL
   lintOnSave: false
 }

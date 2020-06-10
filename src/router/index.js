@@ -1,8 +1,8 @@
 /*
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
- * @LastEditors: zxk
- * @LastEditTime: 2020-06-10 09:33:02
+ * @LastEditors: wjw
+ * @LastEditTime: 2020-06-10 11:44:33
  */
 
 import Vue from 'vue'
@@ -144,15 +144,44 @@ const router = new VueRouter({
   }
 })
 
+const getAgent = terminal => {
+  //获取用户环境
+  const userAgent = navigator.userAgent
+  // 存储用户环境
+  if (!store.state.environment) {
+    if (terminal === 'App') {
+      store.commit('setEnvironment', 'App-brower')
+    } else if (userAgent.toLowerCase().indexOf('micromessenger') !== -1) {
+      store.commit('setEnvironment', 'WEIXIN-brower')
+    } else {
+      store.commit('setEnvironment', 'other-brower')
+    }
+  } else {
+  }
+  if (!store.state.userAgent) {
+    // 存储用户终端
+    if (userAgent.indexOf('Android') > -1 || userAgent.indexOf('Linux') > -1) {
+      store.commit('setUserAgent', 'Android')
+    } else if (!!userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)) {
+      store.commit('setUserAgent', 'IOS')
+    } else {
+      store.commit('setUserAgent', 'brower')
+    }
+  }
+}
+
 router.beforeEach((to, from, next) => {
   //游客页面: 课程列表页，搜索页面，详情页
   var visitorPages = ['Lesson', 'Search', 'LessonDetail']
+  const { terminal } = to.query
+  getAgent(terminal) // 获取环境
   if (to.meta.title) {
     //判断是否有标题
     document.title = to.meta.title
   } else {
     document.title = '网上老年大学招生'
   }
+
   if (to.name === 'Login') {
     // const query = qs.parse(to.hash.split('?')[1])
     const query = to.query
