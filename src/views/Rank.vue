@@ -2,11 +2,11 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-06-04 10:36:57
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-08 17:25:02
+ * @LastEditTime: 2020-06-10 15:08:42
 --> 
 <template>
   <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
-    <div class="rank-page">
+    <div class="rank-page" v-if="rankList.length">
       <van-sticky>
         <header>
           <span>排名</span>
@@ -27,11 +27,19 @@
         </ul>
       </van-list>
     </div>
+    <div class="no-list" v-else>
+      <van-empty :image="require('@/assets/no-rank.png')">
+        <div class="desc" slot="description">
+          暂无排名
+          <br />去邀请好友
+        </div>
+      </van-empty>
+    </div>
   </van-pull-refresh>
 </template>
 
 <script>
-import { PullRefresh, List, Sticky } from 'vant'
+import { PullRefresh, List, Sticky, Empty } from 'vant'
 import http from '@/api'
 
 export default {
@@ -39,6 +47,7 @@ export default {
   components: {
     'van-pull-refresh': PullRefresh,
     'van-list': List,
+    'van-empty': Empty,
     'van-sticky': Sticky
   },
   data() {
@@ -150,6 +159,21 @@ export default {
         @include font(PingFang SC, 1.31rem, #333, 500);
       }
     }
+  }
+}
+.no-list {
+  margin-top: 4.375rem /* 70/16 */;
+  padding-top: 5.625rem /* 90/16 */;
+  width: 100%;
+  /deep/ .van-empty__image {
+    width: 12.3rem;
+    height: 8.88rem;
+  }
+  .desc {
+    width: 100%;
+    text-align: center;
+    line-height: 1.66rem;
+    @include font(PingFang SC, 1.19rem, #999, 400);
   }
 }
 </style>

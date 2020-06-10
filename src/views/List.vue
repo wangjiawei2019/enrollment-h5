@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-05 11:42:00
+ * @LastEditTime: 2020-06-10 14:58:27
 --> 
 <template>
   <div class="list-page">
@@ -129,7 +129,6 @@ export default {
     getCartList() {
       return http.getCartList().then(res => {
         this.list = Array.isArray(res.data) ? res.data : []
-        this.fullList = this.list
       })
     },
     handleEdit() {

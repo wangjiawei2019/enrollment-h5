@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-21 10:12:23
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-04 16:30:36
+ * @LastEditTime: 2020-06-10 14:51:38
 --> 
 <template>
   <div class="confirm-order-page">
@@ -89,9 +89,14 @@ export default {
   methods: {
     submitOrder(classIdList) {
       if (this.$store.state.environment === 'WEIXIN-brower') {
-        this.createOrder('/major/api/course/createOrderJSAPI', { classIdList, tradeType: 'JSAPI', openId: this.$store.state.openId })
+        this.createOrder('/activity/api/course/createOrderJSAPI', {
+          classIdList,
+          tradeType: 'JSAPI',
+          openId: this.$store.state.openId,
+          referenceId: this.$store.state.shareId
+        })
       } else {
-        this.createOrder('/major/api/course/createOrderH5', { classIdList, tradeType: 'MWEB' })
+        this.createOrder('/activity/api/course/createOrderH5', { classIdList, tradeType: 'MWEB', referenceId: this.$store.state.shareId })
       }
     },
     createOrder(url, params) {

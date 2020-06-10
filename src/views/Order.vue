@@ -2,14 +2,13 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-04 19:15:58
+ * @LastEditTime: 2020-06-10 14:28:47
 --> 
 <template>
   <div class="order-page">
     <van-tabs
       v-model="active"
       swipeable
-      animated
       sticky
       color="#F2323A"
       line-width="1.56rem"
