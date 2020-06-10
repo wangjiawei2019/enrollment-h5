@@ -66,7 +66,6 @@ export default {
     },
     getBase64Img(url) {
       //网络资源图片转成base64
-      //console.log("图片路径",url)
       var canvas = document.createElement('canvas') //创建canvas DOM元素
       var ctx = canvas.getContext('2d')
       return new Promise((reslove, reject) => {
