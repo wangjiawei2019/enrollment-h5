@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-22 14:50:38
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-09 11:12:37
+ * @LastEditTime: 2020-06-10 18:53:17
 --> 
 <template>
   <div class="order-detail-page" v-if="detail">
@@ -205,30 +205,38 @@ export default {
     confirmPay() {
       if (this.$store.state.environment === 'WEIXIN-brower') {
         const { appId, timeStamp, nonceStr, packageInfo, signType, paySign } = this.actionSheetObj.brandWCPayRequestDO
-        WeixinJSBridge.invoke(
-          'getBrandWCPayRequest',
-          {
-            appId, //公众号名称，由商户传入
-            timeStamp, //时间戳，自1970年以来的秒数
-            nonceStr, //随机串
-            package: packageInfo,
-            signType, //微信签名方式：
-            paySign //微信签名
-          },
-          res => {
-            if (res.err_msg == 'get_brand_wcpay_request:ok') {
-              this.$toast('支付成功')
-              this.dialogCancel()
-              this.getOrderDetail()
-              this.showInviteTaskToast = true
-            } else {
-              this.$toast('支付失败，请重试')
+        if (appId) {
+          WeixinJSBridge.invoke(
+            'getBrandWCPayRequest',
+            {
+              appId, //公众号名称，由商户传入
+              timeStamp, //时间戳，自1970年以来的秒数
+              nonceStr, //随机串
+              package: packageInfo,
+              signType, //微信签名方式：
+              paySign //微信签名
+            },
+            res => {
+              if (res.err_msg == 'get_brand_wcpay_request:ok') {
+                this.$toast('支付成功')
+                this.dialogCancel()
+                this.getOrderDetail()
+                this.showInviteTaskToast = true
+              } else {
+                this.$toast('支付失败，请重试')
+              }
             }
-          }
-        )
+          )
+        } else {
+          this.$toast('请在原下单渠道支付')
+        }
       } else {
-        const redirect_url = `${domainBaseUrl || this.$store.state.productionLocationOrigin}/#/order-detail?id=${this.actionSheetObj.id}`
-        location.href = `${this.actionSheetObj.url}&redirect_url=${encodeURIComponent(redirect_url)}`
+        if (this.actionSheetObj.url) {
+          const redirect_url = `${domainBaseUrl || this.$store.state.productionLocationOrigin}/#/order-detail?id=${this.actionSheetObj.id}`
+          location.href = `${this.actionSheetObj.url}&redirect_url=${encodeURIComponent(redirect_url)}`
+        } else {
+          this.$toast('请在原下单渠道支付')
+        }
       }
     },
     handleCancel() {
