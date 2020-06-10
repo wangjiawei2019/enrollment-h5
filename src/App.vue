@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-10 11:43:47
+ * @LastEditTime: 2020-06-10 11:51:29
 --> 
 <template>
   <div id="app">
@@ -24,7 +24,6 @@ export default {
     this.getJsConfig(window.location.href.split('#')[0])
   },
   mounted() {
-    console.log('1')
     if (process.env.NODE_ENV === 'production' && !store.state.productionLocationOrigin) {
       // 生产环境截取 location
       store.commit('setProductionLocationOrigin', window.location.origin)
