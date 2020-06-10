@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-21 10:12:23
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-10 14:51:38
+ * @LastEditTime: 2020-06-10 15:35:12
 --> 
 <template>
   <div class="confirm-order-page">
@@ -93,10 +93,10 @@ export default {
           classIdList,
           tradeType: 'JSAPI',
           openId: this.$store.state.openId,
-          referenceId: this.$store.state.shareId
+          referenceId: this.$store.state.shareId || 0
         })
       } else {
-        this.createOrder('/activity/api/course/createOrderH5', { classIdList, tradeType: 'MWEB', referenceId: this.$store.state.shareId })
+        this.createOrder('/activity/api/course/createOrderH5', { classIdList, tradeType: 'MWEB', referenceId: this.$store.state.shareId || 0 })
       }
     },
     createOrder(url, params) {
