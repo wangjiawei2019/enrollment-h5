@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-22 11:41:33
  * @LastEditors: zxk
- * @LastEditTime: 2020-06-09 11:05:44
+ * @LastEditTime: 2020-06-10 09:31:28
 --> 
 <template>
   <div class="detail-page">
@@ -93,10 +93,6 @@ export default {
           desc: '用学习犒劳自己，已有'+that.paidSum+'人参与网上老年大学学习', // 分享描述
           link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
           imgUrl: shareImg, // 分享图标
-          success: function() {
-            // 设置成功
-            console.log("success");
-          }
         });
         that.$wx.updateTimelineShareData({
           title,
@@ -144,7 +140,9 @@ export default {
       .then(res => {
         this.detail = res.data
         // this.paidSum = res.data.paidSum
-        this.wxShare()
+        if(store.state.environment !== 'App-brower'){
+          this.wxShare()
+        }
         document.title = res.data.name
       })
     },
