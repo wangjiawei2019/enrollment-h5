@@ -2,8 +2,8 @@
  * @Github: https://github.com/IdlerHub
  * @Author: zxk
  * @Date: 2020-06-04 09:27:49
- * @LastEditors: zxk
- * @LastEditTime: 2020-06-10 15:46:18
+ * @LastEditors: wjw
+ * @LastEditTime: 2020-06-10 18:54:57
 --> 
 <template>
   <div :class=" ['invite-page', {'invite-touch':showContent=='rule'}]">
@@ -145,7 +145,6 @@ export default {
           coverUrl: 'https://lndxappcdn.jinlingkeji.cn/h5_activity/logo.jpg',
           type: 'circle'
         }
-        console.log(str)
         str = JSON.stringify(str)
         window.ReactNativeWebView.postMessage(str)
       } else {
