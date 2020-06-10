@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-06-04 09:27:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-06-10 15:30:22
+ * @LastEditTime: 2020-06-10 15:46:18
 --> 
 <template>
   <div :class=" ['invite-page', {'invite-touch':showContent=='rule'}]">
@@ -108,6 +108,11 @@ export default {
   },
   mounted() {
     this.userRankInfo()
+    if (store.state.userId === '') {
+      http.getUserInfo().then(res => {
+        store.commit('setUserId', res.data.id)
+      })
+    }
   },
   methods: {
     userRankInfo() {
@@ -117,7 +122,7 @@ export default {
         this.sum = sum || 0
         this.rank = rank
         this.paidSum = paidSum
-        if(store.state.environment !== 'App-brower'){
+        if (store.state.environment !== 'App-brower') {
           this.wxShare()
         }
         this.addressShow = userGoodsAddress ? '修改收货地址' : '填写收货地址'
@@ -131,7 +136,8 @@ export default {
       let that = this
       //分享的时候判断是否app环境下
       var environment = store.state.environment //APP端
-      if (showContent === 'share' && environment === 'App-brower') {//app环境下，调用APP的分享方法
+      if (showContent === 'share' && environment === 'App-brower') {
+        //app环境下，调用APP的分享方法
         let str = {
           recruitUrl: window.location.href,
           title: '我已入学【网上老年大学】,你也快来一起学习吧',
@@ -158,7 +164,7 @@ export default {
           title, // 分享标题
           desc: '用学习犒劳自己，已有' + that.paidSum + '人参与网上老年大学学习', // 分享描述
           link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-          imgUrl: shareImg, // 分享图标
+          imgUrl: shareImg // 分享图标
         })
         that.$wx.updateTimelineShareData({
           //微信朋友圈分享
