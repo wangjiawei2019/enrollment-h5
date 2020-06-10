@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-06-04 09:27:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-06-10 09:32:08
+ * @LastEditTime: 2020-06-10 14:27:47
 --> 
 <template>
   <div :class=" ['invite-page', {'invite-touch':showContent=='rule'}]">
@@ -128,18 +128,20 @@ export default {
       this.showContent = ''
     },
     showShade(showContent) {
+      let that = this
       //分享的时候判断是否app环境下
       var environment = store.state.environment //APP端
       if (showContent === 'share' && environment === 'App-brower') {//app环境下，调用APP的分享方法
         let str = {
-          url: 'url=' + window.location.href,
+          recruitUrl: 'url=' + window.location.href,
           title: '我已入学【网上老年大学】,你也快来一起学习吧',
           content: '用学习犒劳自己，已有' + that.paidSum + '人参与网上老年大学学习',
           coverUrl: 'https://lndxappcdn.jinlingkeji.cn/h5_activity/logo.jpg',
           type: 'circle'
         }
+        console.log(str)
         str = JSON.stringify(str)
-        // window.ReactNativeWebView.postMessage(str)
+        window.ReactNativeWebView.postMessage(str)
       } else {
         //提示用户通过浏览器分享
         this.showContent = showContent
