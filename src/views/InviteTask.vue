@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-06-04 09:27:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-06-10 14:27:47
+ * @LastEditTime: 2020-06-10 15:30:22
 --> 
 <template>
   <div :class=" ['invite-page', {'invite-touch':showContent=='rule'}]">
@@ -133,7 +133,7 @@ export default {
       var environment = store.state.environment //APP端
       if (showContent === 'share' && environment === 'App-brower') {//app环境下，调用APP的分享方法
         let str = {
-          recruitUrl: 'url=' + window.location.href,
+          recruitUrl: window.location.href,
           title: '我已入学【网上老年大学】,你也快来一起学习吧',
           content: '用学习犒劳自己，已有' + that.paidSum + '人参与网上老年大学学习',
           coverUrl: 'https://lndxappcdn.jinlingkeji.cn/h5_activity/logo.jpg',
