@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-20 09:22:14
  * @LastEditors: zxk
- * @LastEditTime: 2020-06-11 10:51:54
+ * @LastEditTime: 2020-06-11 11:00:35
 --> 
 <template>
   <div class="search-page">
@@ -134,11 +134,12 @@ export default {
       this.$router.back()
     },
     searchWorld() {
+      this.page = 0
+      this.classList = []
       this.keyWord.length ? this.searchCourseClass() : (this.classList = [])
     },
     searchCourseClass(page = 0) {
       this.finished = false
-      console.log(this.page,this.totalPage)
       let params = {
         keyword: this.keyWord,
         pageSize: 10,
@@ -148,7 +149,6 @@ export default {
         if (page == 0) {
           this.classList = res.data.content
           this.totalPage = res.data.totalPages - 1  //这边下标页面是从0开始的，所以总页数需要减1
-          console.log("searchCourseClass -> this.totalPage", this.totalPage)
         } else {
           this.classList = this.classList.concat(res.data.content)
         }
@@ -162,7 +162,6 @@ export default {
       })
     },
     downPull() {
-      console.log(11111,this.page,this.totalPage)
       //上拉加载
       if (this.page > this.totalPage) {
         //  数据全部加载完成，可以弹提示
