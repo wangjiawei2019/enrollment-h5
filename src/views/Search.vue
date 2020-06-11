@@ -2,8 +2,8 @@
  * @Github: https://github.com/IdlerHub
  * @Author: zxk
  * @Date: 2020-05-20 09:22:14
- * @LastEditors: wjw
- * @LastEditTime: 2020-06-02 15:18:50
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-06-11 11:00:35
 --> 
 <template>
   <div class="search-page">
@@ -61,7 +61,7 @@ export default {
       keyWord: '', //搜索关键词
       classList: [], //班级列表
       page: 0,
-      totalPage: 2,
+      totalPage: 1,
       loading: false, //是否处于加载中
       finished: true, //是否加载完成
       refreshing: false
@@ -134,9 +134,12 @@ export default {
       this.$router.back()
     },
     searchWorld() {
+      this.page = 0
+      this.classList = []
       this.keyWord.length ? this.searchCourseClass() : (this.classList = [])
     },
     searchCourseClass(page = 0) {
+      this.finished = false
       let params = {
         keyword: this.keyWord,
         pageSize: 10,
@@ -145,10 +148,11 @@ export default {
       http.searchCourseClass(params).then(res => {
         if (page == 0) {
           this.classList = res.data.content
-          this.totalPage = res.data.totalPages
+          this.totalPage = res.data.totalPages - 1  //这边下标页面是从0开始的，所以总页数需要减1
         } else {
           this.classList = this.classList.concat(res.data.content)
         }
+        this.page++
         //加载状态完成
         this.loading = false
         // 数据全部加载完成
@@ -164,7 +168,8 @@ export default {
         this.finished = true
         return
       }
-      this.searchCourseClass(this.page)
+      if(this.page !== 0) this.searchCourseClass(this.page)
+      
     },
     onRefresh() {
       //下拉刷新
