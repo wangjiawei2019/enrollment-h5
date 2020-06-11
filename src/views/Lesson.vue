@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-11 15:00:35
+ * @LastEditTime: 2020-06-11 19:09:48
 --> 
 <template>
   <div :class="['lesson', {'lesson-touch':showClassify}]">
@@ -48,7 +48,8 @@
         <div class="curr-list" v-if="classList.length">
           <div class="curr-list-item" v-for="(item,index) in classList" :key="index">
             <list-item :lesson="true" :item="item" @toDetail="toDetail">
-              <div slot="lesson" class="join">立即报名</div>
+              <div slot="lesson" class="full" v-if="item.fullStatus == 1">已满员</div>
+              <div slot="lesson" class="join" v-else>立即报名</div>
             </list-item>
           </div>
         </div>
@@ -184,6 +185,7 @@ export default {
         courseId: item.id
       }
       this.page = 1
+      this.classList = []
       this.getClassList(id)
     },
     getMajorList() {
@@ -218,7 +220,7 @@ export default {
         .then(res => {
           if (page == 1) {
             this.classList = res.dataList
-            this.totalPage = Math.ceil(res.total / res.pageSize)
+            this.totalPage = res.total == 0 ? 1 : Math.ceil(res.total / params.pageSize)
           } else {
             this.classList = this.classList.concat(res.dataList)
           }
@@ -380,6 +382,22 @@ export default {
       color: rgba(255, 255, 255, 1);
       line-height: 1.3125rem /* 21/16 */;
       text-align: center;
+    }
+    .full {
+      position: absolute;
+      bottom: 0.84375rem /* 13.5/16 */;
+      right: 0;
+      width: 4rem /* 64/16 */;
+      padding: 0.125rem /* 2/16 */ 0.3125rem /* 5/16 */;
+      height: 1.3125rem /* 21/16 */;
+      font-size: 0.9375rem /* 15/16 */;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      border-radius: 0.3125rem /* 5/16 */;
+      color: rgba(255, 255, 255, 1);
+      line-height: 1.3125rem /* 21/16 */;
+      text-align: center;
+      background: #cccccc;
     }
   }
   .no-list {

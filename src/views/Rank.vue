@@ -1,8 +1,8 @@
 <!--
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-06-04 10:36:57
- * @LastEditors: wjw
- * @LastEditTime: 2020-06-11 15:24:12
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-06-11 18:40:16
 --> 
 <template>
   <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
@@ -11,7 +11,7 @@
         <header>
           <span>排名</span>
           <span class="student">学员</span>
-          <span>帮助值</span>
+          <span>影响力</span>
         </header>
       </van-sticky>
       <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadList">

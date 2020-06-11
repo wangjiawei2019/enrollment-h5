@@ -2,15 +2,16 @@
  * @Github: https://github.com/IdlerHub
  * @Author: zxk
  * @Date: 2020-06-04 09:27:49
- * @LastEditors: wjw
- * @LastEditTime: 2020-06-10 18:54:57
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-06-11 18:40:07
 --> 
 <template>
   <div :class=" ['invite-page', {'invite-touch':showContent=='rule'}]">
+    <img class="go-home" @click.stop="goHome" src="@/assets/images/lesson/go-home.png" alt="返回首页" />
     <div class="header">
       <div class="help-rank">
         <div class="rank-title">
-          <div class="title-left">您的帮助值排名</div>
+          <div class="title-left">您的影响力排名</div>
           <div class="title-right" @click="toRank">
             <span>查看排行榜</span>
             <img src="@/assets/images/lesson/right.png" alt />
@@ -115,6 +116,9 @@ export default {
     }
   },
   methods: {
+    goHome() {
+      this.$router.push({ name: 'Lesson' })
+    },
     userRankInfo() {
       const temp = { orderId: this.orderId }
       http.userRankInfo(temp).then(res => {
@@ -194,6 +198,14 @@ export default {
   // height: 100%;
   overflow: hidden;
   background: #f7f7f7;
+  .go-home {
+    position: fixed;
+    top: 1.5625rem /* 25/16 */;
+    right: 0;
+    width: 6rem /* 96/16 */;
+    height: 2.8125rem /* 45/16 */;
+    margin: 0;
+  }
   .header {
     // height: 21.875rem /* 350/16 */;
     background: url('~@/assets/images/lesson/active.png') no-repeat;
