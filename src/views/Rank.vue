@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-06-04 10:36:57
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-11 09:49:28
+ * @LastEditTime: 2020-06-11 10:20:21
 --> 
 <template>
   <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
@@ -17,7 +17,7 @@
       <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadList">
         <ul class="list" v-for="(item, index) in rankList" :key="index">
           <li class="list-item">
-            <div class="rank" :class="'rank' + (index + 1)"></div>
+            <div class="rank" :class="'rank' + (index + 1)">{{(index + 1) > 3 ? (index + 1) : ''}}</div>
             <div class="info">
               <img :src=" item.avatar || '@/assets/images/rank/default.png'" alt="头像" />
               <div class="name van-ellipsis">{{ item.username }}</div>

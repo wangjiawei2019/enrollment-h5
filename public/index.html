@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-11 09:57:01
+ * @LastEditTime: 2020-06-11 11:06:10
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -31,9 +31,8 @@
       <strong>We're sorry but 网上老年大学招生 doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
     <div id="app"></div>
-    <% if(process.env.NODE_ENV!=='development'){htmlWebpackPlugin.options.cdn.js.forEach(function(item){ if(item){ %>
+    <% if(process.env.NODE_ENV==='production'){htmlWebpackPlugin.options.cdn.js.forEach(function(item){ if(item){ %>
     <script type="text/javascript" src="<%= item %>"></script>
     <% }})} %>
-    <!-- built files will be auto injected -->
   </body>
 </html>
