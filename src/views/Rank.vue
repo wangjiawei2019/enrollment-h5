@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-06-04 10:36:57
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-10 15:08:42
+ * @LastEditTime: 2020-06-10 16:01:55
 --> 
 <template>
   <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
@@ -58,6 +58,9 @@ export default {
       refreshing: false,
       pageNum: 0
     }
+  },
+  mounted() {
+    this.loadList()
   },
   methods: {
     loadList() {
