@@ -2,10 +2,10 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-06-08 09:26:33
+ * @LastEditTime: 2020-06-11 09:30:42
 --> 
 <template>
-  <div class="lesson">
+  <div :class="['lesson', {'lesson-touch':showClassify}]">
     <div class="header">
       <div class="classify" @click="changeClassify">
         <div class="major-title">{{majorTitle}}</div>
@@ -18,7 +18,7 @@
         <div class="search-ipt">搜索学习课程</div>
       </div>
     </div>
-    <div class="class-list" v-show="showClassify" @click="changeClassify" @touchmove.prevent>
+    <div class="class-list" v-show="showClassify" @click="changeClassify">
       <div @click.stop>
         <van-tree-select
           @click-nav="selectedClass"
@@ -386,6 +386,15 @@ export default {
     padding-top: 5.625rem /* 90/16 */;
     width: 100%;
   }
+}
+
+.lesson-touch{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
 }
 
 //TreeSelect
