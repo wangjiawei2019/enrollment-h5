@@ -2,7 +2,7 @@
  * @Author: zxk
  * @Date: 2020-05-18 14:01:20
  * @LastEditors: zxk
- * @LastEditTime: 2020-06-04 16:02:47
+ * @LastEditTime: 2020-06-11 20:54:02
 --> 
 <template>
   <div id="login">
@@ -27,7 +27,7 @@
           <input minlength="4" maxlength="4" type="tel" placeholder="请输入验证码" v-model="smsCode" />
         </div>
         <div class="send-code count-down" v-if="sendcode">重新发送({{sendcode}}s)</div>
-        <div class="send-code" @click.prevent="sendCode" v-else>获取验证码</div>
+        <div class="send-code" @click.prevent="sendCode" v-else>{{sendText}}</div>
       </div>
     </div>
     <div class="btn">
@@ -45,7 +45,8 @@ export default {
     return {
       sendcode: 0, //倒计时
       phone: '',
-      smsCode: '' //验证码
+      smsCode: '', //验证码
+      sendText: '获取验证码'
     }
   },
   methods: {
@@ -75,6 +76,7 @@ export default {
             if (that.sendcode > 0 && that.sendcode <= TIME_COUNT) {
               that.sendcode--
             } else {
+              this.sendText = "重新获取"
               clearInterval(timer)
               timer = null
             }

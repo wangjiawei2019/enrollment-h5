@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-22 11:41:33
  * @LastEditors: zxk
- * @LastEditTime: 2020-06-11 19:52:57
+ * @LastEditTime: 2020-06-11 20:59:10
 --> 
 <template>
   <div class="detail-page">
@@ -245,7 +245,7 @@ export default {
 }
 .none-div {
   height: 5.625rem /* 90/16 */;
-  background: #f7f7f7;
+  background: #fff;
 }
 .detail-page {
   .header-detail {
