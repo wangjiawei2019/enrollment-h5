@@ -2,8 +2,8 @@
  * @Github: https://github.com/IdlerHub
  * @Author: zxk
  * @Date: 2020-05-22 11:41:33
- * @LastEditors: wjw
- * @LastEditTime: 2020-06-10 18:55:11
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-06-11 19:04:39
 --> 
 <template>
   <div class="detail-page">
@@ -27,13 +27,17 @@
     <div class="content-detail">
       <div class="text">课程详情</div>
       <div class="detail-info" v-html="detail.classInfo"></div>
+      <div class="none-div"></div>
     </div>
 
-    <div class="footer" v-if="detail.flag" @click="controlQr">报名完成，进入班群</div>
-    <div class="unjoin" v-else-if="detail.isFull">该班级已满员</div>
-    <div class="footer" v-else>
-      <div class="left" @click="applyCourse">加入选课单</div>
-      <div class="right" @click="applyCourse($event,true)">立即报名</div>
+    <div class="footer">
+      <img class="img-home" @click.stop="goHome" src="@/assets/images/lesson/home.png" alt="返回首页" />
+      <div class="footer-over" v-if="detail.flag" @click="controlQr">报名完成，进入班群</div>
+      <div class="footer-full" v-else-if="detail.num==0">该班级已满员</div>
+      <div class="footer-join" v-else>
+        <div class="left" @click="applyCourse">加入选课单</div>
+        <div class="right" @click="applyCourse($event,true)">立即报名</div>
+      </div>
     </div>
 
     <!-- 二维码 -->
@@ -82,6 +86,9 @@ export default {
     Dialog.close()
   },
   methods: {
+    goHome() {
+      this.$router.push({ name: 'Lesson' })
+    },
     wxShare() {
       let that = this
       //TODO: logo图片和总计报名人数未导入
@@ -118,10 +125,8 @@ export default {
     //   }else{
     //     //如果是在APP环境下
     //     if(isApp === 'App'){
-    //       console.log('APP环境下',isApp)
     //       window.ReactNativeWebView.postMessage(JSON.stringify({route: 'enrollment'}))
     //     }else{
-    //       console.log("浏览器环境下")
     //       location.href = 'j24swr://https://appxw.jinlingkeji.cn/?type=ENROLLMENT'
     //       setTimeout(function(){
     //         let hidden = window.document.hidden || window.document.mozHidden || window.document.msHidden ||window.document.webkitHidden
@@ -234,6 +239,10 @@ export default {
   // -ms-user-select:none;
   // user-select:none;
 }
+.none-div {
+  height: 5.625rem /* 90/16 */;
+  background: #f7f7f7;
+}
 .detail-page {
   .header-detail {
     .detail-img {
@@ -324,21 +333,7 @@ export default {
       }
     }
   }
-  .unjoin {
-    height: 3.4375rem /* 55/16 */;
-    line-height: 3.4375rem /* 55/16 */;
-    position: fixed;
-    bottom: 2.1875rem /* 35/16 */;
-    left: 0.9375rem /* 15/16 */;
-    right: 0.9375rem /* 15/16 */;
-    text-align: center;
-    border-radius: 1.71875rem /* 27.5/16 */;
-    font-size: 1.3125rem /* 21/16 */;
-    font-family: PingFangSC-Regular, PingFang SC;
-    font-weight: 400;
-    color: rgba(255, 255, 255, 1);
-    background: #999990;
-  }
+
   .footer {
     height: 3.4375rem /* 55/16 */;
     position: fixed;
@@ -348,27 +343,52 @@ export default {
     display: flex;
     align-items: center;
     text-align: center;
-    justify-content: center;
-    border-radius: 1.71875rem /* 27.5/16 */;
-    overflow: hidden;
-    font-size: 21px;
-    font-family: PingFangSC-Regular, PingFang SC;
-    font-weight: 400;
-    color: rgba(255, 255, 255, 1);
-    background: #f2323a;
-    & > div {
-      width: 50%;
-      height: 3.4375rem;
+    .img-home{
+      width: 3.4375rem /* 55/16 */;
+      height: 3.4375rem /* 55/16 */;
+      margin-right: .625rem /* 10/16 */;
+    }
+    .footer-full {
+      height: 100%;
+      width: 17.5rem /* 280/16 */;
       line-height: 3.4375rem /* 55/16 */;
       text-align: center;
+      border-radius: 1.71875rem /* 27.5/16 */;
+      font-size: 1.25rem /* 20/16 */;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 1);
+      background: #999990;
     }
-    .left {
-      background: #fe9b02;
-      border-radius: 1.71875rem  0  0  1.71875rem;
-    }
-    .right {
+    .footer-over,
+    .footer-join {
+      height: 100%;
+      width: 17.5rem /* 280/16 */;
+      display: flex;
+      align-items: center;
+      text-align: center;
+      justify-content: center;
+      border-radius: 1.71875rem /* 27.5/16 */;
+      overflow: hidden;
+      font-size: 1.25rem /* 20/16 */;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 1);
       background: #f2323a;
-      border-radius: 0 1.71875rem 1.71875rem 0;
+      & > div {
+        width: 50%;
+        height: 3.4375rem;
+        line-height: 3.4375rem /* 55/16 */;
+        text-align: center;
+      }
+      .left {
+        background: #fe9b02;
+        border-radius: 1.71875rem  0  0  1.71875rem;
+      }
+      .right {
+        background: #f2323a;
+        border-radius: 0 1.71875rem 1.71875rem 0;
+      }
     }
   }
   .qrcode-img-box {
