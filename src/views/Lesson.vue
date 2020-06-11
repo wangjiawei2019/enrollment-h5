@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-06-11 10:35:29
+ * @LastEditTime: 2020-06-11 11:22:08
 --> 
 <template>
   <div :class="['lesson', {'lesson-touch':showClassify}]">
@@ -204,6 +204,7 @@ export default {
       })
     },
     getClassList(id, page = 1) {
+      this.finished = false
       //获取班级列表
       let { majorId, courseId } = id
       let params = {
