@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-10 18:52:34
+ * @LastEditTime: 2020-06-11 18:29:56
 --> 
 <template>
   <div class="order-page">
@@ -121,7 +121,7 @@ export default {
         1: [], // 待支付
         2: [] // 已完成
       },
-      statusText: ['', '待支付', '已完成', '已关闭', '已关闭', '已关闭', '已关闭'],
+      statusText: ['', '待支付', '已完成', '已完成', '已关闭', '已关闭', '已关闭'],
       actionSheetObj: { showPay: false, totalMoney: '', expireTime: 0, id: null, url: '', brandWCPayRequestDO: {} },
       dialogObj: {
         id: null,

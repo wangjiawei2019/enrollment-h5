@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-04-20 16:14:58
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-09 11:14:54
+ * @LastEditTime: 2020-06-11 16:58:22
  */
 import axios from 'axios'
 import { httpBaseUrl } from './BASE'
@@ -80,7 +80,7 @@ instance.interceptors.response.use(
             path: `/login`
           })
         }
-        Toast(response.data.msg)
+        response.data.status !== 401 && Toast(response.data.msg)
         return Promise.reject(response.data.msg)
       }
     } else {

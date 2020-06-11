@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-21 10:12:23
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-10 18:54:03
+ * @LastEditTime: 2020-06-11 16:24:18
 --> 
 <template>
   <div class="confirm-order-page">
@@ -100,14 +100,19 @@ export default {
       }
     },
     createOrder(url, params) {
-      http.createOrder(url, params).then(res => {
-        this.showPay = true
-        const { url, id, expireTime, brandWCPayRequestDO } = res.data
-        this.url = url
-        this.id = id
-        this.expireTime = parseInt(expireTime / 1000)
-        this.brandWCPayRequestDO = brandWCPayRequestDO
-      })
+      http
+        .createOrder(url, params)
+        .then(res => {
+          this.showPay = true
+          const { url, id, expireTime, brandWCPayRequestDO } = res.data
+          this.url = url
+          this.id = id
+          this.expireTime = parseInt(expireTime / 1000)
+          this.brandWCPayRequestDO = brandWCPayRequestDO
+        })
+        .catch(err => {
+          this.$toast('当前报名火热，请重试')
+        })
     },
     confirmPay() {
       if (this.$store.state.environment === 'WEIXIN-brower') {
