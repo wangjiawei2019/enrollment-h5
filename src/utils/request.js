@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-04-20 16:14:58
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-11 16:58:22
+ * @LastEditTime: 2020-06-11 21:12:11
  */
 import axios from 'axios'
 import { httpBaseUrl } from './BASE'
@@ -36,6 +36,7 @@ let httpCode = {
 /** 添加请求拦截器 **/
 instance.interceptors.request.use(
   config => {
+    const NO_VERSION = /major|auth/.test(config.url)
     loadingInstance = Toast.loading({
       duration: 0, // 持续展示 toast
       forbidClick: true,
@@ -45,8 +46,10 @@ instance.interceptors.request.use(
     if (config.method === 'post') {
       config.data = JSON.stringify(config.data)
     }
-    if (config.url.indexOf('weixin-mp') > -1 || process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'production') {
-      config.baseURL = httpBaseUrl.substr(0, httpBaseUrl.indexOf(httpBaseUrl.split('/')[httpBaseUrl.split('/').length - 1]) - 1)
+    if (!NO_VERSION || 'weixin-mp'.indexOf(config.url) > -1) {
+      if (process.env.NODE_ENV !== 'development') {
+        config.baseURL = httpBaseUrl.substr(0, httpBaseUrl.indexOf(httpBaseUrl.split('/')[httpBaseUrl.split('/').length - 1]) - 1)
+      }
     }
     // 在这里：可以根据业务需求可以在发送请求之前做些什么:例如我这个是导出文件的接口，因为返回的是二进制流，所以需要设置请求响应类型为blob，就可以在此处设置。
     if (config.url.includes('pur/contract/export')) {

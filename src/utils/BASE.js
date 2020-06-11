@@ -2,11 +2,11 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-04-29 16:44:41
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-09 09:50:39
+ * @LastEditTime: 2020-06-11 20:50:59
  */
 
 const httpBase = {
-  development: 'https://gateway.jinlingkeji.cn/v2',
+  development: 'https://gateway.jinlingkeji.cn',
   production: 'https://jlkjapp.jinlingkeji.cn/v2',
   test: 'https://gatewaytest.jinlingkeji.cn/v2'
 }

@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-11 14:34:55
+ * @LastEditTime: 2020-06-11 21:17:04
 --> 
 <template>
   <div class="list-page">
@@ -253,13 +253,13 @@ export default {
   }
   .has-full-list {
     margin-bottom: 0;
+    border-bottom: 0.63rem solid #f7f7f7;
   }
   .full-list-wrapper {
     width: 100%;
     margin-bottom: calc(3.63rem + 0.94rem);
     margin-bottom: calc(3.63rem + 0.94rem + constant(safe-area-inset-bottom));
     margin-bottom: calc(3.63rem + 0.94rem + env(safe-area-inset-bottom));
-    border-top: 0.63rem solid #f7f7f7;
     @include flex(flex-start, flex-start, column, nowrap);
     .full-list-header {
       width: 100%;

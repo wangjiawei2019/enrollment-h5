@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 17:03:31
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-10 10:18:08
+ * @LastEditTime: 2020-06-11 20:39:09
  */
 import { get, post } from '@/utils/request'
 
@@ -11,24 +11,20 @@ function getUserInfo() {
   return post('/major/api/user/getUser')
 }
 
-//post 是否需要阅读招生简章
-function getReadStatus() {
-  return post('/activity/api/course/getReadStatus')
+/**
+ * @description: 新增收货地址
+ * @param {id,username,mobile,provinceId,cityId,areaId,addressPrefix,address}
+ */
+function setGoodsAddress(param) {
+  return post('/major/api/user/setGoodsAddress', param)
 }
 
-//getTimSign
-function getTimSign() {
-  return post('/message/user/getTimSign')
-}
-
-//post 获取招生简章内容
-function getRecruitIntro() {
-  return post('/activity/api/course/getRecruitIntro')
-}
-
-//post 设置阅读招生简章
-function setReadNote() {
-  return post('/activity/api/course/setReadNote')
+/**
+ * @description: 修改收货地址
+ * @param {id,username,mobile,provinceId,cityId,areaId,addressPrefix,address}
+ */
+function updateGoodsAddress(param) {
+  return post('/major/api/user/updateGoodsAddress', param)
 }
 
 //get 发送短信验证码 { phone }
@@ -40,6 +36,21 @@ function sendsms(params) {
 //TODO: 发布前要改成登录的连接
 function login(params) {
   return get('/auth/login', params)
+}
+
+//post 是否需要阅读招生简章
+function getReadStatus() {
+  return post('/activity/api/course/getReadStatus')
+}
+
+//post 获取招生简章内容
+function getRecruitIntro() {
+  return post('/activity/api/course/getRecruitIntro')
+}
+
+//post 设置阅读招生简章
+function setReadNote() {
+  return post('/activity/api/course/setReadNote')
 }
 
 // post 获取课程分类初始列表
@@ -128,22 +139,6 @@ function getOrderDetail(param) {
 }
 
 /**
- * @description: 新增收货地址
- * @param {id,username,mobile,provinceId,cityId,areaId,addressPrefix,address}
- */
-function setGoodsAddress(param) {
-  return post('/major/api/user/setGoodsAddress', param)
-}
-
-/**
- * @description: 修改收货地址
- * @param {id,username,mobile,provinceId,cityId,areaId,addressPrefix,address}
- */
-function updateGoodsAddress(param) {
-  return post('/major/api/user/updateGoodsAddress', param)
-}
-
-/**
  * @description: 获取 openid
  * @param {code}
  */
@@ -178,7 +173,6 @@ function userRankInfo(params) {
 export default {
   getUserInfo,
   getReadStatus,
-  getTimSign,
   getRecruitIntro,
   setReadNote,
   sendsms,

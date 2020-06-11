@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-19 16:44:12
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-05 11:16:12
+ * @LastEditTime: 2020-06-11 21:15:19
 --> 
 <template>
   <div class="list-item" @click="toDetail">
@@ -11,8 +11,8 @@
       <div :class="status"></div>
     </div>
     <div class="desc-box" :class="{checked:checked}">
-      <div class="title van-ellipsis" v-html="item.name"></div>
-      <div class="subtitle van-ellipsis" v-html="item.subtitle"></div>
+      <div class="title van-ellipsis" :class="{'full-title': full}" v-html="item.name"></div>
+      <div class="subtitle van-ellipsis" :class="{'full-subtitle': full}" v-html="item.subtitle"></div>
       <div class="desc-footer">
         <div class="price" v-if="!full" :class="{red: checked || lesson}">
           <span>￥</span>
@@ -111,6 +111,10 @@ export default {
     margin-top: 0.06rem;
     line-height: 1.56rem;
     @include font(PingFang SC, 0.94rem, rgba(102, 102, 102, 1), 400);
+  }
+  .full-title,
+  .full-subtitle {
+    color: #999;
   }
   .desc-footer {
     width: 100%;

@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-22 09:52:58
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-02 16:13:14
+ * @LastEditTime: 2020-06-11 20:23:26
 --> 
 <template>
   <div class="apply-rule">
@@ -28,7 +28,6 @@ export default {
     }
   },
   mounted() {
-    http.getTimSign()
     http.getRecruitIntro().then(res => {
       this.content = res.data
     })
