@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-22 11:41:33
  * @LastEditors: zxk
- * @LastEditTime: 2020-06-11 19:04:39
+ * @LastEditTime: 2020-06-11 19:19:18
 --> 
 <template>
   <div class="detail-page">
@@ -350,7 +350,8 @@ export default {
     }
     .footer-full {
       height: 100%;
-      width: 17.5rem /* 280/16 */;
+      // width: 17.5rem /* 280/16 */;
+      flex: 1;
       line-height: 3.4375rem /* 55/16 */;
       text-align: center;
       border-radius: 1.71875rem /* 27.5/16 */;
@@ -363,7 +364,8 @@ export default {
     .footer-over,
     .footer-join {
       height: 100%;
-      width: 17.5rem /* 280/16 */;
+      // width: 17.5rem /* 280/16 */;
+      flex: 1;
       display: flex;
       align-items: center;
       text-align: center;
