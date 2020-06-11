@@ -1,8 +1,8 @@
 /*
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
- * @LastEditors: wjw
- * @LastEditTime: 2020-06-10 11:44:33
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-06-11 10:53:00
  */
 
 import Vue from 'vue'
@@ -86,7 +86,8 @@ const routes = [
     name: 'Search',
     component: Search,
     meta: {
-      title: '班级搜索'
+      title: '班级搜索',
+      keepAlive: true
     }
   },
   {

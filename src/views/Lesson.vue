@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-06-11 09:30:42
+ * @LastEditTime: 2020-06-11 10:35:29
 --> 
 <template>
   <div :class="['lesson', {'lesson-touch':showClassify}]">
@@ -89,8 +89,8 @@ export default {
       refreshing: false //下拉刷新是否完成
     }
   },
-  created() {
-    this.init()
+  mounted() {
+    this.getMajorList()
   },
   methods: {
     toDetail(id) {
@@ -233,23 +233,23 @@ export default {
           this.finished = true
         })
     },
-    init() {
-      let id = {
-        majorId: 0,
-        courseId: 0
-      }
-      this.getMajorList()
-      this.getClassList(id)
-    },
     downPull() {
-      if (this.page > this.totalPage || this.page == 1) {
+      if (this.page > this.totalPage) {
         //  数据全部加载完成，可以弹提示
         this.finished = true
         return
       }
-      let id = {
-        majorId: this.majorList[this.majorIndex].id || 0,
-        courseId: this.courseId
+      let id = {}
+      if (this.page === 1) {
+        id = {
+          majorId: 0,
+          courseId: 0
+        }
+      } else {
+        id = {
+          majorId: this.majorList[this.majorIndex].id || 0,
+          courseId: this.courseId
+        }
       }
       this.getClassList(id, this.page)
     },
@@ -388,7 +388,7 @@ export default {
   }
 }
 
-.lesson-touch{
+.lesson-touch {
   position: fixed;
   top: 0;
   left: 0;
