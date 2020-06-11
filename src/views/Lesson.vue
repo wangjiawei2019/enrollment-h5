@@ -1,8 +1,8 @@
 <!--
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
- * @LastEditors: zxk
- * @LastEditTime: 2020-06-11 11:22:08
+ * @LastEditors: wjw
+ * @LastEditTime: 2020-06-11 15:00:35
 --> 
 <template>
   <div :class="['lesson', {'lesson-touch':showClassify}]">
@@ -466,7 +466,7 @@ export default {
   right: 0;
   background: #fff;
   width: 13.75rem /* 220/16 */;
-  height: 0.9375rem /* 15/16 */;
+  // height: 0.9375rem /* 15/16 */;
 }
 .van-tree-select__item--active {
   color: rgba(242, 50, 58, 1);

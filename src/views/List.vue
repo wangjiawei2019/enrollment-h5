@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-11 14:32:26
+ * @LastEditTime: 2020-06-11 14:34:55
 --> 
 <template>
   <div class="list-page">
@@ -188,7 +188,7 @@ export default {
       }
     },
     dialogConfirm() {
-      const cartIdList = this.dialogObj.cartList
+      const cartIdList = this.dialogObj.cartIdList
       http.cancelApplyCourse({ cartIdList }).then(res => {
         this.dialogObj.showDialog = false
         this.getCartList()

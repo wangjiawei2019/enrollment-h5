@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-06-04 10:36:57
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-11 10:20:21
+ * @LastEditTime: 2020-06-11 15:24:12
 --> 
 <template>
   <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
@@ -145,7 +145,7 @@ export default {
       }
       .info {
         flex: 1;
-        max-width: 13rem;
+        width: 13rem;
         margin: 0 1.25rem;
         @include flex(flex-start, center, row, nowrap);
         @include font(PingFang SC, 1.31rem, #333, 400);
