@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-05-22 11:41:33
  * @LastEditors: zxk
- * @LastEditTime: 2020-06-11 19:19:18
+ * @LastEditTime: 2020-06-11 19:52:57
 --> 
 <template>
   <div class="detail-page">
@@ -67,7 +67,7 @@ export default {
       id: 0,
       detail: {},
       repeatShow: false, //重复报名提示
-      className: '啥啥班级',
+      className: '',
       joinClass: false, //加入班群二维码显示
       qrCodeUrl: '',
       paidSum: 10 //分享用，总人数
@@ -160,6 +160,10 @@ export default {
         cancelButtonColor: '#999999'
       }).then(res => {
         this.$router.push({ name, query })
+      }).catch(err=>{
+        if(cancelText=='继续选课'){
+          this.$router.push({ name: 'Lesson' })
+        }
       })
     },
     applyCourse(e, flag = false) {
