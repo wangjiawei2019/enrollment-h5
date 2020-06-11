@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-06-04 10:36:57
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-10 16:01:55
+ * @LastEditTime: 2020-06-11 09:49:28
 --> 
 <template>
   <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
@@ -76,16 +76,16 @@ export default {
       }
       http.getShareRank(param).then(res => {
         const { dataList, total } = res
-        this.loading = false
-        this.finished = total <= 10 ? true : false
         this.rankList = this.pageNum === 1 ? dataList : [...this.rankList, ...dataList]
+        this.loading = false
+        total <= this.pageNum * 10 ? (this.finished = true) : ''
       })
     },
     onRefresh() {
-      this.finished = false
-      this.rankList = []
-      this.loading = true
       this.pageNum = 0
+      this.refreshing = true
+      this.finished = false
+      this.loading = true
       this.loadList()
     }
   }
