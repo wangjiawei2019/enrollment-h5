@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-10 14:58:27
+ * @LastEditTime: 2020-06-11 14:32:26
 --> 
 <template>
   <div class="list-page">
@@ -63,7 +63,7 @@
           :key="item.classId"
         >
           <list-item :full="true" :item="item">
-            <div class="delete-btn" slot="delete" @click="deleteLesson(item.id)">
+            <div class="delete-btn" slot="delete" @click="deleteLesson([item.cartId])">
               <span>删除课程</span>
             </div>
           </list-item>
@@ -128,7 +128,9 @@ export default {
   methods: {
     getCartList() {
       return http.getCartList().then(res => {
-        this.list = Array.isArray(res.data) ? res.data : []
+        const { cartList, fullList } = res.data
+        this.list = Array.isArray(cartList) ? cartList : []
+        this.fullList = Array.isArray(fullList) ? fullList : []
       })
     },
     handleEdit() {
@@ -152,17 +154,21 @@ export default {
       })
     },
     deleteAllLesson() {
+      const cartIdList = []
+      this.fullList.map(i => {
+        cartIdList.push(i.cartId)
+      })
       const obj = {
-        id: null,
+        cartIdList,
         type: 'deleteAllLesson',
         showDialog: true,
         title: '是否全部清空课程？'
       }
       Object.assign(this.dialogObj, obj)
     },
-    deleteLesson(id) {
+    deleteLesson(cartIdList) {
       const obj = {
-        id,
+        cartIdList,
         type: 'deleteLesson',
         showDialog: true,
         title: '是否删除该课程？'
@@ -182,8 +188,11 @@ export default {
       }
     },
     dialogConfirm() {
-      this.$toast(this.dialogObj.type)
-      this.dialogObj.showDialog = false
+      const cartIdList = this.dialogObj.cartList
+      http.cancelApplyCourse({ cartIdList }).then(res => {
+        this.dialogObj.showDialog = false
+        this.getCartList()
+      })
     }
   },
   computed: {
