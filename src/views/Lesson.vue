@@ -1,8 +1,8 @@
 <!--
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
- * @LastEditors: zxk
- * @LastEditTime: 2020-06-12 16:18:29
+ * @LastEditors: wjw
+ * @LastEditTime: 2020-06-12 18:39:55
 --> 
 <template>
   <div :class="['lesson', {'lesson-touch':showClassify}]">
@@ -68,7 +68,7 @@ import ListItem from '@/components/listItem'
 import CurrTip from '@/components/currTip'
 import { TreeSelect, Empty, List, PullRefresh, Dialog } from 'vant'
 import http from '@/api/index.js'
-import store from '@/store'
+
 export default {
   name: 'Lesson',
   data() {
@@ -215,7 +215,7 @@ export default {
       http.getMajorList().then(res => {
         this.majorList = res.data.majorNodeDTOS
         this.courseList = res.data.courseNodeDTOS
-        if (store.state.environment !== 'App-brower') {
+        if (this.$store.state.environment !== 'App-brower') {
           this.wxShare()
         }
       })
@@ -260,10 +260,10 @@ export default {
         .catch(err => {
           this.loading = false
           this.finished = true
-          let timer = setTimeout(()=>{
+          let timer = setTimeout(() => {
             this.finished = false
             clearTimeout(timer)
-          },1500)
+          }, 1500)
         })
     },
     downPull() {

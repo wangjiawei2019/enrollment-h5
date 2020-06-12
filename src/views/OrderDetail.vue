@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-22 14:50:38
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-10 18:53:17
+ * @LastEditTime: 2020-06-12 18:29:37
 --> 
 <template>
   <div class="order-detail-page" v-if="detail">
@@ -94,11 +94,7 @@
       <div class="title-slot" slot="title">长按识别二维码进群</div>
       <div class="subtitle-slot" slot="subtitle">或点击下方按钮保存</div>
     </pop>
-    <pop
-      :showPop="showInviteTaskToast"
-      type="InviteTask"
-      @close="() => { showInviteTaskToast = false }"
-    >
+    <pop :showPop="showInviteTaskToast" type="InviteTask" @close="closeToast">
       <img class="task" src="@/assets/images/order/task.png" alt="领取教材" slot="img" />
       <div class="title-slot-b" slot="title">恭喜您获得「教材奖励」</div>
       <div class="subtitle-slot-b" slot="subtitle">点击按钮领取官方指定教材</div>
@@ -141,8 +137,7 @@ export default {
         title: '',
         message: ''
       },
-      qrCodeUrl: '',
-      showInviteTaskToast: this.$route.query.showInviteTaskToast // 支付成功后跳转此页面显示领取教材弹窗
+      qrCodeUrl: ''
     }
   },
   mounted() {
@@ -221,8 +216,9 @@ export default {
                 this.$toast('支付成功')
                 this.dialogCancel()
                 this.getOrderDetail()
-                this.showInviteTaskToast = true
+                this.$router.replace({ name: 'OrderDetail', query: { id: this.id, showInviteTaskToast: true } })
               } else {
+                this.$router.replace({ name: 'OrderDetail', query: { id: this.id, showInviteTaskToast: false } })
                 this.$toast('支付失败，请重试')
               }
             }
@@ -259,9 +255,20 @@ export default {
         http[this.dialogObj.type]({ id: this.dialogObj.id }).then(res => {
           this.$router.replace({ name: 'Order', query: { index: 2 } })
         })
+    },
+    closeToast() {
+      this.$router.replace({ name: 'OrderDetail', query: { id: this.id, showInviteTaskToast: false } })
     }
   },
   computed: {
+    // 支付成功后跳转此页面显示领取教材弹窗
+    showInviteTaskToast() {
+      if (!this.$route.query.showInviteTaskToast || this.$route.query.showInviteTaskToast === 'false') {
+        return false
+      } else {
+        return true
+      }
+    },
     id() {
       return parseInt(this.$route.query.id)
     },

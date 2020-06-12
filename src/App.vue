@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: wjw
- * @LastEditTime: 2020-06-10 11:51:29
+ * @LastEditTime: 2020-06-12 16:07:00
 --> 
 <template>
   <div id="app">
@@ -83,7 +83,6 @@ export default {
       } else if (!store.state.code && urlCode) {
         store.commit('setCode', urlCode)
         this.getOpenID(urlCode)
-        this.$router.replace('/')
       }
     },
     getOpenID(code) {
@@ -91,8 +90,11 @@ export default {
         .getOpenID({ code })
         .then(res => {
           store.commit('setOpenID', res.data)
+          this.$router.replace('/')
         })
         .catch(err => {
+          store.commit('setCode', '') // 清空 code
+          this.$router.replace('/')
           this.getCode()
         })
     }
