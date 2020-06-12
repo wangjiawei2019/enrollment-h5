@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-06-12 14:21:52
+ * @LastEditTime: 2020-06-12 14:32:37
 --> 
 <template>
   <div :class="['lesson', {'lesson-touch':showClassify}]">
@@ -68,6 +68,7 @@ import ListItem from '@/components/listItem'
 import CurrTip from '@/components/currTip'
 import { TreeSelect, Empty, List, PullRefresh, Dialog } from 'vant'
 import http from '@/api/index.js'
+import store from '@/store'
 export default {
   name: 'Lesson',
   data() {
