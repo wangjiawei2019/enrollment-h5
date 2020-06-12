@@ -1,8 +1,8 @@
 <!--
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-21 10:12:23
- * @LastEditors: wjw
- * @LastEditTime: 2020-06-11 22:39:48
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-06-12 14:23:22
 --> 
 <template>
   <div class="confirm-order-page">
@@ -114,7 +114,7 @@ export default {
           if ('5'.indexOf(JSON.stringify(err.status)) > -1) {
             this.$toast('当前报名火热，请重试')
           } else if ('6'.indexOf(JSON.stringify(err.status)) > -1) {
-            this.$toast('购物车中有班级已满员，请重新选课')
+            this.$toast('选课单中有班级已满员，请重新选课')
             setTimeout(() => {
               this.$router.back()
             }, 1500)

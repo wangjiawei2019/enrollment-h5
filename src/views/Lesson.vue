@@ -1,8 +1,8 @@
 <!--
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
- * @LastEditors: wjw
- * @LastEditTime: 2020-06-11 19:09:48
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-06-12 14:21:52
 --> 
 <template>
   <div :class="['lesson', {'lesson-touch':showClassify}]">
@@ -94,6 +94,27 @@ export default {
     this.getMajorList()
   },
   methods: {
+    wxShare() {
+      let title = '我已入学【网上老年大学】,你也快来一起学习吧'
+      let shareImg = 'https://lndxappcdn.jinlingkeji.cn/h5_activity/logo.jpg'
+      //TODO: logo图片和总计报名人数未导入
+      let that = this
+      that.$wx.ready(() => {
+        that.$wx.updateAppMessageShareData({
+          //微信朋友分享
+          title, // 分享标题
+          desc: '用学习犒劳自己', // 分享描述
+          link: 'https://enrollmenth5dev.jinlingkeji.cn', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          imgUrl: shareImg // 分享图标
+        })
+        that.$wx.updateTimelineShareData({
+          //微信朋友圈分享
+          title,
+          link: 'https://enrollmenth5dev.jinlingkeji.cn',
+          imgUrl: shareImg
+        })
+      })
+    },
     toDetail(id) {
       this.$router.push({ path: '/lesson-detail', query: { id } })
     },
@@ -193,6 +214,9 @@ export default {
       http.getMajorList().then(res => {
         this.majorList = res.data.majorNodeDTOS
         this.courseList = res.data.courseNodeDTOS
+        if (store.state.environment !== 'App-brower') {
+          this.wxShare()
+        }
       })
     },
     getCourseList() {
