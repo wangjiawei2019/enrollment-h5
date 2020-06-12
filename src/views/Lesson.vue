@@ -2,7 +2,7 @@
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-06-12 14:32:37
+ * @LastEditTime: 2020-06-12 16:18:29
 --> 
 <template>
   <div :class="['lesson', {'lesson-touch':showClassify}]">
@@ -258,7 +258,12 @@ export default {
           this.refreshing = false
         })
         .catch(err => {
+          this.loading = false
           this.finished = true
+          let timer = setTimeout(()=>{
+            this.finished = false
+            clearTimeout(timer)
+          },1500)
         })
     },
     downPull() {
