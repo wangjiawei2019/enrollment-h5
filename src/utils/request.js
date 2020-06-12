@@ -1,8 +1,8 @@
 /*
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-04-20 16:14:58
- * @LastEditors: wjw
- * @LastEditTime: 2020-06-11 21:12:11
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-06-12 10:05:10
  */
 import axios from 'axios'
 import { httpBaseUrl } from './BASE'
@@ -36,7 +36,7 @@ let httpCode = {
 /** 添加请求拦截器 **/
 instance.interceptors.request.use(
   config => {
-    const NO_VERSION = /major|auth/.test(config.url)
+    const NO_VERSION = /major|auth|\/es\//.test(config.url)
     loadingInstance = Toast.loading({
       duration: 0, // 持续展示 toast
       forbidClick: true,
