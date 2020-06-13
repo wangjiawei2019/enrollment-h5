@@ -3,7 +3,7 @@
  * @Author: zxk
  * @Date: 2020-06-04 09:27:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-06-12 19:34:14
+ * @LastEditTime: 2020-06-13 09:54:11
 --> 
 <template>
   <div :class=" ['invite-page', {'invite-touch':showContent=='rule'}]">
@@ -197,10 +197,10 @@ export default {
   // height: 100%;
   height: 100vh;
   overflow: hidden;
-  background: #f7f7f7;
-  background: url('~@/assets/images/lesson/active.png') no-repeat;
+  background:#F44B46 url('~@/assets/images/lesson/active.png') no-repeat;
   background-attachment:fixed;
-  background-size: 100% 100%;
+  background-size: cover;
+  background-size: contain;
   .go-home {
     position: fixed;
     top: 0.9375rem /* 15/16 */;
@@ -211,7 +211,7 @@ export default {
   }
   .space-box {
     width: 100%;
-    height: 41.29%;
+    height: 15.625rem /* 250/16 */;
   }
   .invite-header {
     margin: 0 3.4375rem 1.5625rem 3.4375rem;
@@ -460,5 +460,10 @@ export default {
   right: 0;
   bottom: 0;
   overflow: hidden;
+}
+@media screen and (max-width: 359px){ //窄屏手机，底部字体变小
+  .invite-page .footer{
+    font-size: .875rem /* 14/16 */;
+  }
 }
 </style>
