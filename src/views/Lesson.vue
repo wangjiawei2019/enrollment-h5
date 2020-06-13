@@ -1,8 +1,8 @@
 <!--
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
- * @LastEditors: wjw
- * @LastEditTime: 2020-06-12 18:39:55
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-06-13 08:48:48
 --> 
 <template>
   <div :class="['lesson', {'lesson-touch':showClassify}]">
@@ -105,13 +105,13 @@ export default {
           //微信朋友分享
           title, // 分享标题
           desc: '用学习犒劳自己', // 分享描述
-          link: 'https://enrollmenth5dev.jinlingkeji.cn', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          link: window.location.href.split('#')[0], // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
           imgUrl: shareImg // 分享图标
         })
         that.$wx.updateTimelineShareData({
           //微信朋友圈分享
           title,
-          link: 'https://enrollmenth5dev.jinlingkeji.cn',
+          link: window.location.href.split('#')[0],
           imgUrl: shareImg
         })
       })

@@ -3,50 +3,47 @@
  * @Author: zxk
  * @Date: 2020-06-04 09:27:49
  * @LastEditors: zxk
- * @LastEditTime: 2020-06-11 18:40:07
+ * @LastEditTime: 2020-06-13 09:54:11
 --> 
 <template>
   <div :class=" ['invite-page', {'invite-touch':showContent=='rule'}]">
     <img class="go-home" @click.stop="goHome" src="@/assets/images/lesson/go-home.png" alt="返回首页" />
-    <div class="header">
-      <div class="help-rank">
-        <div class="rank-title">
-          <div class="title-left">您的影响力排名</div>
-          <div class="title-right" @click="toRank">
-            <span>查看排行榜</span>
-            <img src="@/assets/images/lesson/right.png" alt />
+    <div class="space-box"></div>
+    <div class="invite-header">
+      <div class="invite-share" @click="showShade('share')">点击邀请好友</div>
+      <div class="invite-rule">
+        <span @click="showShade('rule')">领取规则</span>
+        <img src="@/assets/images/lesson/right-white.png" alt @click="showShade('rule')" />
+      </div>
+    </div>
+    <div class="invite-content">
+      <div class="content-left">
+        <div>
+          <div class="success-text">已成功邀请</div>
+          <div class="success-num">
+            <span>0</span>人
           </div>
         </div>
-        <div class="rank-number" v-if="rank">
-          第
-          <span>{{rank}}</span>名
+      </div>
+      <div class="content-right" @click="toRank">
+        <div>
+          <div class="to-rank">
+            <span>影响力排名</span>
+            <img src="@/assets/images/lesson/right-black.png" alt />
+          </div>
+          <div class="success-num" v-if="rank">
+            第
+            <span>0</span>人
+          </div>
+          <div class="none-rank" v-else>未上榜</div>
         </div>
-        <div class="rank-number" v-else>未上榜</div>
       </div>
     </div>
-    <div class="invite-user">
-      <div class="invite-title">
-        <div class="title-left">邀请好友报名选课</div>
-        <div class="title-right" @click="showShade('rule')">
-          <span>领取规则</span>
-          <img src="@/assets/images/lesson/right.png" alt />
-        </div>
-      </div>
-      <div class="invite-content">
-        <div class="help-number">
-          已成功帮助
-          <span>{{sum}}</span>位好友
-        </div>
-        <div class="invite-share" @click="showShade('share')">点击邀请好友</div>
-      </div>
-      <div class="invite-tip">
-        <div>好友通过分享链接完成报名</div>
-        <div>即可领取教科书</div>
-      </div>
+    <div class="invite-address" @click="editAddress">
+      <img src="@/assets/images/lesson/address.png" alt />
+      <span>{{addressShow}}</span>
     </div>
-    <div class="invite-footer" @click="editAddress">
-      <div class="change-address">{{addressShow}}</div>
-    </div>
+    <div class="footer">好友通过分享链接完成报名，即可领取教科书</div>
 
     <!-- 分享 -->
     <van-overlay class="shade" @click="changeShow" :show="showContent=='share'">
@@ -117,9 +114,11 @@ export default {
   },
   methods: {
     goHome() {
+      //返回首页
       this.$router.push({ name: 'Lesson' })
     },
     userRankInfo() {
+      //获取页面信息
       const temp = { orderId: this.orderId }
       http.userRankInfo(temp).then(res => {
         const { sum, rank, userGoodsAddress, paidSum } = res.data
@@ -196,194 +195,170 @@ export default {
 .invite-page {
   width: 100%;
   // height: 100%;
+  height: 100vh;
   overflow: hidden;
-  background: #f7f7f7;
+  background:#F44B46 url('~@/assets/images/lesson/active.png') no-repeat;
+  background-attachment:fixed;
+  background-size: cover;
+  background-size: contain;
   .go-home {
     position: fixed;
-    top: 1.5625rem /* 25/16 */;
-    right: 0;
-    width: 6rem /* 96/16 */;
-    height: 2.8125rem /* 45/16 */;
+    top: 0.9375rem /* 15/16 */;
+    left: 0.9375rem /* 15/16 */;
+    width: 3.4375rem /* 55/16 */;
+    height: 3.4375rem /* 55/16 */;
     margin: 0;
   }
-  .header {
-    // height: 21.875rem /* 350/16 */;
-    background: url('~@/assets/images/lesson/active.png') no-repeat;
-    background-size: 100%;
-    padding-top: 13.125rem /* 210/16 */;
-    margin-bottom: 15px;
-    .help-rank {
-      margin: 0 0.9375rem;
-      //   margin: -2.15625rem 0.9375rem 0.9375rem 0.9375rem;
-      height: 8.75rem /* 140/16 */;
-      background: #fff;
-      border-radius: 0.5rem /* 8/16 */;
-      .rank-title {
-        height: 3.75rem /* 60/16 */;
-        border-bottom: 0.03rem solid #e9e9e9;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        .title-left {
-          height: 1.84375rem;
-          margin-left: 0.9375rem /* 15/16 */;
-          font-size: 1.3125rem /* 21/16 */;
-          font-family: PingFangSC-Medium, PingFang SC;
-          font-weight: 500;
-          color: rgba(51, 51, 51, 1);
-          line-height: 1.84375rem;
-        }
-        .title-right {
-          width: 6.8125rem /* 109/16 */;
-          height: 1.875rem /* 30/16 */;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          background: rgba(242, 50, 58, 0.1);
-          border-radius: 1.25rem 0px 0px 1.25rem;
-          span {
-            width: 4.8125rem /* 77/16 */;
-            text-align: center;
-            font-size: 0.9375rem /* 15/16 */;
-            font-family: PingFangSC-Regular, PingFang SC;
-            font-weight: 400;
-            color: rgba(242, 50, 58, 1);
-            margin-left: 0.625rem /* 10/16 */;
-          }
-          img {
-            width: 0.4375rem /* 7/16 */;
-            height: 0.625rem /* 10/16 */;
-            margin-right: 0.625rem /* 10/16 */;
-          }
-        }
+  .space-box {
+    width: 100%;
+    height: 15.625rem /* 250/16 */;
+  }
+  .invite-header {
+    margin: 0 3.4375rem 1.5625rem 3.4375rem;
+    text-align: center;
+    .invite-share {
+      flex: 1;
+      height: 9.12%;
+      // height: 3.4375rem /* 55/16 */;
+      // background: #fff176;
+      background: linear-gradient(360deg, #fcd03d 0%, #fff176 100%);
+      box-shadow: 0 0.125rem 0.625rem 0 rgba(222, 38, 0, 1);
+      border-radius: 1.71875rem /* 27.5/16 */;
+      text-align: center;
+      line-height: 3.4375rem /* 55/16 */;
+
+      font-size: 1.4375rem /* 23/16 */;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 500;
+      color: rgba(249, 60, 48, 1);
+      margin-bottom: 0.9375rem /* 15/16 */;
+    }
+    .invite-rule {
+      height: 1.5625rem /* 25/16 */;
+      line-height: 1.5625rem /* 25/16 */;
+      font-size: 1.125rem /* 18/16 */;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 1);
+      margin-bottom: 1.5625rem /* 25/16 */;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      span {
+        margin-right: 0.3125rem /* 5/16 */;
       }
-      .rank-number {
-        flex: 1;
-        height: 5rem /* 80/16 */;
-        line-height: 5rem;
-        font-size: 1.25rem /* 20/16 */;
-        font-family: PingFangSC-Regular, PingFang SC;
-        font-weight: 400;
-        color: rgba(102, 102, 102, 1);
-        text-align: center;
-        span {
-          font-size: 1.875rem /* 30/16 */;
-          font-family: PingFangSC-Medium, PingFang SC;
-          font-weight: 500;
-          color: rgba(242, 50, 58, 1);
-          margin: 0 0.625rem /* 10/16 */;
-        }
+      img {
+        width: 0.4375rem /* 7/16 */;
+        height: 0.625rem /* 10/16 */;
       }
     }
   }
-  .invite-user {
+  .invite-content {
+    margin: 0 0.9375rem /* 15/16 */;
     background: #fff;
-    margin: 0 0.9375rem;
+    height: 16.58%;
+    // height: 6.25rem /* 100/16 */;
     border-radius: 0.5rem /* 8/16 */;
-    .invite-title {
-      height: 3.75rem /* 60/16 */;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 0.03rem solid #e9e9e9;
-      .title-left {
-        height: 1.84375rem;
-        margin-left: 0.9375rem /* 15/16 */;
-        font-size: 1.3125rem /* 21/16 */;
-        font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 500;
-        color: rgba(51, 51, 51, 1);
-        line-height: 1.84375rem;
-      }
-      .title-right {
-        width: 6.8125rem /* 109/16 */;
-        height: 1.875rem /* 30/16 */;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: rgba(242, 50, 58, 0.1);
-        border-radius: 1.25rem 0px 0px 1.25rem;
-        span {
-          width: 4.8125rem /* 77/16 */;
-          text-align: center;
-          font-size: 0.9375rem /* 15/16 */;
-          font-family: PingFangSC-Regular, PingFang SC;
-          font-weight: 400;
-          color: rgba(242, 50, 58, 1);
-          margin-left: 0.625rem /* 10/16 */;
-        }
-        img {
-          width: 0.4375rem /* 7/16 */;
-          height: 0.625rem /* 10/16 */;
-          margin-right: 0.625rem /* 10/16 */;
-        }
-      }
-    }
-    .invite-content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      border-bottom: 0.03rem solid #e9e9e9;
-      .help-number {
-        flex: 1;
-        line-height: 1.75rem /* 28/16 */;
-        font-size: 1.25rem /* 20/16 */;
-        font-family: PingFangSC-Regular, PingFang SC;
-        font-weight: 400;
-        color: rgba(102, 102, 102, 1);
-        text-align: center;
-        margin-bottom: 0.9375rem;
-        margin-top: 2.1875rem /* 35/16 */;
-        span {
-          font-size: 1.875rem /* 30/16 */;
-          font-family: PingFangSC-Medium, PingFang SC;
-          font-weight: 500;
-          color: rgba(242, 50, 58, 1);
-          margin: 0 0.625rem /* 10/16 */;
-        }
-      }
-      .invite-share {
-        width: 16rem /* 256/16 */;
-        height: 3.125rem /* 50/16 */;
-        background: rgba(242, 50, 58, 1);
-        border-radius: 1.71875rem /* 27.5/16 */;
-        text-align: center;
-        line-height: 3.125rem /* 50/16 */;
-        font-size: 1.3125rem /* 21/16 */;
-        font-family: PingFangSC-Regular, PingFang SC;
-        font-weight: 400;
-        color: rgba(255, 255, 255, 1);
-        margin-bottom: 1.875rem /* 30/16 */;
-      }
-    }
-    .invite-tip {
-      padding: 0.9375rem 1.28125rem /* 20.5/16 */;
+    display: flex;
+    .content-right,
+    .content-left {
+      width: 50%;
       text-align: center;
-      div {
-        font-size: 19px;
-        font-family: PingFangSC-Regular, PingFang SC;
-        font-weight: 400;
-        color: rgba(153, 153, 153, 1);
-        line-height: 30px;
-      }
-    }
-  }
-  .invite-footer {
-    padding: 0.9375rem;
-    .change-address {
-      // width: 21.5625rem /* 345/16 */;
-      width: 100%;
-      height: 3.4375rem /* 55/16 */;
-      line-height: 3.4375rem;
-      text-align: center;
-      background: #fff;
-      font-size: 1.3125rem;
+      font-size: 1.125rem /* 18/16 */;
       font-family: PingFangSC-Regular, PingFang SC;
       font-weight: 400;
       color: rgba(51, 51, 51, 1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      .success-text{
+        height: 1.5625rem /* 25/16 */;
+        line-height: 1.5625rem /* 25/16 */;
+      }
+      .success-num {
+        margin-top: 0.625rem /* 10/16 */;
+        font-size: 0.9375rem /* 15/16 */;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: rgba(102, 102, 102, 1);
+        span {
+          font-size: 1.875rem /* 30/16 */;
+          font-family: PingFangSC-Medium, PingFang SC;
+          font-weight: 500;
+          color: rgba(242, 50, 58, 1);
+          margin-right: 0.3125rem /* 5/16 */;
+        }
+      }
+    }
+    .content-right {
+      position: relative;
+      .none-rank {
+        height: 1.875rem /* 30/16 */;
+        line-height: 1.875rem /* 30/16 */;
+        margin-top: .625rem /* 10/16 */;
+        font-size: 0.9375rem /* 15/16 */;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: rgba(102, 102, 102, 1);
+      }
+      .to-rank {
+        height: 1.5625rem /* 25/16 */;
+        line-height: 1.5625rem /* 25/16 */;
+        display: flex;
+        align-items: center;
+        img {
+          width: 0.4375rem /* 7/16 */;
+          height: 0.625rem /* 10/16 */;
+          margin-left: 0.3125rem /* 5/16 */;
+        }
+      }
+      &::before{
+        content: '';
+        width: 1px;
+        // height: 3.125rem /* 50/16 */;
+        background: #E9E9E9;
+        position: absolute;
+        top: 1.5625rem /* 25/16 */;
+        bottom: 1.5625rem /* 25/16 */;
+        left: 0;
+      }
     }
   }
-
+  .invite-address {
+    margin: 0.9375rem;
+    flex: 1;
+    height: 9.12%;
+    height: 3.4375rem /* 55/16 */;
+    text-align: center;
+    background: #fff;
+    border-radius: 0.5rem /* 8/16 */;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+      width: 1rem /* 16/16 */;
+      height: 1.25rem /* 20/16 */;
+      margin-right: 0.3125rem /* 5/16 */;
+    }
+    span {
+      font-size: 1.25rem /* 20/16 */;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: rgba(102, 102, 102, 1);
+    }
+  }
+  .footer {
+    height: 1.5625rem /* 25/16 */;
+    line-height: 1.5625rem /* 25/16 */;
+    margin: 0 0.9375rem /* 15/16 */;
+    text-align: center;
+    font-size: 0.9375rem /* 15/16 */;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: rgba(247, 247, 247, 0.7);
+  }
   //遮罩提示
   .shade {
     position: fixed;
@@ -485,5 +460,10 @@ export default {
   right: 0;
   bottom: 0;
   overflow: hidden;
+}
+@media screen and (max-width: 359px){ //窄屏手机，底部字体变小
+  .invite-page .footer{
+    font-size: .875rem /* 14/16 */;
+  }
 }
 </style>
