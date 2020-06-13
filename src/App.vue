@@ -1,8 +1,8 @@
 <!--
  * @Github: https://github.com/wangjiawei2019
  * @Date: 2020-05-18 11:12:49
- * @LastEditors: wjw
- * @LastEditTime: 2020-06-10 11:51:29
+ * @LastEditors: zxk
+ * @LastEditTime: 2020-06-12 18:52:32
 --> 
 <template>
   <div id="app">
@@ -29,7 +29,7 @@ export default {
       store.commit('setProductionLocationOrigin', window.location.origin)
     }
 
-    store.state.environment === 'WEIXIN-brower' && this.getCode() // 获取 JSAPI 支付所需 code
+    // store.state.environment === 'WEIXIN-brower' && this.getCode() // 获取 JSAPI 支付所需 code
 
     //android禁止微信浏览器调整字体大小
     //TODO: 可能会在刚刚进去的时候大字体，1秒之后变回来
